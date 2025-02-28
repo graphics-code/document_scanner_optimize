@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:doc_scanner/image_edit/image_edit_preview.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
@@ -127,7 +129,7 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                                 baseSavePath,
                                 renameController.text,
                               );
-
+                              print("UniqueSavePath$uniqueSavePath");
                               showDialog(
                                 context: context,
                                 builder: (context) {
@@ -154,26 +156,11 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                                               ));
 
                                           // Save the PDF with a unique name
-                                          await savePdfFile(uniqueSavePath,
-                                              textEditingController.text);
 
-                                          // Save the PDF to Downloads folder
-                                          await saveToDownloadsFolder(
-                                              uniqueSavePath,
-                                              textEditingController.text);
-
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                "Duplicate file saved as ${uniqueSavePath.split('/').last}",
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              duration:
-                                                  const Duration(seconds: 2),
-                                            ),
-                                          );
+                                          toast(
+                                              "Duplicate file saved as ${uniqueSavePath.split('/').last}",
+                                              bgColor: Colors.black12,
+                                              gravity: ToastGravity.TOP);
                                         },
                                         child: const Text("Create Duplicate"),
                                       ),
@@ -187,20 +174,21 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                                   initialSavePath, textEditingController.text);
 
                               // Save the PDF to Downloads folder
-                              await saveToDownloadsFolder(renameController.text,
-                                  textEditingController.text);
+                              await saveToDownloadsFolder(
+                                  initialSavePath, textEditingController.text);
+                              toast(
+                                "PDF file save successfully in Documents Folder.",
+                                gravity: ToastGravity.TOP,
+                                bgColor: Colors.black12,
+                              );
                             }
                           } else {
                             // Show an error message if the file name is empty
                             ScaffoldMessenger.of(context).clearSnackBars();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                duration: Duration(seconds: 1),
-                                content: Text(
-                                  "Please enter a file name",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
+                            toast(
+                              "Please enter a file name",
+                              gravity: ToastGravity.TOP,
+                              bgColor: Colors.black12,
                             );
                           }
                         },

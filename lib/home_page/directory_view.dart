@@ -7,6 +7,7 @@ import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -1030,10 +1031,10 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                                               "Doc Scanner");
                                                                       Navigator.pop(
                                                                           context);
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                              SnackBar(content: Text(translation(context).saveAtGallery)));
+                                                                      AppHelper.showTopSnackBar(
+                                                                          context,
+                                                                          translation(context)
+                                                                              .saveAtGallery);
                                                                     },
                                                                     child:
                                                                         Padding(
@@ -1781,11 +1782,45 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                                           context);
                                                                       if (Platform
                                                                           .isIOS) {
-                                                                        await Share
-                                                                            .shareXFiles([
-                                                                          XFile(
-                                                                              filePath)
-                                                                        ]);
+                                                                        try {
+                                                                          Directory
+                                                                              directory =
+                                                                              await getApplicationDocumentsDirectory();
+
+                                                                          // Ensure the directory exists
+                                                                          if (!directory
+                                                                              .existsSync()) {
+                                                                            directory.createSync(recursive: true);
+                                                                          }
+
+                                                                          // Create the new file path
+                                                                          String
+                                                                              fileName =
+                                                                              path.basenameWithoutExtension(filePath);
+                                                                          String
+                                                                              newPath =
+                                                                              path.join(directory.path, '$fileName.pdf');
+
+                                                                          // Write the file to the new location
+                                                                          File
+                                                                              newFile =
+                                                                              File(newPath);
+                                                                          await newFile
+                                                                              .writeAsBytes(await File(filePath).readAsBytes());
+
+                                                                          // Show success message
+                                                                          AppHelper.showTopSnackBar(
+                                                                              context,
+                                                                              "PDF File saved to Documents folder");
+
+                                                                          print(
+                                                                              "Holl print");
+                                                                        } catch (e) {
+                                                                          // Handle any errors
+                                                                          AppHelper.showTopSnackBar(
+                                                                              context,
+                                                                              "Failed to save file: $e");
+                                                                        }
                                                                       } else if (Platform
                                                                           .isAndroid) {
                                                                         try {
@@ -1816,16 +1851,14 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                                               .writeAsBytes(await File(filePath).readAsBytes());
 
                                                                           // Show success message
-                                                                          ScaffoldMessenger.of(context)
-                                                                              .showSnackBar(
-                                                                            const SnackBar(content: Text('PDF File saved to Documents folder')),
-                                                                          );
+                                                                          AppHelper.showTopSnackBar(
+                                                                              context,
+                                                                              "PDF File saved to Documents folder");
                                                                         } catch (e) {
                                                                           // Handle any errors
-                                                                          ScaffoldMessenger.of(context)
-                                                                              .showSnackBar(
-                                                                            SnackBar(content: Text('Failed to save file: $e')),
-                                                                          );
+                                                                          AppHelper.showTopSnackBar(
+                                                                              context,
+                                                                              "Failed to save file: $e");
                                                                         }
                                                                       }
                                                                     },

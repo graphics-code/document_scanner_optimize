@@ -124,8 +124,6 @@ class CameraProvider extends ChangeNotifier {
     required String fileName,
   }) async {
     try {
-      _isCreatingPDFLoader = true;
-      notifyListeners();
       String directoryPath;
       final List<Uint8List> images =
           _imageList.map((e) => e.imageByte).toList();
@@ -199,8 +197,6 @@ class CameraProvider extends ChangeNotifier {
       return null;
     }
   }
-
-  bool isSavePDFLoader = false;
 
   bool _isCreatingPDFLoader = false;
   bool get isCreatingPDFLoader => _isCreatingPDFLoader;

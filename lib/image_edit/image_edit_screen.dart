@@ -87,10 +87,12 @@ class _ImageEditScreenState extends State<ImageEditScreen> {
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Image.memory(
-              imageEditProvider.currentState,
-              fit: BoxFit.cover,
-            ),
+            child: imageEditProvider.currentIndex >= 0
+                ? Image.memory(
+                    imageEditProvider.currentState,
+                    fit: BoxFit.cover,
+                  )
+                : const CircularProgressIndicator(),
           ),
         ),
         bottomNavigationBar: BottomAppBar(

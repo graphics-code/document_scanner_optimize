@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:doc_scanner/utils/top_snack_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -34,6 +36,24 @@ class AppHelper {
     if (!await barCodeDirectory.exists()) {
       await barCodeDirectory.create(recursive: true);
     }
+  }
+
+  static showTopSnackBar(BuildContext context, String message) {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 10.0,
+        left: 0,
+        right: 0,
+        child: TopSnackBar(message: message),
+      ),
+    );
+
+    overlay.insert(overlayEntry);
+
+    Future.delayed(const Duration(seconds: 3), () {
+      overlayEntry.remove();
+    });
   }
 
   Future<File> convertUint8ListToFile(

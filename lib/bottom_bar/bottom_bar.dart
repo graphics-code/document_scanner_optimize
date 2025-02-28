@@ -327,15 +327,18 @@ class _BottomBarState extends State<BottomBar> {
                     await CunningDocumentScanner.getPictures(
                       isGalleryImportAllowed: true,
                     ).then((pictures) {
-                      if (pictures!.isNotEmpty) {
-                        pictures.forEach((element) async {
+                      if (pictures != null && pictures.isNotEmpty) {
+                        for (var element in pictures) {
                           String imageName = DateFormat('yyyyMMdd_SSSS')
                               .format(DateTime.now());
-                          cameraProvider.addImage(ImageModel(
+                          cameraProvider.addImage(
+                            ImageModel(
                               docType: 'Document',
                               imageByte: File(element).readAsBytesSync(),
-                              name: "Document-$imageName"));
-                        });
+                              name: "Document-$imageName",
+                            ),
+                          );
+                        }
 
                         if (cameraProvider.imageList.isNotEmpty) {
                           Navigator.push(

@@ -31,6 +31,7 @@ class EditImagePreview extends StatefulWidget {
 class _EditImagePreviewState extends State<EditImagePreview> {
   final GlobalKey _globalKey = GlobalKey();
   int _currentIndex = 0;
+  bool isSaving = false;
   final PageController _pageController = PageController();
   final TextEditingController _renameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -570,8 +571,7 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                             return AlertDialog(
                                               title: Text(
                                                   translation(context).savePdf),
-                                              content: cameraProvider
-                                                      .isCreatingPDFLoader
+                                              content: isSaving
                                                   ? ConstrainedBox(
                                                       constraints:
                                                           const BoxConstraints(
@@ -579,10 +579,7 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                                               maxWidth: 40),
                                                       child: const Center(
                                                         child:
-                                                            CircularProgressIndicator(
-                                                          color: AppColor
-                                                              .primaryColor,
-                                                        ),
+                                                            CircularProgressIndicator(),
                                                       ),
                                                     )
                                                   : TextFormField(
@@ -618,48 +615,73 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                                                 horizontal: 10),
                                                       ),
                                                     ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    if (renameController
-                                                        .text.isNotEmpty) {
-                                                      cameProvider
-                                                          .createPDFFromByte(
-                                                              context: context,
-                                                              fileName:
-                                                                  renameController
-                                                                      .text)
-                                                          .then((value) {
-                                                        cameraProvider
-                                                            .clearImageList();
-                                                        Navigator
-                                                            .pushAndRemoveUntil(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                          builder: (context) {
-                                                            return const BottomBar(
-                                                              shouldShowReview:
-                                                                  true,
-                                                            );
-                                                          },
-                                                        ), (route) => false);
-                                                        showTopSnackbar(context,
-                                                            "PDF successfully saved");
-                                                      });
-                                                    }
-                                                  },
-                                                  child: Text(
-                                                      translation(context).ok),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text(
-                                                      translation(context)
-                                                          .cancel),
-                                                )
-                                              ],
+                                              actions: isSaving
+                                                  ? []
+                                                  : [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          if (renameController
+                                                              .text
+                                                              .isNotEmpty) {
+                                                            setState(() {
+                                                              isSaving =
+                                                                  true; // Show progress indicator
+                                                            });
+                                                            cameProvider
+                                                                .createPDFFromByte(
+                                                                    context:
+                                                                        context,
+                                                                    fileName:
+                                                                        renameController
+                                                                            .text)
+                                                                .then((value) {
+                                                              cameraProvider
+                                                                  .clearImageList();
+                                                              Navigator.pushAndRemoveUntil(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                                  return const BottomBar(
+                                                                    shouldShowReview:
+                                                                        true,
+                                                                  );
+                                                                },
+                                                              ),
+                                                                  (route) =>
+                                                                      false).then(
+                                                                (value) {
+                                                                  setState(() {
+                                                                    isSaving =
+                                                                        false; // Hide progress indicator
+                                                                  });
+                                                                },
+                                                              );
+                                                              showTopSnackbar(
+                                                                  context,
+                                                                  "PDF successfully saved");
+                                                            });
+                                                          }
+                                                        },
+                                                        style:
+                                                            const ButtonStyle(
+                                                          splashFactory: InkSparkle
+                                                              .splashFactory, // Disable splash effect
+                                                        ),
+                                                        child: Text(
+                                                            translation(context)
+                                                                .ok),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text(
+                                                            translation(context)
+                                                                .cancel),
+                                                      )
+                                                    ],
                                             );
                                           },
                                         );
