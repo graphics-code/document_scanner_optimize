@@ -21,6 +21,7 @@ class TextRecognitionScreen extends StatefulWidget {
 class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
   TextEditingController textEditingController = TextEditingController();
   TextEditingController renameController = TextEditingController();
+  String? uniqName;
   @override
   void initState() {
     textEditingController.text = widget.recognisedText;
@@ -154,13 +155,16 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                                                 builder: (context) =>
                                                     const EditImagePreview(),
                                               ));
+                                          await savePdfFile(uniqueSavePath,
+                                              textEditingController.text);
 
-                                          // Save the PDF with a unique name
-
+                                          // Save the PDF to Downloads folder
+                                          await saveToDownloadsFolder(uniqName!,
+                                              textEditingController.text);
                                           toast(
-                                              "Duplicate file saved as ${uniqueSavePath.split('/').last}",
-                                              bgColor: Colors.black12,
-                                              gravity: ToastGravity.TOP);
+                                            "PDF save successfully in Document Folder",
+                                          );
+                                          // Save the PDF with a unique name
                                         },
                                         child: const Text("Create Duplicate"),
                                       ),
@@ -174,21 +178,18 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                                   initialSavePath, textEditingController.text);
 
                               // Save the PDF to Downloads folder
-                              await saveToDownloadsFolder(
-                                  initialSavePath, textEditingController.text);
+                              await saveToDownloadsFolder(renameController.text,
+                                  textEditingController.text);
                               toast(
-                                "PDF file save successfully in Documents Folder.",
-                                gravity: ToastGravity.TOP,
-                                bgColor: Colors.black12,
+                                "PDF save successfully in Document Folder",
                               );
                             }
                           } else {
                             // Show an error message if the file name is empty
                             ScaffoldMessenger.of(context).clearSnackBars();
-                            toast(
+                            AppHelper.showTopSnackBar(
+                              context,
                               "Please enter a file name",
-                              gravity: ToastGravity.TOP,
-                              bgColor: Colors.black12,
                             );
                           }
                         },
@@ -233,6 +234,7 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
 
     while (await File(uniqueSavePath).exists()) {
       uniqueFileName = '${fileName}_$counter';
+      uniqName = '${fileName}_$counter';
       uniqueSavePath = '$baseSavePath/$uniqueFileName.pdf';
       counter++;
     }
@@ -277,16 +279,6 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
         await externalFile.writeAsBytes(pdfBytes);
         debugPrint("PDF saved to Downloads: $externalStorageDirectory");
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "PDF file saved as successfully in Documents Folder",
-            style: TextStyle(color: Colors.white),
-          ),
-          duration: Duration(seconds: 1),
-        ),
-      );
     } else {
       debugPrint("Permission denied to access external storage");
     }

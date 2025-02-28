@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:doc_scanner/utils/app_color.dart';
 import 'package:flutter/material.dart';
 import '../bottom_bar/bottom_bar.dart';
 import '../utils/app_assets.dart';
@@ -29,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.primaryColor,
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Center(
@@ -38,19 +37,22 @@ class _SplashScreenState extends State<SplashScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(""),
-              Image.asset(
-                AppAssets.splashLogo,
-                height: 160,
-                width: 160,
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(18)),
+                child: Image.asset(
+                  AppAssets.splashLogo,
+                  height: 130,
+                  width: 130,
+                ),
               ),
               const Padding(
-                padding: EdgeInsets.only(bottom: 20.0),
+                padding: EdgeInsets.only(bottom: 25.0),
                 child: Text(
                   "SCAN FASTER, WORK SMARTER.",
                   style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white),
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
                 ),
               ),
             ],

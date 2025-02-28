@@ -1,6 +1,7 @@
 class AppAssets {
-  static const String splashLogo = "assets/png/splash_logo.png";
-  static const String cameraCaptureButton = "assets/icons/camera_capture_button.svg";
+  static const String splashLogo = "assets/png/app_icon.png";
+  static const String cameraCaptureButton =
+      "assets/icons/camera_capture_button.svg";
   static const String imagePlaceholder = "assets/icons/image_placeholder.svg";
   static const String proIcon = "assets/icons/pro_icon.svg";
   static const String documents = "assets/icons/documents.svg";
@@ -23,7 +24,8 @@ class AppAssets {
   static const String termsCondition = "assets/icons/terms_condition.svg";
   static const String upgradePlan = "assets/icons/upgrade_plan.svg";
   static const String premiumPlan = "assets/icons/premium_plan.svg";
-  static const String forwardCircularArrow = "assets/icons/forward_circular_arrow.svg";
+  static const String forwardCircularArrow =
+      "assets/icons/forward_circular_arrow.svg";
   static const String retake = "assets/icons/retake.svg";
   static const String rotate = "assets/icons/rotate.svg";
   static const String reFrame = "assets/icons/re_frame.svg";

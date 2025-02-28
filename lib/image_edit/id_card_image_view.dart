@@ -690,7 +690,7 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                                                       },
                                                     );
                                                     showTopSnackbar(context,
-                                                        "PDF file saved as successfully in Documents Folder");
+                                                        "PDF save successfully in Document Folder");
                                                   }
                                                 },
                                                 child: Text(

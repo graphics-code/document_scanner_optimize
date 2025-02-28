@@ -2471,22 +2471,10 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                                 if (renameController
                                                                     .text
                                                                     .isNotEmpty) {
-                                                                  ScaffoldMessenger.of(
-                                                                          context)
-                                                                      .showSnackBar(
-                                                                    const SnackBar(
-                                                                      duration: Duration(
-                                                                          seconds:
-                                                                              4),
-                                                                      content:
-                                                                          Text(
-                                                                        "PDF file save successfully in Documents Folder.",
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.white),
-                                                                      ),
-                                                                    ),
-                                                                  );
+                                                                  AppHelper.showTopSnackBar(
+                                                                      context,
+                                                                      "PDF save successfully in Document Folder");
+
                                                                   Navigator.pop(
                                                                       context); // Close the current dialog
                                                                   // Set target path
