@@ -129,7 +129,7 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                                 baseSavePath,
                                 renameController.text,
                               );
-                              print("UniqueSavePath$uniqueSavePath");
+
                               showDialog(
                                 context: context,
                                 builder: (context) {
