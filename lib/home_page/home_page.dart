@@ -12,10 +12,10 @@ import 'package:doc_scanner/image_edit/image_edit_preview.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
+import 'package:doc_scanner/utils/pdf_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:url_launcher/url_launcher.dart';
@@ -415,9 +415,17 @@ class _HomePageState extends State<HomePage> {
                                         .toLowerCase()
                                         .endsWith('.pdf')) {
                                       return GestureDetector(
-                                        onTap: () async {
-                                          await OpenFilex.open(imageFile.path);
-                                        },
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PDFViewScreen(
+                                              path: imageFile.path,
+                                              fileName: imageFile.path
+                                                  .split('/')
+                                                  .last,
+                                            ),
+                                          ),
+                                        ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
@@ -532,9 +540,17 @@ class _HomePageState extends State<HomePage> {
                                         .toLowerCase()
                                         .endsWith('.pdf')) {
                                       return GestureDetector(
-                                        onTap: () async {
-                                          await OpenFilex.open(imageFile.path);
-                                        },
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PDFViewScreen(
+                                              path: imageFile.path,
+                                              fileName: imageFile.path
+                                                  .split('/')
+                                                  .last,
+                                            ),
+                                          ),
+                                        ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(

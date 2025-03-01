@@ -1,10 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:doc_scanner/image_edit/image_edit_preview.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
@@ -46,6 +45,17 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
 
     final file = File(path);
     await file.writeAsBytes(await pdf.save(), flush: true);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "PDF saved successfully to Downloads folder",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   @override
@@ -116,12 +126,7 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                             String initialSavePath =
                                 '$baseSavePath/${renameController.text}.pdf';
 
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EditImagePreview(),
-                                ));
+                            Navigator.pop(context);
 
                             // Check if file exists
                             File file = File(initialSavePath);
@@ -149,29 +154,13 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                                       ),
                                       TextButton(
                                         onPressed: () async {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const EditImagePreview(),
-                                              ));
+                                          Navigator.pop(context);
                                           await savePdfFile(uniqueSavePath,
                                               textEditingController.text);
 
                                           // Save the PDF to Downloads folder
                                           await saveToDownloadsFolder(uniqName!,
                                               textEditingController.text);
-
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "PDF save successfully in Document Folder",
-                                              toastLength: Toast.LENGTH_LONG,
-                                              gravity: ToastGravity.TOP,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.black87,
-                                              textColor: Colors.white,
-                                              fontSize: 13.0);
-                                          // Save the PDF with a unique name
                                         },
                                         child: const Text("Create Duplicate"),
                                       ),
@@ -187,15 +176,6 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                               // Save the PDF to Downloads folder
                               await saveToDownloadsFolder(renameController.text,
                                   textEditingController.text);
-                              Fluttertoast.showToast(
-                                  msg:
-                                      "PDF save successfully in Document Folder",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.TOP,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.black87,
-                                  textColor: Colors.white,
-                                  fontSize: 13.0);
                             }
                           } else {
                             // Show an error message if the file name is empty
@@ -268,6 +248,7 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
         ),
       );
       //  Get Downloads directory path
+
       if (Platform.isIOS) {
         Directory iosDocumentsDirectory =
             await getApplicationDocumentsDirectory();

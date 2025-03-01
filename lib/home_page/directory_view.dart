@@ -8,12 +8,12 @@ import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
+import 'package:doc_scanner/utils/pdf_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gal/gal.dart';
-import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -1455,9 +1455,16 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                         .toLowerCase()
                                         .endsWith('.pdf')) {
                                       return GestureDetector(
-                                        onTap: () async {
-                                          await OpenFilex.open(filePath);
-                                        },
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PDFViewScreen(
+                                              path: filePath,
+                                              fileName:
+                                                  filePath.split('/').last,
+                                            ),
+                                          ),
+                                        ),
                                         child: Stack(
                                           alignment: Alignment.topRight,
                                           children: [

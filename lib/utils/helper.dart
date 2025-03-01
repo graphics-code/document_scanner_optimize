@@ -49,8 +49,9 @@ class AppHelper {
           child: Material(
             color: Colors.transparent,
             child: Container(
+              alignment: Alignment.center,
               width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(12.0),
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
               decoration: BoxDecoration(
                 color: Colors.black87,
@@ -58,6 +59,7 @@ class AppHelper {
               ),
               child: Text(
                 message,
+                textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.white),
               ),
             ),

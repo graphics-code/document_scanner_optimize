@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:doc_scanner/bottom_bar/bottom_bar.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -50,24 +51,6 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
   }
 
   final GlobalKey _globalKey = GlobalKey();
-
-  void showTopSnackbar(BuildContext context, String message) {
-    final overlay = Overlay.of(context);
-    final overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: 10.0,
-        left: 0,
-        right: 0,
-        child: TopSnackbar(message: message),
-      ),
-    );
-
-    overlay.insert(overlayEntry);
-
-    Future.delayed(const Duration(seconds: 3), () {
-      overlayEntry.remove();
-    });
-  }
 
   Future<Uint8List> captureWidgetToImage() async {
     try {
@@ -689,7 +672,8 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                                                         });
                                                       },
                                                     );
-                                                    showTopSnackbar(context,
+                                                    AppHelper.showTopSnackBar(
+                                                        context,
                                                         "PDF save successfully in Document Folder");
                                                   }
                                                 },
