@@ -4,7 +4,7 @@ import 'package:doc_scanner/image_edit/image_edit_preview.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
@@ -161,9 +161,16 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                                           // Save the PDF to Downloads folder
                                           await saveToDownloadsFolder(uniqName!,
                                               textEditingController.text);
-                                          toast(
-                                            "PDF save successfully in Document Folder",
-                                          );
+
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "PDF save successfully in Document Folder",
+                                              toastLength: Toast.LENGTH_LONG,
+                                              gravity: ToastGravity.TOP,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.black87,
+                                              textColor: Colors.white,
+                                              fontSize: 13.0);
                                           // Save the PDF with a unique name
                                         },
                                         child: const Text("Create Duplicate"),
@@ -180,9 +187,15 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                               // Save the PDF to Downloads folder
                               await saveToDownloadsFolder(renameController.text,
                                   textEditingController.text);
-                              toast(
-                                "PDF save successfully in Document Folder",
-                              );
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "PDF save successfully in Document Folder",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.TOP,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.black87,
+                                  textColor: Colors.white,
+                                  fontSize: 13.0);
                             }
                           } else {
                             // Show an error message if the file name is empty

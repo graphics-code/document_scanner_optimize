@@ -8,7 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'core/local_storage.dart';
 import 'camera_screen/provider/camera_provider.dart';
@@ -19,7 +18,6 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -78,7 +76,6 @@ class _MyAppState extends State<MyApp> {
           data: MediaQuery.of(context)
               .copyWith(textScaler: TextScaler.linear(textScaleFactor)),
           child: MaterialApp(
-            navigatorKey: navigatorKey,
             title: 'Document Scanner - PDF Scanner',
             debugShowCheckedModeBanner: false,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
