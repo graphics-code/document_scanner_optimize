@@ -1,14 +1,19 @@
-# Keep class names for reflection
--keepattributes *Annotation*
-
-# Keep essential Flutter classes
+# Keep classes that Flutter uses
 -keep class io.flutter.** { *; }
--keep class androidx.lifecycle.** { *; }
+-keep class io.flutter.plugins.** { *; }
 
-# Keep serialized classes
--keepclassmembers class * implements java.io.Serializable { *; }
+# Keep Flutter-related methods
+-keep class * extends io.flutter.plugins.PluginRegistry$Registrant { *; }
 
-# Avoid stripping native method names
--keepclasseswithmembernames class * {
-    native <methods>;
+# Keep classes and methods that are used in the app
+-keep class com.yourpackage.** { *; }
+-keepclassmembers class * {
+    public static void main(java.lang.String[]);
 }
+
+# Allow rules for Firebase and other libraries
+-keep class com.google.firebase.** { *; }
+-keep class com.google.android.gms.** { *; }
+
+# Add any specific rules for other libraries
+-keep class androidx.** { *; }
