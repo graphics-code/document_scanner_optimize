@@ -28,21 +28,21 @@ class _PermissionScreenState extends State<PermissionScreen>
     var cameraResult = results[Permission.camera];
     var microphoneResult = results[Permission.microphone];
     if (cameraResult!.isGranted && microphoneResult!.isGranted) {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const CameraScreen(),
-          ));
+      // Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => const CameraScreen(),
+      //     ));
     } else if (cameraResult.isDenied || microphoneResult!.isDenied) {
       var results = await [Permission.camera, Permission.microphone].request();
       var cameraResult = results[Permission.camera];
       var microphoneResult = results[Permission.microphone];
       if (cameraResult!.isGranted && microphoneResult!.isGranted) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CameraScreen(),
-            ));
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => const CameraScreen(),
+        // ));
       } else if (cameraResult.isPermanentlyDenied ||
           microphoneResult!.isPermanentlyDenied) {
         showDialog(
