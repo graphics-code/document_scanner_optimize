@@ -657,9 +657,10 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                                                   });
                                                                 },
                                                               );
-                                                              showTopSnackbar(
-                                                                  context,
-                                                                  "PDF save sasuccessfully in Document Folder");
+                                                              AppHelper
+                                                                  .showTopSnackBar(
+                                                                      context,
+                                                                      "PDF save successfully in Document Folder");
                                                             });
                                                           }
                                                         },

@@ -591,7 +591,7 @@ Future<void> showQrAndBarCodeViewDialogue(
                       ),
                     ),
                     const SizedBox(
-                      width: 50,
+                      width: 25,
                     ),
                     Expanded(
                         child: ElevatedButton.icon(

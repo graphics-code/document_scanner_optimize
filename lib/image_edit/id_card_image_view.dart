@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:doc_scanner/bottom_bar/bottom_bar.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -689,7 +690,8 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                                                         });
                                                       },
                                                     );
-                                                    showTopSnackbar(context,
+                                                    AppHelper.showTopSnackBar(
+                                                        context,
                                                         "PDF save successfully in Document Folder");
                                                   }
                                                 },

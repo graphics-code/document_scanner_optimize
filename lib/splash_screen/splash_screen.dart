@@ -38,13 +38,11 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               const Text(""),
               ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(18)),
-                child: Image.asset(
-                  AppAssets.splashLogo,
-                  height: 130,
-                  width: 130,
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox.fromSize(
+                      size: const Size.fromRadius(48),
+                      child: Image.asset(AppAssets.splashLogo,
+                          width: 100, height: 160))),
               const Padding(
                 padding: EdgeInsets.only(bottom: 25.0),
                 child: Text(
