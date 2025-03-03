@@ -193,7 +193,6 @@ class _BottomBarState extends State<BottomBar> {
                     //   }
                   } else {
                     BuildContext context = _scaffoldKey.currentContext!;
-                    AppHelper.showTopSnackBar(context, "Something Went Wrong");
                   }
                 },
               ),
