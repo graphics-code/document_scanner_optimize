@@ -48,7 +48,7 @@ class CameraProvider extends ChangeNotifier {
   List<String> _idCardImages = [];
   List<String> get idCardImages => _idCardImages;
 
-  void addIdCardImage(String imagePath) {
+   addIdCardImage(String imagePath) {
     _idCardImages.add(imagePath);
     notifyListeners();
   }

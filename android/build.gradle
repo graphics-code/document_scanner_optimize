@@ -1,6 +1,7 @@
 
 allprojects {
     repositories {
+//        maven { url "https://dl.google.com/dl/android/maven2/" }
         google()
         mavenCentral()
     }
@@ -35,3 +36,7 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+//dependencies {
+//    implementation 'com.google.mlkit:document-scanner:16.0.0-beta1'
+//}

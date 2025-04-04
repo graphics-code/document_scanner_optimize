@@ -160,41 +160,53 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowedExtensions: ['pdf'],
-                  );
-                  if (result != null) {
-                    File file = File(result.paths.first!);
-                    // int fileSizeInBytes = await file.length();
-                    // double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-                    // if (fileSizeInMB <= 5) {
-                    cameraProvider.convertPdfToImage(file).then((value) {
-                      if (value) {
-                        BuildContext context = _scaffoldKey.currentContext!;
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ImagePreviewScreen(),
-                          ),
-                          (route) => false,
-                        );
-                      }
-                    });
-                    // }
-                    // else {
-                    //     BuildContext context =
-                    //         _scaffoldKey.currentContext!;
-                    //     ScaffoldMessenger.of(context)
-                    //         .showSnackBar(const SnackBar(
-                    //       content: Text('File size exceeds 5 MB. Please select a smaller file.'),
-                    //     ));
-                    //   }
+                  // Request storage permission
+                  PermissionStatus status = await Permission.storage.request();
+
+                  if (status.isGranted) {
+                    // If permission is granted, proceed with file picking
+                    FilePickerResult? result = await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf'],
+                    );
+
+                    if (result != null) {
+                      File file = File(result.paths.first!);
+                      cameraProvider.convertPdfToImage(file).then((value) {
+                        if (value) {
+                          BuildContext context = _scaffoldKey.currentContext!;
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ImagePreviewScreen(),
+                            ),
+                                (route) => false,
+                          );
+                        }
+                      });
+                    } else {
+                      BuildContext context = _scaffoldKey.currentContext!;
+                      // Handle case where file is not selected
+                    }
                   } else {
+
                     BuildContext context = _scaffoldKey.currentContext!;
+
+                    AppHelper.showTopSnackBar(context, 'Storage permission denied. Please enable it in settings.');
+
+
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   const SnackBar(
+                    //     content: Text(),
+                    //   ),
+                    // );
+
+                    // Redirect to app settings to enable storage permission
+                    // await openAppSettings();
                   }
                 },
+
+
               ),
               // Bar Code
               SpeedDialChild(
@@ -275,14 +287,26 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
-                  await AppHelper.handlePermissions().then((_) async {
-                    await CunningDocumentScanner.getPictures(
+                  bool isGranted = await AppHelper.handlePermissions();
+                  if (!isGranted) {
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(content: Text("Permission not granted!")),
+                    // );
+                    AppHelper.showTopSnackBar(context, "Permission not granted!");
+                    return;
+                  }
+
+                  try {
+                    final pictures = await CunningDocumentScanner.getPictures(
                       noOfPages: 2,
                       isGalleryImportAllowed: true,
-                    ).then((pictures) {
-                      pictures?.forEach((element) async {
-                        cameraProvider.addIdCardImage(element);
-                      });
+                    );
+
+                    if (pictures != null && pictures.isNotEmpty) {
+                      for (var element in pictures) {
+                        await cameraProvider.addIdCardImage(element);
+                      }
+
                       if (cameraProvider.idCardImages.isNotEmpty) {
                         Navigator.push(
                           context,
@@ -294,9 +318,20 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         );
                       }
-                    });
-                  });
+                    }
+                  } catch (e) {
+                    debugPrint("Error: $e");
+
+                    AppHelper.showTopSnackBar(context, "Error occurred: $e");
+
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(content: Text("Error occurred: $e")),
+                    // );
+                  }
                 },
+
+
+
               ),
 
               // Documents
@@ -321,36 +356,50 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
-                  await AppHelper.handlePermissions().then((_) async {
-                    await CunningDocumentScanner.getPictures(
-                      isGalleryImportAllowed: true,
-                    ).then((pictures) {
-                      if (pictures != null && pictures.isNotEmpty) {
-                        for (var element in pictures) {
-                          String imageName = DateFormat('yyyyMMdd_SSSS')
-                              .format(DateTime.now());
-                          cameraProvider.addImage(
-                            ImageModel(
-                              docType: 'Document',
-                              imageByte: File(element).readAsBytesSync(),
-                              name: "Document-$imageName",
-                            ),
-                          );
-                        }
+                  bool isGranted = await AppHelper.handlePermissions();
+                  if (!isGranted) {
 
-                        if (cameraProvider.imageList.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return const EditImagePreview();
-                              },
-                            ),
-                          );
-                        }
+
+                    AppHelper.showTopSnackBar(context, "Permission not granted!");
+
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(content: Text("Permission not granted!")),
+                    // );
+                    return;
+                  }
+
+                  try {
+                    final pictures = await CunningDocumentScanner.getPictures(
+                      isGalleryImportAllowed: true,
+                    );
+
+                    if (pictures != null && pictures.isNotEmpty) {
+                      for (var element in pictures) {
+                        String imageName = DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
+                        cameraProvider.addImage(
+                          ImageModel(
+                            docType: 'Document',
+                            imageByte: File(element).readAsBytesSync(),
+                            name: "Document-$imageName",
+                          ),
+                        );
                       }
-                    });
-                  });
+
+                      if (cameraProvider.imageList.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditImagePreview(),
+                          ),
+                        );
+                      }
+                    }
+                  } catch (e) {
+                    debugPrint("Error: $e");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Error occurred: $e")),
+                    );
+                  }
                 },
               ),
               // SpeedDialChild(

@@ -180,66 +180,90 @@ class _HomePageState extends State<HomePage> {
                         return GestureDetector(
                           onTap: () async {
                             cameraItem.name == "Document"
-                                ? await AppHelper.handlePermissions()
-                                    .then((_) async {
-                                    await CunningDocumentScanner.getPictures(
-                                      isGalleryImportAllowed: true,
-                                    ).then((pictures) {
-                                      if (pictures!.isNotEmpty) {
-                                        pictures.forEach((element) async {
-                                          String imageName =
-                                              DateFormat('yyyyMMdd_SSSS')
-                                                  .format(DateTime.now());
-                                          cameraProvider.addImage(ImageModel(
-                                              docType: 'Document',
-                                              imageByte: File(element)
-                                                  .readAsBytesSync(),
-                                              name: "Document-$imageName"));
-                                        });
+                                ? await AppHelper.handlePermissions().then((value) async {
+                              if (!value) {
 
-                                        if (cameraProvider
-                                            .imageList.isNotEmpty) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) {
-                                                return const EditImagePreview();
-                                              },
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    });
-                                  })
+                                AppHelper.showTopSnackBar(context, 'Camera permission is required!');
+
+
+                                return;
+                              }
+                              try {
+                                final pictures = await CunningDocumentScanner.getPictures(
+                                  isGalleryImportAllowed: true,
+                                );
+
+                                if (pictures != null && pictures.isNotEmpty) {
+                                  for (var element in pictures) {
+                                    String imageName =
+                                    DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
+                                    cameraProvider.addImage(ImageModel(
+                                      docType: 'Document',
+                                      imageByte: await File(element).readAsBytes(),
+                                      name: "Document-$imageName",
+                                    ));
+                                  }
+
+                                  if (cameraProvider.imageList.isNotEmpty) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const EditImagePreview(),
+                                      ),
+                                    );
+                                  }
+                                }
+                              } catch (e) {
+                                debugPrint("Error: $e");
+
+
+                                AppHelper.showTopSnackBar(context, 'Failed to scan document: $e');
+
+
+
+
+                              }
+                            })
                                 : cameraItem.name == "ID Card"
-                                    ? await AppHelper.handlePermissions()
-                                        .then((_) async {
-                                        await CunningDocumentScanner
-                                            .getPictures(
-                                          noOfPages: 2,
-                                          isGalleryImportAllowed: true,
-                                        ).then((pictures) {
-                                          pictures?.forEach((element) async {
-                                            cameraProvider
-                                                .addIdCardImage(element);
-                                          });
-                                          if (cameraProvider
-                                              .idCardImages.isNotEmpty) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const IdCardImagePreview(
-                                                  imageIndex: 2,
-                                                  isCameFromRetake: false,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                          // }
-                                        });
-                                      })
-                                    : cameraItem.name == "QR Code"
+                                ? await AppHelper.handlePermissions().then((value) async {
+                              if (!value) {
+                                AppHelper.showTopSnackBar(context, 'Camera permission is required!');
+
+
+                                return;
+                              }
+                              try {
+                                final pictures = await CunningDocumentScanner.getPictures(
+                                  noOfPages: 2,
+                                  isGalleryImportAllowed: true,
+                                );
+
+                                if (pictures != null && pictures.isNotEmpty) {
+                                  for (var element in pictures) {
+                                    cameraProvider.addIdCardImage(element);
+                                  }
+
+                                  if (cameraProvider.idCardImages.isNotEmpty) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const IdCardImagePreview(
+                                          imageIndex: 2,
+                                          isCameFromRetake: false,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              } catch (e) {
+                                debugPrint("Error: $e");
+                                AppHelper.showTopSnackBar(context, 'Failed to scan ID Card: $e');
+
+                              }
+                            })
+
+
+                            : cameraItem.name == "QR Code"
                                         ? Navigator.push(
                                             context,
                                             MaterialPageRoute(
