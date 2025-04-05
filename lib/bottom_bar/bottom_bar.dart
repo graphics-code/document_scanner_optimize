@@ -165,7 +165,8 @@ class _BottomBarState extends State<BottomBar> {
 
                   if (status.isGranted) {
                     // If permission is granted, proceed with file picking
-                    FilePickerResult? result = await FilePicker.platform.pickFiles(
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
                       type: FileType.custom,
                       allowedExtensions: ['pdf'],
                     );
@@ -180,7 +181,7 @@ class _BottomBarState extends State<BottomBar> {
                             MaterialPageRoute(
                               builder: (context) => const ImagePreviewScreen(),
                             ),
-                                (route) => false,
+                            (route) => false,
                           );
                         }
                       });
@@ -189,11 +190,10 @@ class _BottomBarState extends State<BottomBar> {
                       // Handle case where file is not selected
                     }
                   } else {
-
                     BuildContext context = _scaffoldKey.currentContext!;
 
-                    AppHelper.showTopSnackBar(context, 'Storage permission denied. Please enable it in settings.');
-
+                    AppHelper.showTopSnackBar(context,
+                        'Storage permission denied. Please enable it in settings.');
 
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   const SnackBar(
@@ -205,30 +205,27 @@ class _BottomBarState extends State<BottomBar> {
                     // await openAppSettings();
                   }
                 },
-
-
               ),
               // Bar Code
               SpeedDialChild(
-                backgroundColor: const Color(0xFF7B5EFF),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(AppAssets.barCode,
-                        color: Colors.white,
-                        height: size.width >= 600 ? 30 : 25,
-                        width: size.width >= 600 ? 30 : 25),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'Bar Code',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-
+                  backgroundColor: const Color(0xFF7B5EFF),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(AppAssets.barCode,
+                          color: Colors.white,
+                          height: size.width >= 600 ? 30 : 25,
+                          width: size.width >= 600 ? 30 : 25),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        'Bar Code',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                   onTap: () async {
                     PermissionStatus status = await Permission.camera.status;
 
@@ -240,8 +237,8 @@ class _BottomBarState extends State<BottomBar> {
                         ),
                       );
                     } else if (status.isDenied) {
-
-                      PermissionStatus newStatus = await Permission.camera.request();
+                      PermissionStatus newStatus =
+                          await Permission.camera.request();
 
                       if (newStatus.isGranted) {
                         Navigator.push(
@@ -251,54 +248,51 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         );
                       } else if (newStatus.isPermanentlyDenied) {
-
-                        AppHelper.showTopSnackBar(context, "permission is required!");
-                        Future.delayed(Duration(seconds: 3), () {
+                        AppHelper.showTopSnackBar(
+                            context, "permission is required!");
+                        Future.delayed(const Duration(seconds: 3), () {
                           openAppSettings();
                         });
                       }
                     } else if (status.isPermanentlyDenied) {
-                      AppHelper.showTopSnackBar(context, "permission is required!");
+                      AppHelper.showTopSnackBar(
+                          context, "permission is required!");
 
-                      Future.delayed(Duration(seconds: 3), () {
+                      Future.delayed(const Duration(seconds: 3), () {
                         openAppSettings();
                       });
-
                     }
                   }
 
-
-
-
-                // onTap: () {
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => const BarCodeCameraScreen(),
-                //     ),
-                //   );
-                // },
-              ),
+                  // onTap: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => const BarCodeCameraScreen(),
+                  //     ),
+                  //   );
+                  // },
+                  ),
               // QR Code
               SpeedDialChild(
-                backgroundColor: const Color(0xFFF95658),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(AppAssets.qrcode,
-                        color: Colors.white,
-                        height: size.width >= 600 ? 30 : 25,
-                        width: size.width >= 600 ? 30 : 25),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'QR Code',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
+                  backgroundColor: const Color(0xFFF95658),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(AppAssets.qrcode,
+                          color: Colors.white,
+                          height: size.width >= 600 ? 30 : 25,
+                          width: size.width >= 600 ? 30 : 25),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        'QR Code',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                   onTap: () async {
                     PermissionStatus status = await Permission.camera.status;
 
@@ -310,8 +304,8 @@ class _BottomBarState extends State<BottomBar> {
                         ),
                       );
                     } else if (status.isDenied) {
-
-                      PermissionStatus newStatus = await Permission.camera.request();
+                      PermissionStatus newStatus =
+                          await Permission.camera.request();
 
                       if (newStatus.isGranted) {
                         Navigator.push(
@@ -321,23 +315,21 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         );
                       } else if (newStatus.isPermanentlyDenied) {
-
-                        AppHelper.showTopSnackBar(context, "permission is required!");
-                    Future.delayed(Duration(seconds: 3), () {
-                      openAppSettings();
-                    });
+                        AppHelper.showTopSnackBar(
+                            context, "permission is required!");
+                        Future.delayed(const Duration(seconds: 3), () {
+                          openAppSettings();
+                        });
                       }
                     } else if (status.isPermanentlyDenied) {
-                      AppHelper.showTopSnackBar(context, "permission is required!");
+                      AppHelper.showTopSnackBar(
+                          context, "permission is required!");
 
-                      Future.delayed(Duration(seconds: 3), () {
+                      Future.delayed(const Duration(seconds: 3), () {
                         openAppSettings();
                       });
-
                     }
-                  }
-
-              ),
+                  }),
               //ID Card
               SpeedDialChild(
                 backgroundColor: const Color(0xffa9715e),
@@ -364,7 +356,8 @@ class _BottomBarState extends State<BottomBar> {
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   SnackBar(content: Text("Permission not granted!")),
                     // );
-                    AppHelper.showTopSnackBar(context, "Permission not granted!");
+                    AppHelper.showTopSnackBar(
+                        context, "Permission not granted!");
                     return;
                   }
 
@@ -401,9 +394,6 @@ class _BottomBarState extends State<BottomBar> {
                     // );
                   }
                 },
-
-
-
               ),
 
               // Documents
@@ -430,9 +420,8 @@ class _BottomBarState extends State<BottomBar> {
                 onTap: () async {
                   bool isGranted = await AppHelper.handlePermissions();
                   if (!isGranted) {
-
-
-                    AppHelper.showTopSnackBar(context, "Permission not granted!");
+                    AppHelper.showTopSnackBar(
+                        context, "Permission not granted!");
 
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   SnackBar(content: Text("Permission not granted!")),
@@ -447,7 +436,8 @@ class _BottomBarState extends State<BottomBar> {
 
                     if (pictures != null && pictures.isNotEmpty) {
                       for (var element in pictures) {
-                        String imageName = DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
+                        String imageName =
+                            DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
                         cameraProvider.addImage(
                           ImageModel(
                             docType: 'Document',

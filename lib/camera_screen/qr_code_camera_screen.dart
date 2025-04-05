@@ -9,7 +9,6 @@ import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
@@ -40,14 +39,6 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
       throw 'Could not launch $url';
     }
   }
-
-
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {

@@ -37,7 +37,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xff1E1F20),
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           widget.fileName.toString(),
           style: const TextStyle(color: Colors.white),

@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
@@ -36,6 +35,8 @@ class _AddSignatureState extends State<AddSignature> {
   bool drawSignature = false;
   final GlobalKey _globalKey = GlobalKey();
   bool initialShowActionIcons = true;
+  Uint8List? signatureBytes;
+  String? signatureSvgPath; // for svg drawing
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +103,7 @@ class _AddSignatureState extends State<AddSignature> {
                   fit: BoxFit.cover,
                 ),
               ),
-              if (signaturePath != null)
+              if (signatureSvgPath != null || signatureBytes != null)
                 InteractiveBox(
                   initialPosition: const Offset(50, 200),
                   includedScaleDirections: const [
@@ -131,7 +132,7 @@ class _AddSignatureState extends State<AddSignature> {
                   child: drawSignature == true
                       ? SvgPicture.string(signaturePath!, fit: BoxFit.cover)
                       : Image.memory(
-                          Uint8List.fromList(signaturePath!.codeUnits),
+                          signatureBytes!,
                           fit: BoxFit.cover,
                         ),
                 ),
@@ -201,6 +202,11 @@ class _AddSignatureState extends State<AddSignature> {
 
     if (pickedFile != null) {
       final bytes = await pickedFile.readAsBytes();
+      setState(() {
+        signatureSvgPath = null; // if any svg signature was there
+        signatureBytes = bytes;
+        drawSignature = false;
+      });
       setState(() {
         signaturePath =
             null; // Clear any SVG path (optional, if only one image at a time is allowed)
