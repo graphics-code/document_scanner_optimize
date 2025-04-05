@@ -228,14 +228,56 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                   ],
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BarCodeCameraScreen(),
-                    ),
-                  );
-                },
+
+                  onTap: () async {
+                    PermissionStatus status = await Permission.camera.status;
+
+                    if (status.isGranted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BarCodeCameraScreen(),
+                        ),
+                      );
+                    } else if (status.isDenied) {
+
+                      PermissionStatus newStatus = await Permission.camera.request();
+
+                      if (newStatus.isGranted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BarCodeCameraScreen(),
+                          ),
+                        );
+                      } else if (newStatus.isPermanentlyDenied) {
+
+                        AppHelper.showTopSnackBar(context, "permission is required!");
+                        Future.delayed(Duration(seconds: 3), () {
+                          openAppSettings();
+                        });
+                      }
+                    } else if (status.isPermanentlyDenied) {
+                      AppHelper.showTopSnackBar(context, "permission is required!");
+
+                      Future.delayed(Duration(seconds: 3), () {
+                        openAppSettings();
+                      });
+
+                    }
+                  }
+
+
+
+
+                // onTap: () {
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => const BarCodeCameraScreen(),
+                //     ),
+                //   );
+                // },
               ),
               // QR Code
               SpeedDialChild(
@@ -257,14 +299,44 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                   ],
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const QRCodeCameraScreen(),
-                    ),
-                  );
-                },
+                  onTap: () async {
+                    PermissionStatus status = await Permission.camera.status;
+
+                    if (status.isGranted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const QRCodeCameraScreen(),
+                        ),
+                      );
+                    } else if (status.isDenied) {
+
+                      PermissionStatus newStatus = await Permission.camera.request();
+
+                      if (newStatus.isGranted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const QRCodeCameraScreen(),
+                          ),
+                        );
+                      } else if (newStatus.isPermanentlyDenied) {
+
+                        AppHelper.showTopSnackBar(context, "permission is required!");
+                    Future.delayed(Duration(seconds: 3), () {
+                      openAppSettings();
+                    });
+                      }
+                    } else if (status.isPermanentlyDenied) {
+                      AppHelper.showTopSnackBar(context, "permission is required!");
+
+                      Future.delayed(Duration(seconds: 3), () {
+                        openAppSettings();
+                      });
+
+                    }
+                  }
+
               ),
               //ID Card
               SpeedDialChild(

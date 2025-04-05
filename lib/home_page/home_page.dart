@@ -16,6 +16,7 @@ import 'package:doc_scanner/utils/pdf_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:url_launcher/url_launcher.dart';
@@ -49,6 +50,43 @@ class _HomePageState extends State<HomePage> {
       context.read<HomePageProvider>().getDirectoriesForCreate();
     });
     super.initState();
+  }
+
+
+
+  void checkCameraPermissionAndNavigate(BuildContext context, Widget targetScreen) async {
+    PermissionStatus status = await Permission.camera.status;
+
+    if (status.isGranted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => targetScreen,
+        ),
+      );
+    } else if (status.isDenied) {
+      PermissionStatus newStatus = await Permission.camera.request();
+
+      if (newStatus.isGranted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => targetScreen,
+          ),
+        );
+      } else if (newStatus.isPermanentlyDenied) {
+        AppHelper.showTopSnackBar(context, "Permission is required!");
+        Future.delayed(Duration(seconds: 3), () {
+          openAppSettings();
+        });
+      }
+    } else if (status.isPermanentlyDenied) {
+      AppHelper.showTopSnackBar(context, "Permission is required!");
+
+      Future.delayed(Duration(seconds: 3), () {
+        openAppSettings();
+      });
+    }
   }
 
   String getCameraModeName(String name, BuildContext context) {
@@ -179,6 +217,7 @@ class _HomePageState extends State<HomePage> {
                         final cameraItem = cameraItems[index];
                         return GestureDetector(
                           onTap: () async {
+                            PermissionStatus status = await Permission.camera.status;
                             cameraItem.name == "Document"
                                 ? await AppHelper.handlePermissions().then((value) async {
                               if (!value) {
@@ -263,21 +302,22 @@ class _HomePageState extends State<HomePage> {
                             })
 
 
-                            : cameraItem.name == "QR Code"
-                                        ? Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const QRCodeCameraScreen(),
-                                            ),
-                                          )
-                                        : Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const BarCodeCameraScreen(),
-                                            ),
-                                          );
+                            :
+
+                            cameraItem.name == "QR Code"
+                                        ?
+                            checkCameraPermissionAndNavigate(
+                              context,
+                              const QRCodeCameraScreen(),
+                            )
+
+
+
+
+                                        : checkCameraPermissionAndNavigate(
+                              context,
+                              const BarCodeCameraScreen(),
+                            );
                           },
                           child: Column(
                             children: [
