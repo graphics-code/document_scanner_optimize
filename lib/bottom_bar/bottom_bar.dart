@@ -276,14 +276,26 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
-                  await AppHelper.handlePermissions().then((_) async {
-                    await CunningDocumentScanner.getPictures(
+                  bool isGranted = await AppHelper.handlePermissions();
+                  if (!isGranted) {
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(content: Text("Permission not granted!")),
+                    // );
+                    AppHelper.showTopSnackBar(context, "Permission not granted!");
+                    return;
+                  }
+
+                  try {
+                    final pictures = await CunningDocumentScanner.getPictures(
                       noOfPages: 2,
                       isGalleryImportAllowed: true,
-                    ).then((pictures) {
-                      pictures?.forEach((element) async {
-                        cameraProvider.addIdCardImage(element);
-                      });
+                    );
+
+                    if (pictures != null && pictures.isNotEmpty) {
+                      for (var element in pictures) {
+                        await cameraProvider.addIdCardImage(element);
+                      }
+
                       if (cameraProvider.idCardImages.isNotEmpty) {
                         Navigator.push(
                           context,
@@ -295,8 +307,16 @@ class _BottomBarState extends State<BottomBar> {
                           ),
                         );
                       }
-                    });
-                  });
+                    }
+                  } catch (e) {
+                    debugPrint("Error: $e");
+
+                    AppHelper.showTopSnackBar(context, "Error occurred: $e");
+
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(content: Text("Error occurred: $e")),
+                    // );
+                  }
                 },
               ),
 
@@ -322,36 +342,50 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
-                  await AppHelper.handlePermissions().then((_) async {
-                    await CunningDocumentScanner.getPictures(
-                      isGalleryImportAllowed: true,
-                    ).then((pictures) {
-                      if (pictures != null && pictures.isNotEmpty) {
-                        for (var element in pictures) {
-                          String imageName = DateFormat('yyyyMMdd_SSSS')
-                              .format(DateTime.now());
-                          cameraProvider.addImage(
-                            ImageModel(
-                              docType: 'Document',
-                              imageByte: File(element).readAsBytesSync(),
-                              name: "Document-$imageName",
-                            ),
-                          );
-                        }
+                  bool isGranted = await AppHelper.handlePermissions();
+                  if (!isGranted) {
 
-                        if (cameraProvider.imageList.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return const EditImagePreview();
-                              },
-                            ),
-                          );
-                        }
+
+                    AppHelper.showTopSnackBar(context, "Permission not granted!");
+
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(content: Text("Permission not granted!")),
+                    // );
+                    return;
+                  }
+
+                  try {
+                    final pictures = await CunningDocumentScanner.getPictures(
+                      isGalleryImportAllowed: true,
+                    );
+
+                    if (pictures != null && pictures.isNotEmpty) {
+                      for (var element in pictures) {
+                        String imageName = DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
+                        cameraProvider.addImage(
+                          ImageModel(
+                            docType: 'Document',
+                            imageByte: File(element).readAsBytesSync(),
+                            name: "Document-$imageName",
+                          ),
+                        );
                       }
-                    });
-                  });
+
+                      if (cameraProvider.imageList.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditImagePreview(),
+                          ),
+                        );
+                      }
+                    }
+                  } catch (e) {
+                    debugPrint("Error: $e");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Error occurred: $e")),
+                    );
+                  }
                 },
               ),
               // SpeedDialChild(
