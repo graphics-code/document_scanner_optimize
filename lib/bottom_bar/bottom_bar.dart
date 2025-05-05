@@ -5,6 +5,7 @@ import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:doc_scanner/camera_screen/bar_code_camera_screen.dart';
 import 'package:doc_scanner/camera_screen/qr_code_camera_screen.dart';
+import 'package:doc_scanner/google_ads_helper/google_ads_helper.dart';
 import 'package:doc_scanner/home_page/home_page.dart';
 import 'package:doc_scanner/image_edit/id_card_image_view.dart';
 import 'package:doc_scanner/image_edit/image_edit_preview.dart';
@@ -25,6 +26,7 @@ import 'package:provider/provider.dart';
 import '../camera_screen/model/image_model.dart';
 import '../camera_screen/provider/camera_provider.dart';
 import '../image_edit/image_preview.dart';
+import 'package:http/http.dart' as http;
 
 class BottomBar extends StatefulWidget {
   final bool? shouldShowReview;
@@ -91,6 +93,7 @@ class _BottomBarState extends State<BottomBar> {
         }
       }
     });
+
     super.initState();
   }
 
@@ -160,6 +163,7 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
+                  createInterstitialAd();
                   // Request storage permission
                   PermissionStatus status = await Permission.storage.request();
 
@@ -351,6 +355,7 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
+                  createInterstitialAd();
                   bool isGranted = await AppHelper.handlePermissions();
                   if (!isGranted) {
                     // ScaffoldMessenger.of(context).showSnackBar(
@@ -418,6 +423,7 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
+                  createInterstitialAd();
                   bool isGranted = await AppHelper.handlePermissions();
                   if (!isGranted) {
                     AppHelper.showTopSnackBar(

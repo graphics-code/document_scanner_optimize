@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'core/local_storage.dart';
 import 'camera_screen/provider/camera_provider.dart';
@@ -15,8 +16,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'localaization/language_constant.dart';
 import 'firebase_options.dart';
 
+bool bannerReady = false;
+bool interstitialReady = false;
+InterstitialAd? myInterstitial;
+ValueNotifier<bool> interstitialReadyNotifier = ValueNotifier(false);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
