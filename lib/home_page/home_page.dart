@@ -319,7 +319,6 @@ class _HomePageState extends State<HomePage> {
                               return GestureDetector(
                                 onTap: () async {
                                   if (cameraItem.name == "Document") {
-                                    createInterstitialAd();
                                     try {
                                       final pictures =
                                           await CunningDocumentScanner
@@ -343,6 +342,7 @@ class _HomePageState extends State<HomePage> {
 
                                         if (cameraProvider
                                             .imageList.isNotEmpty) {
+                                          createInterstitialAd();
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -350,17 +350,6 @@ class _HomePageState extends State<HomePage> {
                                                   const EditImagePreview(),
                                             ),
                                           );
-                                        }
-                                      } else {
-                                        if (pictures == null ||
-                                            pictures.isEmpty) {
-                                          setState(() {
-                                            interstitialReadyNotifier.value =
-                                                false;
-                                            interstitialReady = false;
-                                          });
-
-                                          return;
                                         }
                                       }
                                     } catch (e) {
@@ -370,7 +359,6 @@ class _HomePageState extends State<HomePage> {
                                           'Failed to scan document: $e');
                                     }
                                   } else if (cameraItem.name == "ID Card") {
-                                    createInterstitialAd();
                                     try {
                                       final pictures =
                                           await CunningDocumentScanner
@@ -388,6 +376,7 @@ class _HomePageState extends State<HomePage> {
 
                                         if (cameraProvider
                                             .idCardImages.isNotEmpty) {
+                                          createInterstitialAd();
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -398,16 +387,6 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                           );
-                                        }
-                                      } else {
-                                        if (pictures == null ||
-                                            pictures.isEmpty) {
-                                          setState(() {
-                                            interstitialReadyNotifier.value =
-                                                false;
-                                            interstitialReady = false;
-                                          });
-                                          return;
                                         }
                                       }
                                     } catch (e) {

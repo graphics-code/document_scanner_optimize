@@ -164,7 +164,6 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
-                  createInterstitialAd();
                   // Request storage permission
                   // PermissionStatus status = await Permission.storage.request();
 
@@ -181,6 +180,7 @@ class _BottomBarState extends State<BottomBar> {
                     cameraProvider.convertPdfToImage(file).then((value) {
                       if (value) {
                         BuildContext context = _scaffoldKey.currentContext!;
+                        createInterstitialAd();
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -193,14 +193,6 @@ class _BottomBarState extends State<BottomBar> {
                   } else {
                     BuildContext context = _scaffoldKey.currentContext!;
                     // Handle case where file is not selected
-
-                    if (result == null) {
-                      setState(() {
-                        interstitialReadyNotifier.value = false;
-                        interstitialReady = false;
-                      });
-                      return;
-                    }
                   }
                   //   } else {
                   //     BuildContext context = _scaffoldKey.currentContext!;
@@ -364,7 +356,6 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
-                  createInterstitialAd();
                   // bool isGranted = await AppHelper.handlePermissions();
                   // if (!isGranted) {
                   //   // ScaffoldMessenger.of(context).showSnackBar(
@@ -387,6 +378,7 @@ class _BottomBarState extends State<BottomBar> {
                       }
 
                       if (cameraProvider.idCardImages.isNotEmpty) {
+                        createInterstitialAd();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -396,14 +388,6 @@ class _BottomBarState extends State<BottomBar> {
                             ),
                           ),
                         );
-                      }
-                    } else {
-                      if (pictures == null || pictures.isEmpty) {
-                        setState(() {
-                          interstitialReadyNotifier.value = false;
-                          interstitialReady = false;
-                        });
-                        return;
                       }
                     }
                   } catch (e) {
@@ -440,7 +424,6 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 onTap: () async {
-                  createInterstitialAd();
                   // bool isGranted = await AppHelper.handlePermissions();
                   // if (!isGranted) {
                   //   AppHelper.showTopSnackBar(
@@ -471,20 +454,13 @@ class _BottomBarState extends State<BottomBar> {
                       }
 
                       if (cameraProvider.imageList.isNotEmpty) {
+                        createInterstitialAd();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const EditImagePreview(),
                           ),
                         );
-                      }
-                    } else {
-                      if (pictures == null || pictures.isEmpty) {
-                        setState(() {
-                          interstitialReadyNotifier.value = false;
-                          interstitialReady = false;
-                        });
-                        return;
                       }
                     }
                   } catch (e) {
