@@ -1,7 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:doc_scanner/camera_screen/provider/camera_provider.dart';
+import 'package:doc_scanner/camera_screen/widget/analyzee_image.dart';
 import 'package:doc_scanner/camera_screen/widget/scanner_button_widget.dart';
 import 'package:doc_scanner/camera_screen/widget/scanner_error_widget.dart';
+import 'package:doc_scanner/camera_screen/widget/zoom_scale_slider.dart';
 import 'package:doc_scanner/core/local_storage.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/utils/app_constant.dart';
@@ -40,34 +42,40 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
     }
   }
 
+  String _formatBarcodeContent(String rawValue) {
+    final StringBuffer formattedContent = StringBuffer();
+
+    List<String> parts = rawValue.split(';');
+    for (var part in parts.where((p) => p.isNotEmpty)) {
+      List<String> keyValue = part.split(':');
+      String key = keyValue[0];
+      String value = keyValue.length > 1 ? keyValue.sublist(1).join(':') : '';
+
+      if (key.toLowerCase() == "wifi") {
+        formattedContent.writeln("WIFI NAME : $value");
+      } else if (key == "T") {
+        formattedContent.writeln("TYPE : $value");
+      } else if (key == "P") {
+        formattedContent.writeln("PASSWORD : $value");
+      } else {
+        formattedContent.writeln("$key : $value");
+      }
+    }
+
+    return formattedContent.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     final cameraProvider = context.watch<CameraProvider>();
     final scanWindow = Rect.fromCenter(
       center: MediaQuery.sizeOf(context).center(const Offset(0, -5)),
-      width: 250,
-      height: 250,
+      width: 300,
+      height: 300,
     );
 
     return Scaffold(
       backgroundColor: Colors.black,
-      // appBar: AppBar(
-      //   backgroundColor: const Color(0xff1E1F20),
-      //   centerTitle: true,
-      // leading: IconButton(
-      //     onPressed: () {
-      //       Navigator.pop(context);
-      //     },
-      //     icon: const Icon(
-      //       Icons.arrow_back,
-      //       color: Color(0xffffffff),
-      //     )),
-      //   title: const Text(
-      //     'QR Code Scanner',
-      //     style: TextStyle(
-      //         fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
-      //   ),
-      // ),
       body: Stack(
         children: [
           Center(
@@ -185,9 +193,7 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
                         // Add your saving logic here
                         cameraProvider.saveQRCodeText(
                             barcode.rawValue.toString(), context);
-
                         Navigator.pop(context);
-
                         await _resumeCamera();
                       },
                       cancle: () async {
@@ -233,10 +239,103 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
                         Icons.arrow_back,
                         color: Color(0xffffffff),
                       )),
-                  ToggleFlashlightButton(controller: controller),
+
                   // SwitchCameraButton(controller: controller),
                 ],
               ),
+            ),
+          ),
+          Transform.translate(
+            offset: const Offset(0, -120),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: 125,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.black.withOpacity(0.4),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ToggleFlashlightButton(controller: controller),
+                      ValueListenableBuilder(
+                          valueListenable: controller,
+                          builder: (context, state, child) {
+                            if (!state.isInitialized || !state.isRunning) {
+                              return const SizedBox.shrink();
+                            }
+
+                            return VerticalDivider(
+                              color: Colors.white.withOpacity(0.5),
+                              endIndent: 12,
+                              indent: 12,
+                            );
+                          }),
+                      AnalyzeImageButton(
+                        controller: controller,
+                        onBarcodeFound: (String rawValue) async {
+                          if (!activeDialog) {
+                            setState(() {
+                              activeDialog = true;
+                            });
+                            controller.stop();
+
+                            final formattedContent =
+                                _formatBarcodeContent(rawValue);
+
+                            showQrAndBarCodeDialogue(
+                              context: context,
+                              title: translation(context).qrCodeDetected,
+                              content: rawValue,
+                              browserView: () {
+                                rawValue.toLowerCase().startsWith("wifi")
+                                    ? _openBrowserWithSearch(formattedContent)
+                                    : _openBrowserWithSearch(rawValue);
+                              },
+                              onCopy: () async {
+                                rawValue.toLowerCase().startsWith("wifi")
+                                    ? Clipboard.setData(
+                                        ClipboardData(text: formattedContent))
+                                    : Clipboard.setData(
+                                        ClipboardData(text: rawValue));
+
+                                ScaffoldMessenger.of(context).clearSnackBars();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Copied to Clipboard')));
+
+                                Navigator.pop(context);
+                                await _resumeCamera();
+                              },
+                              onSave: () async {
+                                context
+                                    .read<CameraProvider>()
+                                    .saveQRCodeText(rawValue, context);
+                                Navigator.pop(context);
+                                await _resumeCamera();
+                              },
+                              cancle: () async {
+                                Navigator.pop(context);
+                                await _resumeCamera();
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          Transform.translate(
+            offset: const Offset(0, -35),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 60,
+                  child: ZoomScaleSlider(controller: controller)),
             ),
           ),
         ],
@@ -261,7 +360,7 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
 class ScannerOverlay extends CustomPainter {
   const ScannerOverlay({
     required this.scanWindow,
-    this.borderRadius = 12.0,
+    this.borderRadius = 8.0,
   });
 
   final Rect scanWindow;
@@ -296,7 +395,7 @@ class ScannerOverlay extends CustomPainter {
     );
 
     final borderPaint = Paint()
-      ..color = Colors.white
+      ..color = Colors.white.withOpacity(0.8)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0;
 

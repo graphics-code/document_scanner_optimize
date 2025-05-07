@@ -3,48 +3,74 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class AnalyzeImageFromGalleryButton extends StatelessWidget {
-  const AnalyzeImageFromGalleryButton({required this.controller, super.key});
+  const AnalyzeImageFromGalleryButton({
+    required this.controller,
+    required this.onBarcodeFound,
+    super.key,
+  });
 
   final MobileScannerController controller;
+  final void Function(Barcode barcode) onBarcodeFound;
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      color: Colors.white,
-      icon: const Icon(Icons.image),
-      iconSize: 32.0,
-      onPressed: () async {
-        final ImagePicker picker = ImagePicker();
+    return ValueListenableBuilder(
+        valueListenable: controller,
+        builder: (context, state, child) {
+          if (!state.isInitialized || !state.isRunning) {
+            return const SizedBox.shrink();
+          }
 
-        final XFile? image = await picker.pickImage(
-          source: ImageSource.gallery,
-        );
+          return IconButton(
+            color: Colors.white,
+            icon: const Icon(Icons.image),
+            iconSize: 32.0,
+            onPressed: () async {
+              final ImagePicker picker = ImagePicker();
+              final XFile? image =
+                  await picker.pickImage(source: ImageSource.gallery);
 
-        if (image == null) {
-          return;
-        }
+              if (image == null) return;
 
-        final BarcodeCapture? barcodes = await controller.analyzeImage(
-          image.path,
-        );
+              final BarcodeCapture? capture =
+                  await controller.analyzeImage(image.path);
 
-        if (!context.mounted) {
-          return;
-        }
+              if (!context.mounted ||
+                  capture == null ||
+                  capture.barcodes.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Only QRcodes are supported!',
+                      textAlign: TextAlign.center,
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
 
-        final SnackBar snackbar = barcodes != null
-            ? const SnackBar(
-                content: Text('Barcode found!'),
-                backgroundColor: Colors.green,
-              )
-            : const SnackBar(
-                content: Text('No barcode found!'),
-                backgroundColor: Colors.red,
-              );
+              // Filter out QR codes
+              final filtered = capture.barcodes
+                  .where((b) => b.format != BarcodeFormat.qrCode)
+                  .toList();
 
-        ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      },
-    );
+              if (filtered.isNotEmpty) {
+                onBarcodeFound(filtered.first);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Only Barcodes are supported!',
+                      textAlign: TextAlign.center,
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+          );
+        });
   }
 }
 
@@ -171,8 +197,8 @@ class ToggleFlashlightButton extends StatelessWidget {
               dimension: 48.0,
               child: Icon(
                 Icons.no_flash,
-                size: 25.0,
-                color: Colors.grey,
+                size: 32.0,
+                color: Colors.white,
               ),
             );
         }

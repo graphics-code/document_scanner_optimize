@@ -323,7 +323,7 @@ class _HomePageState extends State<HomePage> {
                                   cameraItem.name == "Document"
                                       ? await AppHelper.handlePermissions()
                                           .then((value) async {
-                                          if (!value) {
+                                          if (value == false) {
                                             AppHelper.showTopSnackBar(context,
                                                 'Camera permission is required!');
 
@@ -372,7 +372,7 @@ class _HomePageState extends State<HomePage> {
                                       : cameraItem.name == "ID Card"
                                           ? await AppHelper.handlePermissions()
                                               .then((value) async {
-                                              if (!value) {
+                                              if (value == false) {
                                                 AppHelper.showTopSnackBar(
                                                     context,
                                                     'Camera permission is required!');

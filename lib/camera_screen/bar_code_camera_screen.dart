@@ -1,8 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:doc_scanner/camera_screen/provider/camera_provider.dart';
+import 'package:doc_scanner/camera_screen/widget/analyzee_image.dart';
 import 'package:doc_scanner/camera_screen/widget/scanner_button_widget.dart';
 import 'package:doc_scanner/camera_screen/widget/scanner_error_widget.dart';
+import 'package:doc_scanner/camera_screen/widget/zoom_scale_slider.dart';
 import 'package:doc_scanner/core/local_storage.dart';
+import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/utils/app_constant.dart';
 import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -58,29 +61,12 @@ class _BarCodeCameraScreenState extends State<BarCodeCameraScreen> {
     final cameraProvider = context.watch<CameraProvider>();
     final scanWindow = Rect.fromCenter(
       center: MediaQuery.sizeOf(context).center(const Offset(0, -5)),
-      width: 320,
-      height: 220,
+      width: MediaQuery.sizeOf(context).width * 0.85,
+      height: 240,
     );
 
     return Scaffold(
       backgroundColor: Colors.black,
-      // appBar: AppBar(
-      //   backgroundColor: const Color(0xff1E1F20),
-      //   centerTitle: true,
-      //   leading: IconButton(
-      //       onPressed: () {
-      //         Navigator.pop(context);
-      //       },
-      //       icon: const Icon(
-      //         Icons.arrow_back,
-      //         color: Color(0xffffffff),
-      //       )),
-      //   title: const Text(
-      //     'Bar Code Scanner',
-      //     style: TextStyle(
-      //         fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
-      //   ),
-      // ),
       body: Stack(
         children: [
           Center(
@@ -176,10 +162,99 @@ class _BarCodeCameraScreenState extends State<BarCodeCameraScreen> {
                         Icons.arrow_back,
                         color: Color(0xffffffff),
                       )),
-                  ToggleFlashlightButton(controller: controller),
+                  // ToggleFlashlightButton(controller: controller),
                   // AnalyzeImageFromGalleryButton(controller: controller),
                 ],
               ),
+            ),
+          ),
+          Transform.translate(
+            offset: const Offset(0, -35),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 60,
+                  child: ZoomScaleSlider(controller: controller)),
+            ),
+          ),
+          Transform.translate(
+            offset: const Offset(0, -120),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: 125,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black.withOpacity(0.4),
+                ),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  ToggleFlashlightButton(controller: controller),
+                  ValueListenableBuilder(
+                      valueListenable: controller,
+                      builder: (context, state, child) {
+                        if (!state.isInitialized || !state.isRunning) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return VerticalDivider(
+                          color: Colors.white.withOpacity(0.5),
+                          endIndent: 12,
+                          indent: 12,
+                        );
+                      }),
+                  AnalyzeImageFromGalleryButton(
+                    controller: controller,
+                    onBarcodeFound: (barcode) {
+                      setState(() {
+                        activeDialog = true;
+                      });
+                      controller.stop(); // Pause camera if needed
+
+                      showQrAndBarCodeDialogue(
+                        context: context,
+                        title: 'Bar Code Detected',
+                        content: barcode.rawValue.toString(),
+                        browserView: () {
+                          _openBrowserWithSearch(barcode.rawValue.toString());
+                        },
+                        onCopy: () async {
+                          Clipboard.setData(
+                              ClipboardData(text: barcode.rawValue.toString()));
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Copied to Clipboard')));
+                          Navigator.pop(context);
+                          await _resumeCamera();
+                        },
+                        onSave: () async {
+                          cameraProvider.saveBarCodeText(
+                              barcode.rawValue.toString(), context);
+                          Navigator.pop(context);
+                          await _resumeCamera();
+                        },
+                        cancle: () async {
+                          Navigator.pop(context);
+                          await _resumeCamera();
+                        },
+                      );
+                    },
+                  ),
+                ]),
+              ),
+            ),
+          ),
+          Transform.translate(
+            offset: const Offset(0, -35),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 60,
+                  child: ZoomScaleSlider(controller: controller)),
             ),
           ),
         ],
@@ -204,7 +279,7 @@ class _BarCodeCameraScreenState extends State<BarCodeCameraScreen> {
 class ScannerOverlay extends CustomPainter {
   const ScannerOverlay({
     required this.scanWindow,
-    this.borderRadius = 12.0,
+    this.borderRadius = 8.0,
   });
 
   final Rect scanWindow;
@@ -239,7 +314,7 @@ class ScannerOverlay extends CustomPainter {
     );
 
     final borderPaint = Paint()
-      ..color = Colors.white
+      ..color = Colors.white.withOpacity(0.8)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0;
 
