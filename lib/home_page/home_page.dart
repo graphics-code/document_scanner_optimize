@@ -354,9 +354,12 @@ class _HomePageState extends State<HomePage> {
                                       } else {
                                         if (pictures == null ||
                                             pictures.isEmpty) {
-                                          interstitialReadyNotifier.value =
-                                              false;
-                                          interstitialReady = false;
+                                          setState(() {
+                                            interstitialReadyNotifier.value =
+                                                false;
+                                            interstitialReady = false;
+                                          });
+
                                           return;
                                         }
                                       }
@@ -399,9 +402,11 @@ class _HomePageState extends State<HomePage> {
                                       } else {
                                         if (pictures == null ||
                                             pictures.isEmpty) {
-                                          interstitialReadyNotifier.value =
-                                              false;
-                                          interstitialReady = false;
+                                          setState(() {
+                                            interstitialReadyNotifier.value =
+                                                false;
+                                            interstitialReady = false;
+                                          });
                                           return;
                                         }
                                       }

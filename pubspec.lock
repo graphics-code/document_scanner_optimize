@@ -565,14 +565,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.4"
-  image_background_remover:
-    dependency: "direct main"
-    description:
-      name: image_background_remover
-      sha256: "3939a598dec311dce8237b34dd67aa02579f5178559f674865161796bde47dfe"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   image_editor:
     dependency: "direct main"
     description:
@@ -812,14 +804,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  onnxruntime:
-    dependency: transitive
-    description:
-      name: onnxruntime
-      sha256: e77ec05acafc135cc5fe7bcdf11b101b39f06513c9d5e9fa02cb1929f6bac72a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.1"
   package_info_plus:
     dependency: "direct main"
     description:

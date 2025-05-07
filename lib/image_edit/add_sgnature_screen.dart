@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_background_remover/image_background_remover.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:interactive_box/interactive_box.dart';
 import 'package:provider/provider.dart';
+
 import '../camera_screen/provider/camera_provider.dart';
 import '../localaization/language_constant.dart';
 import '../utils/app_assets.dart';
@@ -35,19 +35,6 @@ class _AddSignatureState extends State<AddSignature> {
   bool drawSignature = false;
   final GlobalKey _globalKey = GlobalKey();
   bool initialShowActionIcons = true;
-  Uint8List? signatureBytes;
-  String? signatureSvgPath; // for svg drawing
-  @override
-  void initState() {
-    super.initState();
-    BackgroundRemover.instance.initializeOrt();
-  }
-
-  @override
-  void dispose() {
-    BackgroundRemover.instance.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +101,7 @@ class _AddSignatureState extends State<AddSignature> {
                   fit: BoxFit.cover,
                 ),
               ),
-              if ((drawSignature && signaturePath != null) ||
-                  signatureBytes != null)
+              if (signaturePath != null)
                 InteractiveBox(
                   initialPosition: const Offset(50, 200),
                   includedScaleDirections: const [
@@ -136,19 +122,16 @@ class _AddSignatureState extends State<AddSignature> {
                     if (controlActionType == ControlActionType.delete) {
                       setState(() {
                         signaturePath = null;
-                        signatureBytes = null;
-                        signatureSvgPath = null;
-                        drawSignature = false;
                       });
                     }
                   },
                   initialShowActionIcons: initialShowActionIcons,
                   rotateIndicatorSpacing: 10,
-                  child: drawSignature && signaturePath != null
+                  child: drawSignature == true
                       ? SvgPicture.string(signaturePath!, fit: BoxFit.cover)
                       : Image.memory(
-                          signatureBytes!,
-                          fit: BoxFit.contain,
+                          Uint8List.fromList(signaturePath!.codeUnits),
+                          fit: BoxFit.cover,
                         ),
                 ),
             ],
@@ -217,23 +200,15 @@ class _AddSignatureState extends State<AddSignature> {
 
     if (pickedFile != null) {
       final bytes = await pickedFile.readAsBytes();
-      var resultImage = await BackgroundRemover.instance.removeBg(bytes);
+      setState(() {
+        signaturePath =
+            null; // Clear any SVG path (optional, if only one image at a time is allowed)
+      });
 
-      // Convert ui.Image to Uint8List
-      if (resultImage is ui.Image) {
-        final byteData =
-            await resultImage.toByteData(format: ui.ImageByteFormat.png);
-        if (byteData != null) {
-          setState(() {
-            signatureSvgPath = null;
-            signatureBytes = byteData.buffer.asUint8List();
-            drawSignature = false;
-            signaturePath = null;
-          });
-        }
-      } else {
-        log("Unexpected result from removeBg: ${resultImage.runtimeType}");
-      }
+      // Display the imported image using InteractiveBox
+      setState(() {
+        signaturePath = String.fromCharCodes(bytes);
+      });
     }
   }
 }

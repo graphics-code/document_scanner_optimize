@@ -195,8 +195,10 @@ class _BottomBarState extends State<BottomBar> {
                     // Handle case where file is not selected
 
                     if (result == null) {
-                      interstitialReadyNotifier.value = false;
-                      interstitialReady = false;
+                      setState(() {
+                        interstitialReadyNotifier.value = false;
+                        interstitialReady = false;
+                      });
                       return;
                     }
                   }
@@ -397,8 +399,10 @@ class _BottomBarState extends State<BottomBar> {
                       }
                     } else {
                       if (pictures == null || pictures.isEmpty) {
-                        interstitialReadyNotifier.value = false;
-                        interstitialReady = false;
+                        setState(() {
+                          interstitialReadyNotifier.value = false;
+                          interstitialReady = false;
+                        });
                         return;
                       }
                     }
@@ -476,8 +480,10 @@ class _BottomBarState extends State<BottomBar> {
                       }
                     } else {
                       if (pictures == null || pictures.isEmpty) {
-                        interstitialReadyNotifier.value = false;
-                        interstitialReady = false;
+                        setState(() {
+                          interstitialReadyNotifier.value = false;
+                          interstitialReady = false;
+                        });
                         return;
                       }
                     }
