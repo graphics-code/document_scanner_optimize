@@ -318,116 +318,109 @@ class _HomePageState extends State<HomePage> {
                               final cameraItem = cameraItems[index];
                               return GestureDetector(
                                 onTap: () async {
-                                  PermissionStatus status =
-                                      await Permission.camera.status;
-                                  cameraItem.name == "Document"
-                                      ? await AppHelper.handlePermissions()
-                                          .then((value) async {
-                                          if (value == false) {
-                                            AppHelper.showTopSnackBar(context,
-                                                'Camera permission is required!');
+                                  if (cameraItem.name == "Document") {
+                                    createInterstitialAd();
+                                    try {
+                                      final pictures =
+                                          await CunningDocumentScanner
+                                              .getPictures(
+                                        isGalleryImportAllowed: true,
+                                      );
 
-                                            return;
-                                          }
-                                          try {
-                                            final pictures =
-                                                await CunningDocumentScanner
-                                                    .getPictures(
-                                              isGalleryImportAllowed: true,
-                                            );
+                                      if (pictures != null &&
+                                          pictures.isNotEmpty) {
+                                        for (var element in pictures) {
+                                          String imageName =
+                                              DateFormat('yyyyMMdd_SSSS')
+                                                  .format(DateTime.now());
+                                          cameraProvider.addImage(ImageModel(
+                                            docType: 'Document',
+                                            imageByte: await File(element)
+                                                .readAsBytes(),
+                                            name: "Document-$imageName",
+                                          ));
+                                        }
 
-                                            if (pictures != null &&
-                                                pictures.isNotEmpty) {
-                                              for (var element in pictures) {
-                                                String imageName =
-                                                    DateFormat('yyyyMMdd_SSSS')
-                                                        .format(DateTime.now());
-                                                cameraProvider
-                                                    .addImage(ImageModel(
-                                                  docType: 'Document',
-                                                  imageByte: await File(element)
-                                                      .readAsBytes(),
-                                                  name: "Document-$imageName",
-                                                ));
-                                              }
+                                        if (cameraProvider
+                                            .imageList.isNotEmpty) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const EditImagePreview(),
+                                            ),
+                                          );
+                                        }
+                                      } else {
+                                        if (pictures == null ||
+                                            pictures.isEmpty) {
+                                          interstitialReadyNotifier.value =
+                                              false;
+                                          interstitialReady = false;
+                                          return;
+                                        }
+                                      }
+                                    } catch (e) {
+                                      debugPrint("Error: $e");
 
-                                              if (cameraProvider
-                                                  .imageList.isNotEmpty) {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const EditImagePreview(),
-                                                  ),
-                                                );
-                                              }
-                                            }
-                                          } catch (e) {
-                                            debugPrint("Error: $e");
+                                      AppHelper.showTopSnackBar(context,
+                                          'Failed to scan document: $e');
+                                    }
+                                  } else if (cameraItem.name == "ID Card") {
+                                    createInterstitialAd();
+                                    try {
+                                      final pictures =
+                                          await CunningDocumentScanner
+                                              .getPictures(
+                                        noOfPages: 2,
+                                        isGalleryImportAllowed: true,
+                                      );
 
-                                            AppHelper.showTopSnackBar(context,
-                                                'Failed to scan document: $e');
-                                          }
-                                        })
-                                      : cameraItem.name == "ID Card"
-                                          ? await AppHelper.handlePermissions()
-                                              .then((value) async {
-                                              if (value == false) {
-                                                AppHelper.showTopSnackBar(
-                                                    context,
-                                                    'Camera permission is required!');
+                                      if (pictures != null &&
+                                          pictures.isNotEmpty) {
+                                        for (var element in pictures) {
+                                          cameraProvider
+                                              .addIdCardImage(element);
+                                        }
 
-                                                return;
-                                              }
-                                              try {
-                                                final pictures =
-                                                    await CunningDocumentScanner
-                                                        .getPictures(
-                                                  noOfPages: 2,
-                                                  isGalleryImportAllowed: true,
-                                                );
-
-                                                if (pictures != null &&
-                                                    pictures.isNotEmpty) {
-                                                  for (var element
-                                                      in pictures) {
-                                                    cameraProvider
-                                                        .addIdCardImage(
-                                                            element);
-                                                  }
-
-                                                  if (cameraProvider
-                                                      .idCardImages
-                                                      .isNotEmpty) {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const IdCardImagePreview(
-                                                          imageIndex: 2,
-                                                          isCameFromRetake:
-                                                              false,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                }
-                                              } catch (e) {
-                                                debugPrint("Error: $e");
-                                                AppHelper.showTopSnackBar(
-                                                    context,
-                                                    'Failed to scan ID Card: $e');
-                                              }
-                                            })
-                                          : cameraItem.name == "QR Code"
-                                              ? checkCameraPermissionAndNavigate(
-                                                  context,
-                                                  const QRCodeCameraScreen(),
-                                                )
-                                              : checkCameraPermissionAndNavigate(
-                                                  context,
-                                                  const BarCodeCameraScreen(),
-                                                );
+                                        if (cameraProvider
+                                            .idCardImages.isNotEmpty) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const IdCardImagePreview(
+                                                imageIndex: 2,
+                                                isCameFromRetake: false,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      } else {
+                                        if (pictures == null ||
+                                            pictures.isEmpty) {
+                                          interstitialReadyNotifier.value =
+                                              false;
+                                          interstitialReady = false;
+                                          return;
+                                        }
+                                      }
+                                    } catch (e) {
+                                      debugPrint("Error: $e");
+                                      AppHelper.showTopSnackBar(context,
+                                          'Failed to scan ID Card: $e');
+                                    }
+                                  } else {
+                                    cameraItem.name == "QR Code"
+                                        ? checkCameraPermissionAndNavigate(
+                                            context,
+                                            const QRCodeCameraScreen(),
+                                          )
+                                        : checkCameraPermissionAndNavigate(
+                                            context,
+                                            const BarCodeCameraScreen(),
+                                          );
+                                  }
                                 },
                                 child: Column(
                                   children: [

@@ -10,6 +10,7 @@ import 'package:doc_scanner/home_page/home_page.dart';
 import 'package:doc_scanner/image_edit/id_card_image_view.dart';
 import 'package:doc_scanner/image_edit/image_edit_preview.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
+import 'package:doc_scanner/main.dart';
 import 'package:doc_scanner/settings_page/settings_page.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
@@ -165,49 +166,55 @@ class _BottomBarState extends State<BottomBar> {
                 onTap: () async {
                   createInterstitialAd();
                   // Request storage permission
-                  PermissionStatus status = await Permission.storage.request();
+                  // PermissionStatus status = await Permission.storage.request();
 
-                  if (status.isGranted) {
-                    // If permission is granted, proceed with file picking
-                    FilePickerResult? result =
-                        await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['pdf'],
-                    );
+                  // if (status.isGranted) {
+                  // If permission is granted, proceed with file picking
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ['pdf'],
+                  );
 
-                    if (result != null) {
-                      File file = File(result.paths.first!);
-                      cameraProvider.convertPdfToImage(file).then((value) {
-                        if (value) {
-                          BuildContext context = _scaffoldKey.currentContext!;
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ImagePreviewScreen(),
-                            ),
-                            (route) => false,
-                          );
-                        }
-                      });
-                    } else {
-                      BuildContext context = _scaffoldKey.currentContext!;
-                      // Handle case where file is not selected
-                    }
+                  if (result != null) {
+                    File file = File(result.paths.first!);
+                    cameraProvider.convertPdfToImage(file).then((value) {
+                      if (value) {
+                        BuildContext context = _scaffoldKey.currentContext!;
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ImagePreviewScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      }
+                    });
                   } else {
                     BuildContext context = _scaffoldKey.currentContext!;
+                    // Handle case where file is not selected
 
-                    AppHelper.showTopSnackBar(context,
-                        'Storage permission denied. Please enable it in settings.');
-
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   const SnackBar(
-                    //     content: Text(),
-                    //   ),
-                    // );
-
-                    // Redirect to app settings to enable storage permission
-                    // await openAppSettings();
+                    if (result == null) {
+                      interstitialReadyNotifier.value = false;
+                      interstitialReady = false;
+                      return;
+                    }
                   }
+                  //   } else {
+                  //     BuildContext context = _scaffoldKey.currentContext!;
+
+                  //     AppHelper.showTopSnackBar(context,
+                  //         'Storage permission denied. Please enable it in settings.');
+
+                  //     // ScaffoldMessenger.of(context).showSnackBar(
+                  //     //   const SnackBar(
+                  //     //     content: Text(),
+                  //     //   ),
+                  //     // );
+
+                  //     // Redirect to app settings to enable storage permission
+                  //     // await openAppSettings();
+                  //   }
                 },
               ),
               // Bar Code
@@ -356,15 +363,15 @@ class _BottomBarState extends State<BottomBar> {
                 ),
                 onTap: () async {
                   createInterstitialAd();
-                  bool isGranted = await AppHelper.handlePermissions();
-                  if (!isGranted) {
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   SnackBar(content: Text("Permission not granted!")),
-                    // );
-                    AppHelper.showTopSnackBar(
-                        context, "Permission not granted!");
-                    return;
-                  }
+                  // bool isGranted = await AppHelper.handlePermissions();
+                  // if (!isGranted) {
+                  //   // ScaffoldMessenger.of(context).showSnackBar(
+                  //   //   SnackBar(content: Text("Permission not granted!")),
+                  //   // );
+                  //   AppHelper.showTopSnackBar(
+                  //       context, "Permission not granted!");
+                  //   return;
+                  // }
 
                   try {
                     final pictures = await CunningDocumentScanner.getPictures(
@@ -387,6 +394,12 @@ class _BottomBarState extends State<BottomBar> {
                             ),
                           ),
                         );
+                      }
+                    } else {
+                      if (pictures == null || pictures.isEmpty) {
+                        interstitialReadyNotifier.value = false;
+                        interstitialReady = false;
+                        return;
                       }
                     }
                   } catch (e) {
@@ -424,16 +437,16 @@ class _BottomBarState extends State<BottomBar> {
                 ),
                 onTap: () async {
                   createInterstitialAd();
-                  bool isGranted = await AppHelper.handlePermissions();
-                  if (!isGranted) {
-                    AppHelper.showTopSnackBar(
-                        context, "Permission not granted!");
+                  // bool isGranted = await AppHelper.handlePermissions();
+                  // if (!isGranted) {
+                  //   AppHelper.showTopSnackBar(
+                  //       context, "Permission not granted!");
 
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   SnackBar(content: Text("Permission not granted!")),
-                    // );
-                    return;
-                  }
+                  //   // ScaffoldMessenger.of(context).showSnackBar(
+                  //   //   SnackBar(content: Text("Permission not granted!")),
+                  //   // );
+                  //   return;
+                  // }
 
                   try {
                     final pictures = await CunningDocumentScanner.getPictures(
@@ -460,6 +473,12 @@ class _BottomBarState extends State<BottomBar> {
                             builder: (context) => const EditImagePreview(),
                           ),
                         );
+                      }
+                    } else {
+                      if (pictures == null || pictures.isEmpty) {
+                        interstitialReadyNotifier.value = false;
+                        interstitialReady = false;
+                        return;
                       }
                     }
                   } catch (e) {

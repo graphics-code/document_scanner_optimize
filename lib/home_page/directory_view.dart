@@ -1836,15 +1836,15 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                   ),
                                   Column(
                                     children: [
-                                      Container(
-                                        alignment: Alignment.center,
-                                        height: 100,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: myBanner != null
-                                            ? AdWidget(ad: myBanner!)
-                                            : const SizedBox(),
-                                      ),
+                                      // Container(
+                                      //   alignment: Alignment.center,
+                                      //   height: 100,
+                                      //   width:
+                                      //       MediaQuery.of(context).size.width,
+                                      //   child: myBanner != null
+                                      //       ? AdWidget(ad: myBanner!)
+                                      //       : const SizedBox(),
+                                      // ),
                                       Container(
                                         height: size.width >= 600 ? 100 : 70,
                                         color: Colors.white,
