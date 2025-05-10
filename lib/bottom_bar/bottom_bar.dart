@@ -10,6 +10,7 @@ import 'package:doc_scanner/image_edit/id_card_image_view.dart';
 import 'package:doc_scanner/image_edit/image_edit_preview.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/settings_page/settings_page.dart';
+import 'package:doc_scanner/utils/Common.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
@@ -172,6 +173,7 @@ class _BottomBarState extends State<BottomBar> {
                     // if (fileSizeInMB <= 5) {
                     cameraProvider.convertPdfToImage(file).then((value) {
                       if (value) {
+                        createInterstitialAd();
                         BuildContext context = _scaffoldKey.currentContext!;
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -281,7 +283,8 @@ class _BottomBarState extends State<BottomBar> {
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   SnackBar(content: Text("Permission not granted!")),
                     // );
-                    AppHelper.showTopSnackBar(context, "Permission not granted!");
+                    AppHelper.showTopSnackBar(
+                        context, "Permission not granted!");
                     return;
                   }
 
@@ -297,6 +300,7 @@ class _BottomBarState extends State<BottomBar> {
                       }
 
                       if (cameraProvider.idCardImages.isNotEmpty) {
+                        createInterstitialAd();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -344,9 +348,8 @@ class _BottomBarState extends State<BottomBar> {
                 onTap: () async {
                   bool isGranted = await AppHelper.handlePermissions();
                   if (!isGranted) {
-
-
-                    AppHelper.showTopSnackBar(context, "Permission not granted!");
+                    AppHelper.showTopSnackBar(
+                        context, "Permission not granted!");
 
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   SnackBar(content: Text("Permission not granted!")),
@@ -361,7 +364,8 @@ class _BottomBarState extends State<BottomBar> {
 
                     if (pictures != null && pictures.isNotEmpty) {
                       for (var element in pictures) {
-                        String imageName = DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
+                        String imageName =
+                            DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
                         cameraProvider.addImage(
                           ImageModel(
                             docType: 'Document',
@@ -372,6 +376,7 @@ class _BottomBarState extends State<BottomBar> {
                       }
 
                       if (cameraProvider.imageList.isNotEmpty) {
+                        createInterstitialAd();
                         Navigator.push(
                           context,
                           MaterialPageRoute(

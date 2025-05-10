@@ -45,9 +45,9 @@ class AnalyzeImageButton extends StatelessWidget {
 
       // Show the scanned raw value in a dialog or a Snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
-            '$type Scan Successful !',
+            'Code Scan Successfully!',
             textAlign: TextAlign.center,
           ),
           backgroundColor: Colors.green,

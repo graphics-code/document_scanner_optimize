@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:doc_scanner/camera_screen/bar_code_camera_screen.dart';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
@@ -9,6 +9,7 @@ import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
 import 'package:doc_scanner/home_page/search_page.dart';
 import 'package:doc_scanner/image_edit/id_card_image_view.dart';
 import 'package:doc_scanner/image_edit/image_edit_preview.dart';
+import 'package:doc_scanner/utils/Common.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
@@ -48,12 +50,94 @@ class _HomePageState extends State<HomePage> {
       context.read<HomePageProvider>().loadQRCode();
       context.read<HomePageProvider>().loadBarCode();
       context.read<HomePageProvider>().getDirectoriesForCreate();
+      checkForUpdate(context);
+      showInterstitialAd(context);
     });
     super.initState();
   }
 
+  Future<void> checkForUpdate(BuildContext context) async {
+    print("objects: checkForUpdate called");
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    final String currentVersion = info.version;
+    final String packageName = info.packageName;
+    print("objects: $currentVersion");
+    print("objects: $packageName");
 
-  void checkCameraPermissionAndNavigate(BuildContext context, Widget targetScreen) async {
+    final playStoreUrl =
+        'https://play.google.com/store/apps/details?id=$packageName&hl=en';
+
+    try {
+      final response = await http.get(Uri.parse(playStoreUrl));
+      if (response.statusCode == 200) {
+        print('url: ${response.body}');
+        // Use regex to extract the version number from the HTML response
+        final regex = RegExp(r'Current Version.+?>([\d.]+)<');
+        final match = regex.firstMatch(response.body);
+        if (match != null) {
+          final storeVersion = match.group(1)!.trim();
+          if (_isVersionNewer(currentVersion, storeVersion)) {
+            _showUpdateDialog(context, packageName);
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to check version: $e');
+    }
+  }
+
+  bool _isVersionNewer(String current, String store) {
+    final curr = current.split('.').map(int.parse).toList();
+    final st = store.split('.').map(int.parse).toList();
+
+    for (int i = 0; i < st.length; i++) {
+      if (i >= curr.length || st[i] > curr[i]) return true;
+      if (st[i] < curr[i]) return false;
+    }
+    return false;
+  }
+
+  void _showUpdateDialog(BuildContext context, String packageName) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Update Required"),
+          content: Text(
+              "A new version of the app is available. Please update to continue."),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                final url =
+                    "https://play.google.com/store/apps/details?id=$packageName";
+                if (await canLaunch(url)) {
+                  await launch(url);
+                }
+              },
+              child: Text("Update"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Exit app
+                Future.delayed(Duration(milliseconds: 200), () {
+                  // Use SystemNavigator.pop() or exit(0)
+                  // SystemNavigator.pop(); // if in main page
+                  // or
+                  Future.delayed(
+                      Duration.zero, () => Navigator.of(context).pop());
+                });
+              },
+              child: Text("Exit"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void checkCameraPermissionAndNavigate(
+      BuildContext context, Widget targetScreen) async {
     PermissionStatus status = await Permission.camera.status;
 
     if (status.isGranted) {
@@ -216,107 +300,111 @@ class _HomePageState extends State<HomePage> {
                         final cameraItem = cameraItems[index];
                         return GestureDetector(
                           onTap: () async {
-                            PermissionStatus status = await Permission.camera.status;
+                            PermissionStatus status =
+                                await Permission.camera.status;
                             cameraItem.name == "Document"
-                                ? await AppHelper.handlePermissions().then((value) async {
-                              if (!value) {
+                                ? await AppHelper.handlePermissions()
+                                    .then((value) async {
+                                    if (!value) {
+                                      AppHelper.showTopSnackBar(context,
+                                          'Camera permission is required!');
 
-                                AppHelper.showTopSnackBar(context, 'Camera permission is required!');
+                                      return;
+                                    }
+                                    try {
+                                      final pictures =
+                                          await CunningDocumentScanner
+                                              .getPictures(
+                                        isGalleryImportAllowed: true,
+                                      );
 
+                                      if (pictures != null &&
+                                          pictures.isNotEmpty) {
+                                        for (var element in pictures) {
+                                          String imageName =
+                                              DateFormat('yyyyMMdd_SSSS')
+                                                  .format(DateTime.now());
+                                          cameraProvider.addImage(ImageModel(
+                                            docType: 'Document',
+                                            imageByte: await File(element)
+                                                .readAsBytes(),
+                                            name: "Document-$imageName",
+                                          ));
+                                        }
 
-                                return;
-                              }
-                              try {
-                                final pictures = await CunningDocumentScanner.getPictures(
-                                  isGalleryImportAllowed: true,
-                                );
+                                        if (cameraProvider
+                                            .imageList.isNotEmpty) {
+                                          createInterstitialAd();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const EditImagePreview(),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    } catch (e) {
+                                      debugPrint("Error: $e");
 
-                                if (pictures != null && pictures.isNotEmpty) {
-                                  for (var element in pictures) {
-                                    String imageName =
-                                    DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
-                                    cameraProvider.addImage(ImageModel(
-                                      docType: 'Document',
-                                      imageByte: await File(element).readAsBytes(),
-                                      name: "Document-$imageName",
-                                    ));
-                                  }
-
-                                  if (cameraProvider.imageList.isNotEmpty) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const EditImagePreview(),
-                                      ),
-                                    );
-                                  }
-                                }
-                              } catch (e) {
-                                debugPrint("Error: $e");
-
-
-                                AppHelper.showTopSnackBar(context, 'Failed to scan document: $e');
-
-
-
-
-                              }
-                            })
+                                      AppHelper.showTopSnackBar(context,
+                                          'Failed to scan document: $e');
+                                    }
+                                  })
                                 : cameraItem.name == "ID Card"
-                                ? await AppHelper.handlePermissions().then((value) async {
-                              if (!value) {
-                                AppHelper.showTopSnackBar(context, 'Camera permission is required!');
+                                    ? await AppHelper.handlePermissions()
+                                        .then((value) async {
+                                        if (!value) {
+                                          AppHelper.showTopSnackBar(context,
+                                              'Camera permission is required!');
 
+                                          return;
+                                        }
+                                        try {
+                                          final pictures =
+                                              await CunningDocumentScanner
+                                                  .getPictures(
+                                            noOfPages: 2,
+                                            isGalleryImportAllowed: true,
+                                          );
 
-                                return;
-                              }
-                              try {
-                                final pictures = await CunningDocumentScanner.getPictures(
-                                  noOfPages: 2,
-                                  isGalleryImportAllowed: true,
-                                );
+                                          if (pictures != null &&
+                                              pictures.isNotEmpty) {
+                                            for (var element in pictures) {
+                                              cameraProvider
+                                                  .addIdCardImage(element);
+                                            }
 
-                                if (pictures != null && pictures.isNotEmpty) {
-                                  for (var element in pictures) {
-                                    cameraProvider.addIdCardImage(element);
-                                  }
-
-                                  if (cameraProvider.idCardImages.isNotEmpty) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const IdCardImagePreview(
-                                          imageIndex: 2,
-                                          isCameFromRetake: false,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                }
-                              } catch (e) {
-                                debugPrint("Error: $e");
-                                AppHelper.showTopSnackBar(context, 'Failed to scan ID Card: $e');
-
-                              }
-                            })
-
-
-                                :
-
-                            cameraItem.name == "QR Code"
-                                ?
-                            checkCameraPermissionAndNavigate(
-                              context,
-                              const QRCodeCameraScreen(),
-                            )
-
-
-
-
-                                : checkCameraPermissionAndNavigate(
-                              context,
-                              const BarCodeCameraScreen(),
-                            );
+                                            if (cameraProvider
+                                                .idCardImages.isNotEmpty) {
+                                              createInterstitialAd();
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const IdCardImagePreview(
+                                                    imageIndex: 2,
+                                                    isCameFromRetake: false,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        } catch (e) {
+                                          debugPrint("Error: $e");
+                                          AppHelper.showTopSnackBar(context,
+                                              'Failed to scan ID Card: $e');
+                                        }
+                                      })
+                                    : cameraItem.name == "QR Code"
+                                        ? checkCameraPermissionAndNavigate(
+                                            context,
+                                            const QRCodeCameraScreen(),
+                                          )
+                                        : checkCameraPermissionAndNavigate(
+                                            context,
+                                            const BarCodeCameraScreen(),
+                                          );
                           },
                           child: Column(
                             children: [
