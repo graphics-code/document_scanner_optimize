@@ -99,10 +99,10 @@ PODS:
   - gal (1.0.0):
     - Flutter
     - FlutterMacOS
-  - google_mlkit_commons (0.9.0):
+  - google_mlkit_commons (0.11.0):
     - Flutter
     - MLKitVision
-  - google_mlkit_text_recognition (0.14.0):
+  - google_mlkit_text_recognition (0.15.0):
     - Flutter
     - google_mlkit_commons
     - GoogleMLKit/TextRecognition (~> 7.0.0)
@@ -206,6 +206,8 @@ PODS:
     - Flutter
     - MTBBarcodeScanner
   - ReachabilitySwift (5.2.4)
+  - scan (0.0.1):
+    - Flutter
   - SDWebImage (5.21.0):
     - SDWebImage/Core (= 5.21.0)
   - SDWebImage/Core (5.21.0)
@@ -251,6 +253,7 @@ DEPENDENCIES:
   - pdf_render (from `.symlinks/plugins/pdf_render/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - qr_code_scanner_plus (from `.symlinks/plugins/qr_code_scanner_plus/ios`)
+  - scan (from `.symlinks/plugins/scan/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -340,6 +343,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   qr_code_scanner_plus:
     :path: ".symlinks/plugins/qr_code_scanner_plus/ios"
+  scan:
+    :path: ".symlinks/plugins/scan/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
@@ -374,8 +379,8 @@ SPEC CHECKSUMS:
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   fluttertoast: 21eecd6935e7064cc1fcb733a4c5a428f3f24f0f
   gal: 61e868295d28fe67ffa297fae6dacebf56fd53e1
-  google_mlkit_commons: 384e4e206e122b6dad430d3158205e0b2fac6789
-  google_mlkit_text_recognition: e540f2aff997f2b0daaa1b4fd5ead3b0b7030adc
+  google_mlkit_commons: 2544377e5503bf78ee7412ccfce0394c2dcb8a6b
+  google_mlkit_text_recognition: c30828d00af79c10dc56bed2c6a4ca8b7dd40a50
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleMLKit: eff9e23ec1d90ea4157a1ee2e32a4f610c5b3318
   GoogleToolboxForMac: d1a2cbf009c453f4d6ded37c105e2f67a32206d8
@@ -404,6 +409,7 @@ SPEC CHECKSUMS:
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   qr_code_scanner_plus: 3bfe4deb7f28996a63a2a580819d49dae80d5ed3
   ReachabilitySwift: 32793e867593cfc1177f5d16491e3a197d2fccda
+  scan: aea35bb4aa59ccc8839c576a18cd57c7d492cc86
   SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
