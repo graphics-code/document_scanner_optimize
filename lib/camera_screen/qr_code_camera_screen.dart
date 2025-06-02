@@ -70,8 +70,8 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
     final cameraProvider = context.watch<CameraProvider>();
     final scanWindow = Rect.fromCenter(
       center: MediaQuery.sizeOf(context).center(const Offset(0, -5)),
-      width: 300,
-      height: 300,
+      width: 400,
+      height: 400,
     );
 
     return Scaffold(

@@ -843,15 +843,21 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                 ImageEditButton(
                   title: translation(context).share,
                   onTap: () async {
-                    await AppHelper()
-                        .convertUint8ListToFile(
-                            data: cameraProvider
-                                .imageList[_currentIndex].imageByte,
-                            extension: 'jpg')
-                        .then((value) async {
-                      await Share.shareXFiles([XFile(value.path)]);
-                    });
+                    final box = context.findRenderObject() as RenderBox?;
+
+                    if (box != null) {
+                      final file = await AppHelper().convertUint8ListToFile(
+                        data: cameraProvider.imageList[_currentIndex].imageByte,
+                        extension: 'jpg',
+                      );
+
+                      await Share.shareXFiles(
+                        [XFile(file.path)],
+                        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+                      );
+                    }
                   },
+
                   iconPath: AppAssets.share,
                 ),
                 ImageEditButton(

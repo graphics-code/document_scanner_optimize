@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:http/http.dart' as http;
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/utils/app_color.dart';
@@ -8,14 +11,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:interactive_box/interactive_box.dart';
+import 'package:mime/mime.dart';
 import 'package:provider/provider.dart';
 
 import '../camera_screen/provider/camera_provider.dart';
 import '../localaization/language_constant.dart';
 import '../utils/app_assets.dart';
+import '../utils/no_internet_connection.dart';
 import 'drawing.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+
+
 
 class AddSignature extends StatefulWidget {
   final ImageModel imageModel;
@@ -195,20 +204,148 @@ class _AddSignatureState extends State<AddSignature> {
     }
   }
 
+
+  Future<Uint8List> removeImageBackground({
+    required BuildContext context,
+    required File imageFile,
+  }) async {
+    final progressNotifier = ValueNotifier<double>(0);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Processing Image'),
+        content: ValueListenableBuilder<double>(
+          valueListenable: progressNotifier,
+          builder: (context, progress, _) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LinearProgressIndicator(value: progress),
+                const SizedBox(height: 12),
+                Text('${(progress * 100).toStringAsFixed(0)}% completed'),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+
+    try {
+      final uri = Uri.parse('https://removebackground-036fcb96c69b.herokuapp.com/remove-background');
+      final request = http.MultipartRequest('POST', uri);
+
+      final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';
+      final fileLength = await imageFile.length();
+      final fileStream = imageFile.openRead();
+
+      int bytesSent = 0;
+      final streamWithProgress = fileStream.transform<List<int>>(
+        StreamTransformer.fromHandlers(
+          handleData: (data, sink) {
+            bytesSent += data.length;
+            progressNotifier.value = bytesSent / fileLength * 0.5;
+            sink.add(data);
+          },
+        ),
+      );
+
+      final multipartFile = http.MultipartFile(
+        'image',
+        streamWithProgress,
+        fileLength,
+        filename: imageFile.path.split('/').last,
+        contentType: MediaType.parse(mimeType),
+      );
+
+      request.files.add(multipartFile);
+
+      final streamedResponse = await request.send();
+
+      if (streamedResponse.statusCode == 200) {
+        final contentLength = streamedResponse.contentLength ?? 0;
+        List<int> bytes = [];
+        int downloaded = 0;
+
+        await for (var chunk in streamedResponse.stream) {
+          bytes.addAll(chunk);
+          downloaded += chunk.length;
+          if (contentLength > 0) {
+            progressNotifier.value = 0.5 + (downloaded / contentLength) * 0.5;
+          }
+        }
+
+        Navigator.of(context).pop();
+        return Uint8List.fromList(bytes);
+      } else {
+        // Try to read error message from response body
+        final responseBody = await streamedResponse.stream.bytesToString();
+        String errorMessage = 'Failed: ${streamedResponse.reasonPhrase}';
+
+        try {
+          final jsonError = jsonDecode(responseBody);
+          if (jsonError is Map && jsonError['error'] is String) {
+            errorMessage = 'Failed: ${jsonError['error']}';
+          }
+        } catch (_) {
+          // Ignore JSON parse errors, fallback to status reason
+        }
+
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+        throw Exception(errorMessage);
+      }
+    } catch (e, stackTrace) {
+      Navigator.of(context).pop();
+      debugPrint('Error during background removal: $e');
+      debugPrintStack(stackTrace: stackTrace);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      rethrow;
+    }
+  }
+
+
+
   Future<void> importFromGallery() async {
+    final hasInternet =
+    await InternetConnectionChecker().hasConnection;
+
+    if (!hasInternet) {
+      NoInternetOverlay.show(context);
+      return;
+    }
+
+
+
+
+
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes();
+      final bytes = await removeImageBackground(context: context, imageFile: File(pickedFile.path));
+
+
+      await pickedFile.readAsBytes();
       setState(() {
-        signaturePath =
-            null; // Clear any SVG path (optional, if only one image at a time is allowed)
+        signaturePath = null;
       });
 
-      // Display the imported image using InteractiveBox
+
       setState(() {
-        signaturePath = String.fromCharCodes(bytes);
+        signaturePath =
+            String.fromCharCodes(bytes);
       });
     }
   }

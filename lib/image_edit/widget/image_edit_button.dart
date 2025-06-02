@@ -37,7 +37,7 @@ class _ImageEditButtonState extends State<ImageEditButton> {
                 fit: BoxFit.cover,
                 color: Colors.white,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 0),
               Text(
                 widget.title,
                 style: const TextStyle(

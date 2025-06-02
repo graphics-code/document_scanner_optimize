@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:doc_scanner/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:doc_scanner/camera_screen/bar_code_camera_screen.dart';
@@ -51,7 +52,13 @@ class _HomePageState extends State<HomePage> {
       context.read<HomePageProvider>().loadBarCode();
       context.read<HomePageProvider>().getDirectoriesForCreate();
       checkForUpdate(context);
-      showInterstitialAd(context);
+
+      if(interstitialReady==true && interstitialReadyNotifier.value==true){
+        showInterstitialAd(context);
+      }
+
+
+
     });
     super.initState();
   }
@@ -229,6 +236,7 @@ class _HomePageState extends State<HomePage> {
                 height: 28,
                 width: 28,
               )),
+          SizedBox(width: 30,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: GestureDetector(
@@ -246,6 +254,7 @@ class _HomePageState extends State<HomePage> {
                   width: 28,
                 )),
           ),
+          SizedBox(width: 10,),
           // IconButton(
           //   onPressed: () async {
           //     Navigator.push(
