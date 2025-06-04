@@ -239,42 +239,56 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(6),
                       onTap: () async {
-                        try {
-                          if (Platform.isIOS) {
-                            final url = Uri.parse(
-                              "https://apps.apple.com/app/id6472610820",
-                            );
-                            await launchUrl(
-                              url,
-                              mode: LaunchMode.externalApplication,
-                            );
-                          } else {
-                            final url = Uri.parse(
-                              "https://play.google.com/store/apps/details?id=com.documentscannerpdfscanner_",
-                            );
-                            await launchUrl(
-                              url,
-                              mode: LaunchMode.externalApplication,
-                            );
-                          }
+                        print("this app is call");
+                        final url = Uri.parse(
+                          "https://play.google.com/store/apps/details?id=com.documentscannerpdfscanner_",
+                        );
 
-                          // if (Platform.isAndroid || Platform.isIOS) {
-                          //   final appId = Platform.isAndroid
-                          //       ? ''
-                          //       : 'com.documentscannerpdfscanner';
-                          //   final url = Uri.parse(
-                          //     Platform.isAndroid
-                          //         ? "market://details?id=$appId"
-                          //         : "https://apps.apple.com/app/id6472610820",
-                          //   );
-                          //   await launchUrl(
-                          //     url,
-                          //     mode: LaunchMode.externalApplication,
-                          //   );
-                          // }
-                        } catch (e) {
-                          developer.log(e.toString());
+                        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                          print("chekk---------------->$url");
+                          throw 'Could not launch $url';
                         }
+
+                        // await launchUrl(
+                        //            url,
+                        //            mode: LaunchMode.externalApplication,
+                        //         );
+
+
+                        // try {
+                        //   if (Platform.isIOS) {
+                        //     final url = Uri.parse(
+                        //       "https://apps.apple.com/app/id6472610820",
+                        //     );
+                        //     await launchUrl(
+                        //       url,
+                        //       mode: LaunchMode.externalApplication,
+                        //     );
+                        //   } else {
+                        //
+                        //     await launchUrl(
+                        //       url,
+                        //       mode: LaunchMode.externalApplication,
+                        //     );
+                        //   }
+                        //
+                        //   // if (Platform.isAndroid || Platform.isIOS) {
+                        //   //   final appId = Platform.isAndroid
+                        //   //       ? ''
+                        //   //       : 'com.documentscannerpdfscanner';
+                        //   //   final url = Uri.parse(
+                        //   //     Platform.isAndroid
+                        //   //         ? "market://details?id=$appId"
+                        //   //         : "https://apps.apple.com/app/id6472610820",
+                        //   //   );
+                        //   //   await launchUrl(
+                        //   //     url,
+                        //   //     mode: LaunchMode.externalApplication,
+                        //   //   );
+                        //   // }
+                        // } catch (e) {
+                        //   developer.log(e.toString());
+                        // }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
