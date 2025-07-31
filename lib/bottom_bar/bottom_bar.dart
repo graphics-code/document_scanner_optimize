@@ -517,8 +517,8 @@ class _BottomBarState extends State<BottomBar> {
               // ),
             ],
             child: SvgPicture.asset(AppAssets.floatingCamera,
-                width: size.width >= 600 ? 40 : 30,
-                height: size.width >= 600 ? 38 : 28)),
+                width: size.width >= 600 ? 32 : 30,
+                height: size.width >= 600 ? 32 : 28)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
           surfaceTintColor: Colors.grey,

@@ -243,8 +243,8 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: SvgPicture.asset(
                             AppAssets.create_folder,
-                            height: 28,
-                            width: 28,
+                            height:AppHelper.isTablet(context)?32: 28,
+                            width:AppHelper.isTablet(context)?32: 28,
                           )),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -259,8 +259,8 @@ class _HomePageState extends State<HomePage> {
                             },
                             child: SvgPicture.asset(
                               AppAssets.search,
-                              height: 28,
-                              width: 28,
+                              height:AppHelper.isTablet(context)?32: 28,
+                              width:AppHelper.isTablet(context)?32: 28,
                             )),
                       ),
                       // IconButton(
@@ -308,7 +308,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           width: MediaQuery.sizeOf(context).width,
                           alignment: Alignment.center,
-                          height: size.width >= 600 ? 120 : 100,
+                          height: size.width >= 600 ? 130 : 100,
                           child: Row(
                             mainAxisAlignment: size.width >= 600
                                 ? MainAxisAlignment.spaceAround
@@ -409,7 +409,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Column(
                                   children: [
                                     CircleAvatar(
-                                      radius: size.width >= 600 ? 35 : 30,
+                                      radius: size.width >= 600 ? 40 : 30,
                                       backgroundColor: cameraItem.color,
                                       child: SvgPicture.asset(cameraItem.icon,
                                           height: size.width >= 600 ? 30 : 25,
@@ -420,7 +420,7 @@ class _HomePageState extends State<HomePage> {
                                       child: Text(
                                         getCameraModeName(
                                             cameraItem.name, context),
-                                        style: const TextStyle(fontSize: 12),
+                                        style:  TextStyle(fontSize:AppHelper.isTablet(context)?14: 12),
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
                                       ),
@@ -434,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           width: MediaQuery.sizeOf(context).width,
-                          height: 100,
+                          height: 110,
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: size.width >= 600
@@ -478,9 +478,9 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       Text(
                                         path.basename(directory.path),
-                                        style: const TextStyle(
+                                        style:  TextStyle(
                                           color: Colors.black,
-                                          fontSize: 12,
+                                          fontSize: AppHelper.isTablet(context)?14: 12,
                                           fontWeight: FontWeight.w400,
                                         ),
                                         overflow: TextOverflow.ellipsis,

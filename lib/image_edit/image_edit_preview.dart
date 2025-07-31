@@ -225,12 +225,15 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                         return StatefulBuilder(
                                             builder: (context, setState) {
                                           return AlertDialog(
-                                            title: Text(
-                                              translation(context).renameFile,
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
+                                            title: SizedBox(
+                                              width: AppHelper.isTablet(context)?250:200,
+                                              child: Text(
+                                                translation(context).renameFile,
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
                                             ),
                                             content: Form(
@@ -569,8 +572,11 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                         return StatefulBuilder(
                                           builder: (context, setState) {
                                             return AlertDialog(
-                                              title: Text(
-                                                  translation(context).savePdf),
+                                              title: SizedBox(
+                                                width: AppHelper.isTablet(context)?350:300,
+                                                child: Text(
+                                                    translation(context).savePdf),
+                                              ),
                                               content: isSaving
                                                   ? ConstrainedBox(
                                                       constraints:

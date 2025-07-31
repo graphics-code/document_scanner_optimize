@@ -5,6 +5,8 @@ import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'helper.dart';
+
 Future<void> showQrAndBarCodeDialogue(
     {required BuildContext context,
     required String title,
@@ -267,7 +269,9 @@ Future<void> showNormalAlertDialogue({
     barrierDismissible: false,
     builder: (context) {
       return AlertDialog(
-        title: Text(title),
+        title: SizedBox(
+            width: AppHelper.isTablet(context)?300:250,
+            child: Text(title)),
         content: Text(content),
         actions: [
           TextButton(
@@ -433,7 +437,7 @@ Future<void> showQrAndBarCodeViewDialogue(
       return Dialog(
         alignment: Alignment.center,
         child: Container(
-            height: 250,
+            height:AppHelper.isTablet(context)?260: 250,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.grey.shade200,

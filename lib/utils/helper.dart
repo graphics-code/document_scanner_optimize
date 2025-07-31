@@ -37,6 +37,10 @@ class AppHelper {
     }
   }
 
+  static  bool isTablet(BuildContext context) {
+    return MediaQuery.of(context).size.shortestSide >= 600;
+  }
+
   static showTopSnackBar(BuildContext context, String message) {
     final overlay = Overlay.of(context);
     final overlayEntry = OverlayEntry(

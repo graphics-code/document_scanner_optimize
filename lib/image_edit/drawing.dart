@@ -1,5 +1,6 @@
 import 'package:doc_scanner/image_edit/widget/color_button.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:hand_signature/signature.dart';
 
@@ -53,7 +54,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
         actions: [
           IconButton(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            icon: const Icon(Icons.clear),
+            icon:  Icon(Icons.clear, size: AppHelper.isTablet(context)?35:25,),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -62,6 +63,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
           IconButton(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             icon: Icon(
+              size: AppHelper.isTablet(context)?35:25,
               Icons.undo,
               color: control.paths.isNotEmpty
                   ? Colors.black
@@ -78,6 +80,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
           IconButton(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             icon: Icon(
+              size: AppHelper.isTablet(context)?35:25,
               Icons.redo,
               color: undoList.isNotEmpty
                   ? Colors.black
@@ -91,7 +94,9 @@ class _DrawingScreenState extends State<DrawingScreen> {
           ),
           IconButton(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            icon: const Icon(Icons.check,color: AppColor.primaryColor,),
+            icon:  Icon(Icons.check,color: AppColor.primaryColor,
+            size: AppHelper.isTablet(context)?35:25,
+            ),
             onPressed: () async {
               var res = control.toSvg(
                 type: SignatureDrawType.line,
@@ -135,16 +140,19 @@ class _DrawingScreenState extends State<DrawingScreen> {
                     backgroundColor: currentColor,
                   ),
                 ),
-                Slider(
-                  activeColor: AppColor.primaryColor,
-                  min: 0.0,
-                  max: 0.2,
-                  value: sliderValue,
-                  onChanged: (value) {
-                    setState(() {
-                      sliderValue = value;
-                    });
-                  },
+                SizedBox(
+                  width:AppHelper.isTablet(context)? 400:200,
+                  child: Slider(
+                    activeColor: AppColor.primaryColor,
+                    min: 0.0,
+                    max: 0.2,
+                    value: sliderValue,
+                    onChanged: (value) {
+                      setState(() {
+                        sliderValue = value;
+                      });
+                    },
+                  ),
                 ),
               ],
             ),
@@ -153,13 +161,16 @@ class _DrawingScreenState extends State<DrawingScreen> {
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   for (var color in colors)
-                    ColorButton(
-                      color: color,
-                      onTap: (color) {
-                        currentColor = color;
-                        setState(() {});
-                      },
-                      isSelected: color == currentColor,
+                    Padding(
+                      padding:  EdgeInsets.only(left:AppHelper.isTablet(context)? 23:0),
+                      child: ColorButton(
+                        color: color,
+                        onTap: (color) {
+                          currentColor = color;
+                          setState(() {});
+                        },
+                        isSelected: color == currentColor,
+                      ),
                     ),
                 ],
               ),

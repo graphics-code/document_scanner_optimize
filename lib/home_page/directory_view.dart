@@ -429,18 +429,18 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         CrossAxisAlignment
                                                             .center,
                                                     children: [
-                                                      const Icon(
+                                                       Icon(
                                                         Icons.folder,
                                                         color: AppColor
                                                             .primaryColor,
-                                                        size: 40,
+                                                        size:AppHelper.isTablet(context)?60: 40,
                                                       ),
                                                       Text(
                                                         filePath
                                                             .split('/')
                                                             .last,
-                                                        style: const TextStyle(
-                                                          fontSize: 12,
+                                                        style:  TextStyle(
+                                                          fontSize:AppHelper.isTablet(context)?15: 12,
                                                         ),
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -453,38 +453,41 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         child: SizedBox(
                                                           height: 30,
                                                           width: 30,
-                                                          child: Checkbox(
-                                                            shape:
-                                                                const CircleBorder(),
-                                                            activeColor: AppColor
-                                                                .primaryColor,
-                                                            value: isSelected,
-                                                            side: const BorderSide(
-                                                                color: Color(
-                                                                    0xFFBEBEBE)),
-                                                            onChanged:
-                                                                (bool? value) {
-                                                              setState(() {
-                                                                if (value ==
-                                                                    true) {
-                                                                  _selectedItems
-                                                                      .add(
-                                                                          filePath);
-                                                                } else {
-                                                                  _selectedItems
-                                                                      .remove(
-                                                                          filePath);
-                                                                }
-                                                              });
-                                                            },
+                                                          child: Transform.scale(
+                                                            scale: AppHelper.isTablet(context)? 1.3:1,
+                                                            child: Checkbox(
+                                                              shape:
+                                                                  const CircleBorder(),
+                                                              activeColor: AppColor
+                                                                  .primaryColor,
+                                                              value: isSelected,
+                                                              side: const BorderSide(
+                                                                  color: Color(
+                                                                      0xFFBEBEBE)),
+                                                              onChanged:
+                                                                  (bool? value) {
+                                                                setState(() {
+                                                                  if (value ==
+                                                                      true) {
+                                                                    _selectedItems
+                                                                        .add(
+                                                                            filePath);
+                                                                  } else {
+                                                                    _selectedItems
+                                                                        .remove(
+                                                                            filePath);
+                                                                  }
+                                                                });
+                                                              },
+                                                            ),
                                                           ),
                                                         ),
                                                       )
                                                     : InkWell(
-                                                        child: const Icon(
+                                                        child:  Icon(
                                                           Icons.more_vert,
                                                           color: Colors.black,
-                                                          size: 20,
+                                                          size:AppHelper.isTablet(context)?25: 20,
                                                         ),
                                                         onTap: () {
                                                           showModalBottomSheet(
@@ -745,8 +748,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         filePath
                                                             .split('/')
                                                             .last,
-                                                        style: const TextStyle(
-                                                          fontSize: 12,
+                                                        style:  TextStyle(
+                                                          fontSize:AppHelper.isTablet(context)?15: 12,
                                                         ),
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -759,38 +762,43 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         child: SizedBox(
                                                           height: 30,
                                                           width: 30,
-                                                          child: Checkbox(
-                                                            side: const BorderSide(
-                                                                color: Color(
-                                                                    0xFFBEBEBE)),
-                                                            shape:
-                                                                const CircleBorder(),
-                                                            activeColor: AppColor
-                                                                .primaryColor,
-                                                            value: isSelected,
-                                                            onChanged:
-                                                                (bool? value) {
-                                                              setState(() {
-                                                                if (value ==
-                                                                    true) {
-                                                                  _selectedItems
-                                                                      .add(
-                                                                          filePath);
-                                                                } else {
-                                                                  _selectedItems
-                                                                      .remove(
-                                                                          filePath);
-                                                                }
-                                                              });
-                                                            },
+                                                          child: Transform.scale(
+                                                            scale: AppHelper.isTablet(context)? 1.3:1,
+
+
+                                                            child: Checkbox(
+                                                              side: const BorderSide(
+                                                                  color: Color(
+                                                                      0xFFBEBEBE)),
+                                                              shape:
+                                                                  const CircleBorder(),
+                                                              activeColor: AppColor
+                                                                  .primaryColor,
+                                                              value: isSelected,
+                                                              onChanged:
+                                                                  (bool? value) {
+                                                                setState(() {
+                                                                  if (value ==
+                                                                      true) {
+                                                                    _selectedItems
+                                                                        .add(
+                                                                            filePath);
+                                                                  } else {
+                                                                    _selectedItems
+                                                                        .remove(
+                                                                            filePath);
+                                                                  }
+                                                                });
+                                                              },
+                                                            ),
                                                           ),
                                                         ),
                                                       )
                                                     : InkWell(
-                                                        child: const Icon(
+                                                        child:  Icon(
                                                           Icons.more_vert,
                                                           color: Colors.black,
-                                                          size: 20,
+                                                          size:AppHelper.isTablet(context)?25: 20,
                                                         ),
                                                         onTap: () {
                                                           showModalBottomSheet(
@@ -1176,38 +1184,41 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         child: SizedBox(
                                                           height: 30,
                                                           width: 30,
-                                                          child: Checkbox(
-                                                            side: const BorderSide(
-                                                                color: Color(
-                                                                    0xFFBEBEBE)),
-                                                            shape:
-                                                                const CircleBorder(),
-                                                            activeColor: AppColor
-                                                                .primaryColor,
-                                                            value: isSelected,
-                                                            onChanged:
-                                                                (bool? value) {
-                                                              setState(() {
-                                                                if (value ==
-                                                                    true) {
-                                                                  _selectedItems
-                                                                      .add(
-                                                                          filePath);
-                                                                } else {
-                                                                  _selectedItems
-                                                                      .remove(
-                                                                          filePath);
-                                                                }
-                                                              });
-                                                            },
+                                                          child: Transform.scale(
+                                                            scale: AppHelper.isTablet(context)? 1.3:1,
+                                                            child: Checkbox(
+                                                              side: const BorderSide(
+                                                                  color: Color(
+                                                                      0xFFBEBEBE)),
+                                                              shape:
+                                                                  const CircleBorder(),
+                                                              activeColor: AppColor
+                                                                  .primaryColor,
+                                                              value: isSelected,
+                                                              onChanged:
+                                                                  (bool? value) {
+                                                                setState(() {
+                                                                  if (value ==
+                                                                      true) {
+                                                                    _selectedItems
+                                                                        .add(
+                                                                            filePath);
+                                                                  } else {
+                                                                    _selectedItems
+                                                                        .remove(
+                                                                            filePath);
+                                                                  }
+                                                                });
+                                                              },
+                                                            ),
                                                           ),
                                                         ),
                                                       )
                                                     : InkWell(
-                                                        child: const Icon(
+                                                        child:  Icon(
                                                           Icons.more_vert,
                                                           color: Colors.black,
-                                                          size: 20,
+                                                          size:AppHelper.isTablet(context)?25: 20,
                                                         ),
                                                         onTap: () {
                                                           showModalBottomSheet(
@@ -1477,38 +1488,41 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         child: SizedBox(
                                                           height: 30,
                                                           width: 30,
-                                                          child: Checkbox(
-                                                            side: const BorderSide(
-                                                                color: Color(
-                                                                    0xFFBEBEBE)),
-                                                            shape:
-                                                                const CircleBorder(),
-                                                            activeColor: AppColor
-                                                                .primaryColor,
-                                                            value: isSelected,
-                                                            onChanged:
-                                                                (bool? value) {
-                                                              setState(() {
-                                                                if (value ==
-                                                                    true) {
-                                                                  _selectedItems
-                                                                      .add(
-                                                                          filePath);
-                                                                } else {
-                                                                  _selectedItems
-                                                                      .remove(
-                                                                          filePath);
-                                                                }
-                                                              });
-                                                            },
+                                                          child: Transform.scale(
+                                                            scale: AppHelper.isTablet(context)? 1.3:1,
+                                                            child: Checkbox(
+                                                              side: const BorderSide(
+                                                                  color: Color(
+                                                                      0xFFBEBEBE)),
+                                                              shape:
+                                                                  const CircleBorder(),
+                                                              activeColor: AppColor
+                                                                  .primaryColor,
+                                                              value: isSelected,
+                                                              onChanged:
+                                                                  (bool? value) {
+                                                                setState(() {
+                                                                  if (value ==
+                                                                      true) {
+                                                                    _selectedItems
+                                                                        .add(
+                                                                            filePath);
+                                                                  } else {
+                                                                    _selectedItems
+                                                                        .remove(
+                                                                            filePath);
+                                                                  }
+                                                                });
+                                                              },
+                                                            ),
                                                           ),
                                                         ),
                                                       )
                                                     : InkWell(
-                                                        child: const Icon(
+                                                        child:  Icon(
                                                           Icons.more_vert,
                                                           color: Colors.black,
-                                                          size: 20,
+                                                      size:AppHelper.isTablet(context)?25: 20,
                                                         ),
                                                         onTap: () {
                                                           showModalBottomSheet(
@@ -1848,12 +1862,12 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                       Container(
                                         height: size.width >= 600 ? 100 : 70,
                                         color: Colors.white,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
+                                        padding:  EdgeInsets.symmetric(
+                                            horizontal: AppHelper.isTablet(context)?30: 8.0),
                                         alignment: Alignment.center,
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             GestureDetector(
                                               onTap: () async {
@@ -2050,8 +2064,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                 children: [
                                                   SvgPicture.asset(
                                                     AppAssets.move,
-                                                    height: 20,
-                                                    width: 20,
+                                                    height:AppHelper.isTablet(context)?24: 20,
+                                                    width:AppHelper.isTablet(context)?24: 20,
                                                     fit: BoxFit.fill,
                                                     color: _selectedItems
                                                             .isNotEmpty
@@ -2066,7 +2080,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                             ? AppColor
                                                                 .primaryColor
                                                             : Colors.black,
-                                                        fontSize: 12,
+                                                        fontSize:12,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
@@ -2200,8 +2214,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                 children: [
                                                   SvgPicture.asset(
                                                     AppAssets.share,
-                                                    height: 20,
-                                                    width: 20,
+                                                    height:AppHelper.isTablet(context)?24: 20,
+                                                    width: AppHelper.isTablet(context)?24: 20,
                                                     fit: BoxFit.fill,
                                                     color: _selectedItems
                                                             .isNotEmpty
@@ -2377,8 +2391,11 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                                     TextEditingController();
                                                                 return AlertDialog(
                                                                   title:
-                                                                      const Text(
-                                                                          "PDF"),
+                                                                      SizedBox(
+                                                                        width: AppHelper.isTablet(context)?300:250,
+                                                                        child: const Text(
+                                                                            "PDF"),
+                                                                      ),
                                                                   content:
                                                                       TextFormField(
                                                                     controller:
@@ -2561,8 +2578,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                       children: [
                                                         SvgPicture.asset(
                                                           AppAssets.merge,
-                                                          height: 18,
-                                                          width: 18,
+                                                          height: AppHelper.isTablet(context)?24: 20,
+                                                          width: AppHelper.isTablet(context)?24: 20,
                                                           fit: BoxFit.fill,
                                                           color: _selectedItems
                                                                       .length >=
@@ -2756,8 +2773,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                 children: [
                                                   SvgPicture.asset(
                                                     AppAssets.delete,
-                                                    width: 24,
-                                                    height: 24,
+                                                    width: AppHelper.isTablet(context)?29: 20,
+                                                    height: AppHelper.isTablet(context)?29: 20,
                                                     color: _selectedItems
                                                             .isNotEmpty
                                                         ? AppColor.primaryColor

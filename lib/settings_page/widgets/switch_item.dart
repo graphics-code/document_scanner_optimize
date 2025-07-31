@@ -2,6 +2,8 @@ import 'package:doc_scanner/utils/app_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../utils/helper.dart';
+
 class SwitchItem extends StatefulWidget {
   final String iconPath;
   final String title;
@@ -26,8 +28,8 @@ class _SwitchItemState extends State<SwitchItem> {
       children: [
         SvgPicture.asset(
           widget.iconPath,
-          height: 20,
-          width: 20,
+          height: AppHelper.isTablet(context)?30: 20,
+          width: AppHelper.isTablet(context)?30: 20,
         ),
         SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.015,

@@ -15,6 +15,8 @@ import '../localaization/language_constant.dart';
 import '../utils/app_assets.dart';
 import 'dart:developer' as developer;
 
+import '../utils/helper.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -70,8 +72,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   SvgPicture.asset(
                     AppAssets.languageIcon,
-                    height: 20,
-                    width: 20,
+                    height: AppHelper.isTablet(context)?30: 20,
+                    width: AppHelper.isTablet(context)?30: 20,
                   ),
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width * 0.015,
@@ -126,9 +128,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  const Icon(
+                   Icon(
                     Icons.arrow_forward_ios,
-                    size: 15,
+                    size: AppHelper.isTablet(context)?20: 15,
                   ),
                 ],
               ),
@@ -208,8 +210,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             SvgPicture.asset(
                               AppAssets.shareWithFriend,
-                              height: 20,
-                              width: 20,
+                              height: AppHelper.isTablet(context)?30: 20,
+                              width: AppHelper.isTablet(context)?30: 20,
                             ),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.015,
@@ -222,9 +224,9 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             const Spacer(),
-                            const Icon(
+                             Icon(
                               Icons.arrow_forward_ios,
-                              size: 15,
+                              size: AppHelper.isTablet(context)?20: 15,
                             ),
                           ],
                         ),
@@ -282,8 +284,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             SvgPicture.asset(
                               AppAssets.rateUs,
-                              height: 20,
-                              width: 20,
+                              height: AppHelper.isTablet(context)?30: 20,
+                              width: AppHelper.isTablet(context)?30: 20,
                             ),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.015,
@@ -297,9 +299,9 @@ class _SettingsPageState extends State<SettingsPage> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             const Spacer(),
-                            const Icon(
+                             Icon(
                               Icons.arrow_forward_ios,
-                              size: 15,
+                              size: AppHelper.isTablet(context)?20: 15,
                             ),
                           ],
                         ),
@@ -348,8 +350,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             SvgPicture.asset(
                               AppAssets.privacyPolicy,
-                              height: 20,
-                              width: 20,
+                              height: AppHelper.isTablet(context)?30: 20,
+                              width: AppHelper.isTablet(context)?30: 20,
                             ),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.015,
@@ -362,9 +364,9 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             const Spacer(),
-                            const Icon(
+                             Icon(
                               Icons.arrow_forward_ios,
-                              size: 15,
+                              size: AppHelper.isTablet(context)?20: 15,
                             ),
                           ],
                         ),
@@ -413,8 +415,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             SvgPicture.asset(
                               AppAssets.termsCondition,
-                              height: 20,
-                              width: 20,
+                              height: AppHelper.isTablet(context)?30: 20,
+                              width: AppHelper.isTablet(context)?30: 20,
                             ),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.015,
@@ -427,9 +429,9 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             const Spacer(),
-                            const Icon(
+                             Icon(
                               Icons.arrow_forward_ios,
-                              size: 15,
+                              size: AppHelper.isTablet(context)?20: 15,
                             ),
                           ],
                         ),

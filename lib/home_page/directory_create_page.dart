@@ -116,10 +116,7 @@ class _DirectoryCreatePageState extends State<DirectoryCreatePage> {
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
-              if (Platform.isIOS)
-                const SizedBox(
-                  height: 20,
-                )
+             SizedBox(height: 10,)
             ],
           ),
         ),
