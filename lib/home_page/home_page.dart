@@ -231,21 +231,21 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.w500,
                     ),
                     actions: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const DirectoryCreatePage(),
-                              ),
-                            );
-                          },
-                          child: SvgPicture.asset(
-                            AppAssets.create_folder,
-                            height:AppHelper.isTablet(context)?32: 28,
-                            width:AppHelper.isTablet(context)?32: 28,
-                          )),
+                      // GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //           builder: (context) =>
+                      //               const DirectoryCreatePage(),
+                      //         ),
+                      //       );
+                      //     },
+                      //     child: SvgPicture.asset(
+                      //       AppAssets.create_folder,
+                      //       height:AppHelper.isTablet(context)?32: 28,
+                      //       width:AppHelper.isTablet(context)?32: 28,
+                      //     )),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         child: GestureDetector(

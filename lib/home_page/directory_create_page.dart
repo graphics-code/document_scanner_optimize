@@ -21,6 +21,8 @@ class _DirectoryCreatePageState extends State<DirectoryCreatePage> {
   final formKey = GlobalKey<FormState>();
   bool _directoryAlreadyExists = false;
 
+
+
   @override
   Widget build(BuildContext context) {
     final homePageProvider = context.watch<HomePageProvider>();

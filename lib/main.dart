@@ -6,8 +6,10 @@ import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'core/local_storage.dart';
@@ -20,17 +22,132 @@ bool bannerReady = false;
 bool interstitialReady = false;
 InterstitialAd? myInterstitial;
 ValueNotifier<bool> interstitialReadyNotifier = ValueNotifier(false);
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+// Notification Plugin
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+Future<void> setupFirebaseMessaging() async {
+  try {
+    // Request permissions (iOS)
+    final settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    }
+
+    // Initialize local notifications
+    const AndroidInitializationSettings androidSettings =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      const InitializationSettings(android: androidSettings, iOS: iosSettings),
+      onDidReceiveNotificationResponse: (details) {
+        // Handle notification tap when app is in foreground
+      },
+    );
+
+    // Foreground message handling
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        _showNotification(
+          message.notification!.title ?? 'New Notification',
+          message.notification!.body ?? 'You have a new message',
+        );
+      }
+    });
+
+    // Background message handling
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('App opened from background via notification');
+      _handleNotificationTap(message);
+    });
+
+    // Terminated state message handling
+    RemoteMessage? initialMessage =
+    await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      _handleNotificationTap(initialMessage);
+    }
+
+    // Get FCM token
+    String? token = await FirebaseMessaging.instance.getToken();
+    print('FCM Token: $token');
+
+    // Subscribe to topics if needed
+    // await FirebaseMessaging.instance.subscribeToTopic('all');
+  } catch (e) {
+    print('Error setting up Firebase Messaging: $e');
+  }
+}
+
+Future<void> _showNotification(String title, String body) async {
+  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    'high_importance_channel',
+    'High Importance Notifications',
+    importance: Importance.max,
+    priority: Priority.high,
+    showWhen: true,
+  );
+
+  const DarwinNotificationDetails iosDetails = DarwinNotificationDetails();
+
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    title,
+    body,
+    const NotificationDetails(android: androidDetails, iOS: iosDetails),
+    payload: 'notification_payload',
+  );
+}
+
+void _handleNotificationTap(RemoteMessage message) {
+  if (navigatorKey.currentContext == null) {
+    Future.delayed(const Duration(seconds: 1), () {
+      _handleNotificationTap(message);
+    });
+    return;
+  }
+
+  // Handle navigation based on message data
+  // Example:
+  // Navigator.of(navigatorKey.currentContext!).push(MaterialPageRoute(
+  //   builder: (context) => NotificationScreen(message: message),
+  // ));
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+
+  Future.delayed(const Duration(seconds: 5), () {
+    print("this call after 5 seconds");
+     setupFirebaseMessaging();
+
+
+  });
+
+
+
+  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  // PlatformDispatcher.instance.onError = (error, stack) {
+  //   FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+  //   return true;
+  // };
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await LocalStorage().init();
   await AppHelper().createDirectories();

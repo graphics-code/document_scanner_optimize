@@ -42,6 +42,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
   late Future<List<String>> allFiles;
   bool isDeleteLoading = false;
   bool isShareIng = false;
+  bool _directoryAlreadyExists = false;
   late Directory rootDirectory;
   String subFilePath = "";
   BannerAd? myBanner;
@@ -58,7 +59,138 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
       throw 'Could not launch $url';
     }
   }
+  Future<bool> _directoryExistsWithCaseInsensitive(
+      Directory parentDirectory, String directoryName) async {
+    try {
+      final List<FileSystemEntity> entities =
+      await parentDirectory.list().toList();
+      for (final entity in entities) {
+        if (entity is Directory &&
+            entity.path.split('/').last.toLowerCase() ==
+                directoryName.toLowerCase()) {
+          return true;
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return false;
+  }
 
+  Future<bool> createDirectory({
+    required Directory targetDirectory,
+    required String directoryName,
+  }) async {
+    Directory rootDirectory = await getApplicationDocumentsDirectory();
+    final documentDirectory =
+    Directory('${rootDirectory.path}/Doc Scanner/Document');
+    final idCardDirectory =
+    Directory('${rootDirectory.path}/Doc Scanner/ID Card');
+    final qrCodeDirectory =
+    Directory('${rootDirectory.path}/Doc Scanner/QR Code');
+    final barCodeDirectory =
+    Directory('${rootDirectory.path}/Doc Scanner/Bar Code');
+
+    try {
+      if (await _directoryExistsWithCaseInsensitive(
+          documentDirectory, directoryName) ||
+          await _directoryExistsWithCaseInsensitive(
+              idCardDirectory, directoryName) ||
+          await _directoryExistsWithCaseInsensitive(
+              qrCodeDirectory, directoryName) ||
+          await _directoryExistsWithCaseInsensitive(
+              barCodeDirectory, directoryName)) {
+        return false;
+      } else {
+        final newCreatedDirectory =
+        Directory('${targetDirectory.path}/$directoryName');
+        await newCreatedDirectory.create(recursive: true);
+        return true;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+
+  void _showCenterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevents dialog from closing by tapping outside
+      builder: (BuildContext context) {
+        TextEditingController _controller = TextEditingController();
+
+        return AlertDialog(
+          alignment: Alignment.center,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          content: SizedBox(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Folder",style: TextStyle(
+                      fontSize: 15
+                    ),),
+                    IconButton(onPressed: (){
+                      Navigator.pop(context);
+
+                    }, icon: Icon(Icons.close,size: AppHelper.isTablet(context)?15:12,))
+                  ],
+                ),
+
+                TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+
+
+
+                ElevatedButton(
+                  onPressed: () async {
+
+                      if (_controller.text.trim().isNotEmpty) {
+                        FocusScope.of(context).unfocus();
+                        bool created = await createDirectory(
+                            targetDirectory: Directory(widget.directoryPath),
+                            directoryName: _controller.text);
+                        if (created) {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (_)=>DirectoryDetailsPage( directoryPath: '${widget.directoryPath}',)));
+                        }
+                        setState(() {
+                          _directoryAlreadyExists = !created;
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              translation(context).pleaseEnterADirectoryName,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      }
+
+                  },
+                  child: const Text('Create Folder'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
   @override
   void initState() {
     print("Hello Matching == ${widget.directoryPath.split('/').last}");
@@ -153,21 +285,35 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
+                                 Row(
+                                   children: [
+                                     IconButton(
+                                         onPressed: () {
+                                           Navigator.pop(context);
+                                         },
+                                         style: IconButton.styleFrom(
+                                           padding: EdgeInsets.zero,
+                                         ),
+                                         icon: const Icon(Icons.arrow_back)),
+                                     Text(
+                                       widget.directoryPath.split('/').last,
+                                       style: const TextStyle(
+                                         fontSize: 20,
+                                         fontWeight: FontWeight.w500,
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+
+                                    GestureDetector(
+                                        onTap: () {
+
                                         },
-                                        style: IconButton.styleFrom(
-                                          padding: EdgeInsets.zero,
-                                        ),
-                                        icon: const Icon(Icons.arrow_back)),
-                                    Text(
-                                      widget.directoryPath.split('/').last,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                        child: SvgPicture.asset(
+                                          AppAssets.create_folder,
+                                          height:AppHelper.isTablet(context)?32: 28,
+                                          width:AppHelper.isTablet(context)?32: 28,
+                                        )),
                                   ],
                                 ),
                               ),
@@ -201,25 +347,42 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                     height: 70,
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        IconButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            style: IconButton.styleFrom(
-                                              padding: EdgeInsets.zero,
-                                            ),
-                                            icon: Platform.isAndroid
-                                                ? const Icon(Icons.arrow_back)
-                                                : const Icon(
-                                                    Icons.arrow_back_ios)),
-                                        Text(
-                                          widget.directoryPath.split('/').last,
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                       Row(
+                                           children: [
+                                             IconButton(
+                                                 onPressed: () {
+                                                   Navigator.pop(context);
+                                                 },
+                                                 style: IconButton.styleFrom(
+                                                   padding: EdgeInsets.zero,
+                                                 ),
+                                                 icon: Platform.isAndroid
+                                                     ? const Icon(Icons.arrow_back)
+                                                     : const Icon(
+                                                     Icons.arrow_back_ios)),
+                                             Text(
+                                               widget.directoryPath.split('/').last,
+                                               style: const TextStyle(
+                                                 fontSize: 20,
+                                                 fontWeight: FontWeight.w500,
+                                               ),
+                                             ),
+                                           ],
+                                       ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 10),
+                                          child: GestureDetector(
+                                              onTap: () {
+                                                _showCenterDialog(context);
+
+                                              },
+                                              child: SvgPicture.asset(
+                                                AppAssets.create_folder,
+                                                height:AppHelper.isTablet(context)?32: 28,
+                                                width:AppHelper.isTablet(context)?32: 28,
+                                              )),
                                         ),
                                       ],
                                     ),
@@ -326,21 +489,38 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                 ),
                                               ),
                                         !_isLongPressed
-                                            ? TextButton(
-                                                style: IconButton.styleFrom(
-                                                  padding: EdgeInsets.zero,
-                                                ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _isLongPressed = true;
-                                                  });
-                                                },
-                                                child: Text(
-                                                  translation(context).select,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                  ),
-                                                ))
+                                            ? Row(
+                                              children: [
+
+                                                TextButton(
+                                                    style: IconButton.styleFrom(
+                                                      padding: EdgeInsets.zero,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _isLongPressed = true;
+                                                      });
+                                                    },
+                                                    child: Text(
+                                                      translation(context).select,
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                      ),
+                                                    )),
+                                                SizedBox(width: 10,),
+
+                                                GestureDetector(
+                                                    onTap: () {
+                                                      _showCenterDialog(context);
+
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      AppAssets.create_folder,
+                                                      height:AppHelper.isTablet(context)?32: 28,
+                                                      width:AppHelper.isTablet(context)?32: 28,
+                                                    )),
+                                              ],
+                                            )
                                             : _isLongPressed &&
                                                     _selectedItems.isNotEmpty
                                                 ? TextButton(
