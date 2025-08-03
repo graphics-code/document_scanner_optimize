@@ -393,54 +393,11 @@ class _BottomBarState extends State<BottomBar> {
                   }
                 },
               ),
-              // SpeedDialChild(
-              //   backgroundColor: const Color(0xFF008000),
-              //   child: const Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: [
-              //       Icon(
-              //         Icons.camera_alt,
-              //         color: Colors.white,
-              //       ),
-              //       SizedBox(
-              //         width: 10,
-              //       ),
-              //       Text(
-              //         'Passport',
-              //         style: TextStyle(color: Colors.white),
-              //       ),
-              //     ],
-              //   ),
-              //   onTap: () async {
-              //     await AppHelper.handlePermissions().then((_) async {
-              //       await CunningDocumentScanner.getPictures(
-              //               isGalleryImportAllowed: true)
-              //           .then((pictures) {
-              //         if (pictures!.isNotEmpty) {
-              //           pictures.forEach((element) async {
-              //             String imageName =
-              //                 DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
-              //             imageEditProvider.addImage(ImageModel(
-              //                 docType: 'Passport',
-              //                 imageByte: File(element).readAsBytesSync(),
-              //                 name: "Passport-$imageName"));
-              //           });
-              //
-              //           Navigator.push(
-              //               context,
-              //               MaterialPageRoute(
-              //                 builder: (context) => const ImagePreviewScreen(),
-              //               ));
-              //         }
-              //       });
-              //     });
-              //   },
-              // ),
+
             ],
             child: SvgPicture.asset(AppAssets.floatingCamera,
-                width: size.width >= 600 ? 40 : 30,
-                height: size.width >= 600 ? 38 : 28)),
+                width: size.width >= 600 ? 30 : 30,
+                height: size.width >= 600 ? 30 : 28)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
           surfaceTintColor: Colors.grey,

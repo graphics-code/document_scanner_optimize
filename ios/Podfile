@@ -30,6 +30,10 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_modular_headers!
 
+  # Add Firebase pods
+  pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
@@ -53,8 +57,10 @@ post_install do |installer|
         'PERMISSION_MEDIA_LIBRARY=1',
         ## dart: PermissionGroup.microphone
         'PERMISSION_MICROPHONE=1',
+        ## dart: PermissionGroup.notification
+        'PERMISSION_NOTIFICATIONS=1',
       ]
-      
+
       if Gem::Version.new($iOsVersion) > Gem::Version.new(config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'])
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = $iOsVersion
       end

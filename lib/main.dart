@@ -3,7 +3,9 @@ import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
 import 'package:doc_scanner/image_edit/provider/image_edit_provider.dart';
 import 'package:doc_scanner/splash_screen/splash_screen.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/firebase_messageing.dart';
 import 'package:doc_scanner/utils/helper.dart';
+import 'package:doc_scanner/utils/local_notification.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,17 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Future.delayed(const Duration(seconds: 5), () async {
+
+
+    final localNotificationsService = LocalNotificationsService.instance();
+    await localNotificationsService.init();
+
+    final firebaseMessagingService = FirebaseMessagingService.instance();
+    await firebaseMessagingService.init(
+      localNotificationsService: localNotificationsService,
+    );
+  });
   MobileAds.instance.initialize();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {

@@ -77,7 +77,10 @@ class _TextRecognitionScreenState extends State<TextRecognitionScreen> {
                   TextEditingController renameController =
                       TextEditingController();
                   return AlertDialog(
-                    title: const Text("PDF"),
+                    title: SizedBox(
+                      width: AppHelper.isIpad(context)?350:300,
+
+                        child: const Text("PDF")),
                     content: TextFormField(
                       controller: renameController,
                       keyboardType: TextInputType.text,

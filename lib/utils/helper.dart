@@ -10,6 +10,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AppHelper {
+  static bool isIpad(BuildContext context) {
+    final width = MediaQuery.of(context).size.shortestSide;
+    return width >= 768;
+  }
+
   Future<void> createDirectories() async {
     final Directory appDirectory = await getApplicationDocumentsDirectory();
     final Directory docScannerDirectory =

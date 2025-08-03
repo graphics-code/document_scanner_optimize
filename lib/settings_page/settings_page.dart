@@ -5,6 +5,7 @@ import 'package:doc_scanner/main.dart';
 import 'package:doc_scanner/settings_page/web_view_page.dart';
 import 'package:doc_scanner/settings_page/widgets/switch_item.dart';
 import 'package:doc_scanner/utils/app_constant.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:share_plus/share_plus.dart';
@@ -48,8 +49,8 @@ class _SettingsPageState extends State<SettingsPage> {
         centerTitle: true,
         title: Text(
           translation(context).settings,
-          style: const TextStyle(
-            fontSize: 20,
+          style:  TextStyle(
+            fontSize:AppHelper.isIpad(context)?30: 20,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -70,17 +71,17 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   SvgPicture.asset(
                     AppAssets.languageIcon,
-                    height: 20,
-                    width: 20,
+                    height:AppHelper.isIpad(context)?35: 20,
+                    width:AppHelper.isIpad(context)?35: 20,
                   ),
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width * 0.015,
                   ),
                   Text(
                     translation(context).language,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 17,
+                      fontSize:AppHelper.isIpad(context)?20: 17,
                     ),
                   ),
                   Expanded(

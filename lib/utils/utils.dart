@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:doc_scanner/localaization/language_constant.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -267,7 +268,9 @@ Future<void> showNormalAlertDialogue({
     barrierDismissible: false,
     builder: (context) {
       return AlertDialog(
-        title: Text(title),
+        title: SizedBox(
+            width: AppHelper.isIpad(context)?350:250,
+            child: Text(title)),
         content: Text(content),
         actions: [
           TextButton(

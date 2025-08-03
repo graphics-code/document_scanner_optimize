@@ -414,16 +414,16 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
-                                                  const Icon(
+                                                   Icon(
                                                     Icons.folder,
                                                     color:
                                                         AppColor.primaryColor,
-                                                    size: 40,
+                                                    size:AppHelper.isIpad(context)?70: 40,
                                                   ),
                                                   Text(
                                                     filePath.split('/').last,
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
+                                                    style:  TextStyle(
+                                                      fontSize:AppHelper.isIpad(context)?15: 12,
                                                     ),
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -436,37 +436,40 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                     child: SizedBox(
                                                       height: 30,
                                                       width: 30,
-                                                      child: Checkbox(
-                                                        shape:
-                                                            const CircleBorder(),
-                                                        activeColor: AppColor
-                                                            .primaryColor,
-                                                        value: isSelected,
-                                                        side: const BorderSide(
-                                                            color: Color(
-                                                                0xFFBEBEBE)),
-                                                        onChanged:
-                                                            (bool? value) {
-                                                          setState(() {
-                                                            if (value == true) {
-                                                              _selectedItems
-                                                                  .add(
-                                                                      filePath);
-                                                            } else {
-                                                              _selectedItems
-                                                                  .remove(
-                                                                      filePath);
-                                                            }
-                                                          });
-                                                        },
+                                                      child: Transform.scale(
+                                                        scale: AppHelper.isIpad(context)?1.3:1,
+                                                        child: Checkbox(
+                                                          shape:
+                                                              const CircleBorder(),
+                                                          activeColor: AppColor
+                                                              .primaryColor,
+                                                          value: isSelected,
+                                                          side: const BorderSide(
+                                                              color: Color(
+                                                                  0xFFBEBEBE)),
+                                                          onChanged:
+                                                              (bool? value) {
+                                                            setState(() {
+                                                              if (value == true) {
+                                                                _selectedItems
+                                                                    .add(
+                                                                        filePath);
+                                                              } else {
+                                                                _selectedItems
+                                                                    .remove(
+                                                                        filePath);
+                                                              }
+                                                            });
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
                                                   )
                                                 : InkWell(
-                                                    child: const Icon(
+                                                    child:  Icon(
                                                       Icons.more_vert,
                                                       color: Colors.black,
-                                                      size: 20,
+                                                      size:AppHelper.isIpad(context)?30: 20,
                                                     ),
                                                     onTap: () {
                                                       showModalBottomSheet(
@@ -748,13 +751,13 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                     File(
                                                       filePath,
                                                     ),
-                                                    width: 100,
+                                                    width:AppHelper.isIpad(context)?120: 100,
                                                     height: 60,
                                                   ),
                                                   Text(
                                                     filePath.split('/').last,
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
+                                                    style:  TextStyle(
+                                                      fontSize:AppHelper.isIpad(context)?15: 12,
                                                     ),
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -767,37 +770,40 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                     child: SizedBox(
                                                       height: 30,
                                                       width: 30,
-                                                      child: Checkbox(
-                                                        side: const BorderSide(
-                                                            color: Color(
-                                                                0xFFBEBEBE)),
-                                                        shape:
-                                                            const CircleBorder(),
-                                                        activeColor: AppColor
-                                                            .primaryColor,
-                                                        value: isSelected,
-                                                        onChanged:
-                                                            (bool? value) {
-                                                          setState(() {
-                                                            if (value == true) {
-                                                              _selectedItems
-                                                                  .add(
-                                                                      filePath);
-                                                            } else {
-                                                              _selectedItems
-                                                                  .remove(
-                                                                      filePath);
-                                                            }
-                                                          });
-                                                        },
+                                                      child: Transform.scale(
+                                                        scale: AppHelper.isIpad(context)?1.3:1,
+                                                        child: Checkbox(
+                                                          side: const BorderSide(
+                                                              color: Color(
+                                                                  0xFFBEBEBE)),
+                                                          shape:
+                                                              const CircleBorder(),
+                                                          activeColor: AppColor
+                                                              .primaryColor,
+                                                          value: isSelected,
+                                                          onChanged:
+                                                              (bool? value) {
+                                                            setState(() {
+                                                              if (value == true) {
+                                                                _selectedItems
+                                                                    .add(
+                                                                        filePath);
+                                                              } else {
+                                                                _selectedItems
+                                                                    .remove(
+                                                                        filePath);
+                                                              }
+                                                            });
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
                                                   )
                                                 : InkWell(
-                                                    child: const Icon(
+                                                    child:  Icon(
                                                       Icons.more_vert,
                                                       color: Colors.black,
-                                                      size: 20,
+                                                      size:AppHelper.isIpad(context)?30: 20,
                                                     ),
                                                     onTap: () {
                                                       showModalBottomSheet(
@@ -1210,37 +1216,40 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                     child: SizedBox(
                                                       height: 30,
                                                       width: 30,
-                                                      child: Checkbox(
-                                                        side: const BorderSide(
-                                                            color: Color(
-                                                                0xFFBEBEBE)),
-                                                        shape:
-                                                            const CircleBorder(),
-                                                        activeColor: AppColor
-                                                            .primaryColor,
-                                                        value: isSelected,
-                                                        onChanged:
-                                                            (bool? value) {
-                                                          setState(() {
-                                                            if (value == true) {
-                                                              _selectedItems
-                                                                  .add(
-                                                                      filePath);
-                                                            } else {
-                                                              _selectedItems
-                                                                  .remove(
-                                                                      filePath);
-                                                            }
-                                                          });
-                                                        },
+                                                      child: Transform.scale(
+                                                        scale: AppHelper.isIpad(context)?1.3:1,
+                                                        child: Checkbox(
+                                                          side: const BorderSide(
+                                                              color: Color(
+                                                                  0xFFBEBEBE)),
+                                                          shape:
+                                                              const CircleBorder(),
+                                                          activeColor: AppColor
+                                                              .primaryColor,
+                                                          value: isSelected,
+                                                          onChanged:
+                                                              (bool? value) {
+                                                            setState(() {
+                                                              if (value == true) {
+                                                                _selectedItems
+                                                                    .add(
+                                                                        filePath);
+                                                              } else {
+                                                                _selectedItems
+                                                                    .remove(
+                                                                        filePath);
+                                                              }
+                                                            });
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
                                                   )
                                                 : InkWell(
-                                                    child: const Icon(
+                                                    child:  Icon(
                                                       Icons.more_vert,
                                                       color: Colors.black,
-                                                      size: 20,
+                                                      size:AppHelper.isIpad(context)?30: 20,
                                                     ),
                                                     onTap: () {
                                                       showModalBottomSheet(
@@ -1516,6 +1525,9 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                     filePath.split('/').last,
                                                     overflow:
                                                         TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: AppHelper.isIpad(context)?15:12
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -1525,37 +1537,40 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                     child: SizedBox(
                                                       height: 30,
                                                       width: 30,
-                                                      child: Checkbox(
-                                                        side: const BorderSide(
-                                                            color: Color(
-                                                                0xFFBEBEBE)),
-                                                        shape:
-                                                            const CircleBorder(),
-                                                        activeColor: AppColor
-                                                            .primaryColor,
-                                                        value: isSelected,
-                                                        onChanged:
-                                                            (bool? value) {
-                                                          setState(() {
-                                                            if (value == true) {
-                                                              _selectedItems
-                                                                  .add(
-                                                                      filePath);
-                                                            } else {
-                                                              _selectedItems
-                                                                  .remove(
-                                                                      filePath);
-                                                            }
-                                                          });
-                                                        },
+                                                      child: Transform.scale(
+                                                        scale: AppHelper.isIpad(context)?1.3:1,
+                                                        child: Checkbox(
+                                                          side: const BorderSide(
+                                                              color: Color(
+                                                                  0xFFBEBEBE)),
+                                                          shape:
+                                                              const CircleBorder(),
+                                                          activeColor: AppColor
+                                                              .primaryColor,
+                                                          value: isSelected,
+                                                          onChanged:
+                                                              (bool? value) {
+                                                            setState(() {
+                                                              if (value == true) {
+                                                                _selectedItems
+                                                                    .add(
+                                                                        filePath);
+                                                              } else {
+                                                                _selectedItems
+                                                                    .remove(
+                                                                        filePath);
+                                                              }
+                                                            });
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
                                                   )
                                                 : InkWell(
-                                                    child: const Icon(
+                                                    child:  Icon(
                                                       Icons.more_vert,
                                                       color: Colors.black,
-                                                      size: 20,
+                                                      size:AppHelper.isIpad(context)?30: 20,
                                                     ),
                                                     onTap: () {
                                                       showModalBottomSheet(
@@ -1945,936 +1960,22 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                   },
                                 ),
                               ),
-                              Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    height: 75,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: myBanner != null
-                                        ? AdWidget(ad: myBanner!)
-                                        : const SizedBox(),
-                                  ),
-                                  const SizedBox(
-                                    height: 2,
-                                  ),
-                                  Container(
-                                    height: size.width >= 600 ? 100 : 70,
-                                    color: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    alignment: Alignment.center,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            if (_selectedItems.every(
-                                                    (element) =>
-                                                        element
-                                                            .toLowerCase()
-                                                            .endsWith('.jpg') ||
-                                                        element
-                                                            .toLowerCase()
-                                                            .endsWith('.txt') ||
-                                                        element
-                                                            .toLowerCase()
-                                                            .endsWith('.pdf') ||
-                                                        element
-                                                            .toLowerCase()
-                                                            .endsWith(
-                                                                '.jpeg') ||
-                                                        element
-                                                            .toLowerCase()
-                                                            .endsWith(
-                                                                '.png')) &&
-                                                _selectedItems.isNotEmpty) {
-                                              await showModalBottomSheet(
-                                                context: context,
-                                                builder: (context) {
-                                                  List<String> directories =
-                                                      getSubdirectoriesSyncForIos(
-                                                          widget.directoryPath);
-                                                  directories.remove(
-                                                      widget.directoryPath);
-                                                  log(directories.toString());
-
-                                                  return SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.5,
-                                                    child:
-                                                        directories.isNotEmpty
-                                                            ? Padding(
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        20.0,
-                                                                    vertical:
-                                                                        10),
-                                                                child: ListView(
-                                                                  scrollDirection:
-                                                                      Axis.vertical,
-                                                                  children: List.generate(
-                                                                      directories
-                                                                          .length,
-                                                                      (index) {
-                                                                    return ListTile(
-                                                                      leading:
-                                                                          const Icon(
-                                                                        Icons
-                                                                            .folder,
-                                                                        color: AppColor
-                                                                            .primaryColor,
-                                                                        size:
-                                                                            40,
-                                                                      ),
-                                                                      title: Text(directories[
-                                                                              index]
-                                                                          .split(
-                                                                              '/')
-                                                                          .last),
-                                                                      onTap:
-                                                                          () async {
-                                                                        var conflictResult =
-                                                                            homePageProvider.checkIfFilesExistInDirectory(
-                                                                          targetDirectoryPath:
-                                                                              directories[index],
-                                                                          filePaths:
-                                                                              _selectedItems.toList(),
-                                                                        );
-
-                                                                        if (conflictResult) {
-                                                                          showDialog(
-                                                                            context:
-                                                                                context,
-                                                                            builder:
-                                                                                (context) {
-                                                                              return AlertDialog(
-                                                                                title: Text(translation(context).conflictAlert),
-                                                                                content: Text(translation(context).fileConflictAlertContent),
-                                                                                actions: [
-                                                                                  TextButton(
-                                                                                    onPressed: () {
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: Text(translation(context).cancel),
-                                                                                  ),
-                                                                                  TextButton(
-                                                                                    onPressed: () {
-                                                                                      homePageProvider.moveFilesToDirectory(
-                                                                                        targetDirectoryPath: directories[index],
-                                                                                        filePaths: _selectedItems.toList(),
-                                                                                      );
-                                                                                      setState(() {
-                                                                                        _selectedItems.clear();
-                                                                                        _isLongPressed = false;
-                                                                                      });
-                                                                                      Navigator.pop(context);
-                                                                                      Navigator.pop(context);
-                                                                                      allFiles = homePageProvider.getFileList(widget.directoryPath);
-                                                                                    },
-                                                                                    child: Text(translation(context).duplicate),
-                                                                                  ),
-                                                                                ],
-                                                                              );
-                                                                            },
-                                                                          );
-                                                                        } else {
-                                                                          homePageProvider
-                                                                              .moveFilesToDirectory(
-                                                                            targetDirectoryPath:
-                                                                                directories[index],
-                                                                            filePaths:
-                                                                                _selectedItems.toList(),
-                                                                          );
-                                                                          setState(
-                                                                              () {
-                                                                            _selectedItems.clear();
-                                                                            _isLongPressed =
-                                                                                false;
-                                                                          });
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                          allFiles =
-                                                                              homePageProvider.getFileList(widget.directoryPath);
-                                                                        }
-
-                                                                        // homePageProvider.moveFilesToDirectory(
-                                                                        //   targetDirectoryPath: directories[index],
-                                                                        //   filePaths: _selectedItems.toList(),
-                                                                        //   context: context,
-                                                                        // );
-                                                                        // setState(() {
-                                                                        //   _selectedItems.clear();
-                                                                        //   _isLongPressed = false;
-                                                                        // });
-                                                                        // Navigator.pop(context);
-                                                                        // allFiles = homePageProvider.getFileList(widget.directoryPath);
-                                                                      },
-                                                                    );
-                                                                  }),
-                                                                ),
-                                                              )
-                                                            : Center(
-                                                                child: Text(
-                                                                  translation(
-                                                                          context)
-                                                                      .noDirectoryFound,
-                                                                ),
-                                                              ),
-                                                  );
-                                                },
-                                              );
-                                            } else if (_selectedItems.isEmpty) {
-                                              ScaffoldMessenger.of(context)
-                                                  .clearSnackBars();
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    translation(context)
-                                                        .pleaseSelectFirst,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  duration: const Duration(
-                                                      seconds: 1),
-                                                ),
-                                              );
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .clearSnackBars();
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    translation(context)
-                                                        .pleaseSelectFileOnly,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  duration: const Duration(
-                                                      seconds: 1),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              SvgPicture.asset(
-                                                AppAssets.move,
-                                                height: 20,
-                                                width: 20,
-                                                fit: BoxFit.fill,
-                                                color: _selectedItems.isNotEmpty
-                                                    ? AppColor.primaryColor
-                                                    : Colors.black,
-                                              ),
-                                              Text(
-                                                translation(context).move,
-                                                style: TextStyle(
-                                                    color: _selectedItems
-                                                            .isNotEmpty
-                                                        ? AppColor.primaryColor
-                                                        : Colors.black,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            if (_selectedItems.isNotEmpty) {
-                                              if (_selectedItems.every(
-                                                  (element) =>
-                                                      element
-                                                          .toLowerCase()
-                                                          .endsWith('.jpg') ||
-                                                      element
-                                                          .toLowerCase()
-                                                          .endsWith('.pdf') ||
-                                                      element
-                                                          .toLowerCase()
-                                                          .endsWith('.jpeg') ||
-                                                      element
-                                                          .toLowerCase()
-                                                          .endsWith('.png'))) {
-                                                if (isShareIng) {
-                                                  return;
-                                                } else {
-                                                  isShareIng = true;
-                                                  await Share.shareXFiles(
-                                                          _selectedItems
-                                                              .map((e) =>
-                                                                  XFile(e))
-                                                              .toList())
-                                                      .then((value) {
-                                                    isShareIng = false;
-                                                    setState(() {
-                                                      _selectedItems.clear();
-                                                      _isLongPressed = false;
-                                                    });
-                                                  });
-                                                }
-                                              } else if (_selectedItems.every(
-                                                      (element) => element
-                                                          .toLowerCase()
-                                                          .endsWith('.txt')) &&
-                                                  _selectedItems.length == 1) {
-                                                String text = await File(
-                                                        _selectedItems.first)
-                                                    .readAsString();
-                                                if (isShareIng) {
-                                                  return;
-                                                } else {
-                                                  isShareIng = true;
-                                                  await Share.share(text)
-                                                      .then((value) {
-                                                    isShareIng = false;
-                                                  });
-                                                }
-                                              } else if (_selectedItems.every(
-                                                      (element) => element
-                                                          .toLowerCase()
-                                                          .endsWith('.txt')) &&
-                                                  _selectedItems.length > 1) {
-                                                ScaffoldMessenger.of(context)
-                                                    .clearSnackBars();
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  const SnackBar(
-                                                    duration:
-                                                        Duration(seconds: 1),
-                                                    content: Text(
-                                                      "Please select one text file only",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .clearSnackBars();
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    duration: const Duration(
-                                                        seconds: 1),
-                                                    content: Text(
-                                                      translation(context)
-                                                          .pleaseSelectFileOnly,
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .clearSnackBars();
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  duration: const Duration(
-                                                      seconds: 1),
-                                                  content: Text(
-                                                    translation(context)
-                                                        .pleaseSelectFirst,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              SvgPicture.asset(
-                                                AppAssets.share,
-                                                height: 20,
-                                                width: 20,
-                                                fit: BoxFit.fill,
-                                                color: _selectedItems.isNotEmpty
-                                                    ? AppColor.primaryColor
-                                                    : Colors.black,
-                                              ),
-                                              Text(
-                                                translation(context).share,
-                                                style: TextStyle(
-                                                    color: _selectedItems
-                                                            .isNotEmpty
-                                                        ? AppColor.primaryColor
-                                                        : Colors.black,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        widget.directoryPath
-                                                    .endsWith("QR Code") ||
-                                                widget.directoryPath
-                                                    .endsWith("Bar Code") ||
-                                                isSubfolderOfQRCode(
-                                                    widget.directoryPath)
-                                            ? GestureDetector(
-                                                onTap: () async {
-                                                  if (_selectedItems
-                                                      .isNotEmpty) {
-                                                    if (_selectedItems.length ==
-                                                            1 &&
-                                                        _selectedItems.first
-                                                            .toLowerCase()
-                                                            .endsWith('.txt')) {
-                                                      String text = await File(
-                                                              _selectedItems
-                                                                  .first)
-                                                          .readAsString();
-                                                      Clipboard.setData(
-                                                              ClipboardData(
-                                                                  text: text))
-                                                          .then((value) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            duration:
-                                                                const Duration(
-                                                                    seconds: 1),
-                                                            content: Text(
-                                                              translation(
-                                                                      context)
-                                                                  .textCopied,
-                                                              style:
-                                                                  const TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      });
-                                                    } else {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          duration:
-                                                              const Duration(
-                                                                  seconds: 1),
-                                                          content: Text(
-                                                            translation(context)
-                                                                .pleaseSelectOneTextOnly,
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        duration:
-                                                            const Duration(
-                                                                seconds: 1),
-                                                        content: Text(
-                                                          translation(context)
-                                                              .pleaseSelectFirst,
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.copy,
-                                                      size: 20,
-                                                      color: _selectedItems
-                                                                  .length ==
-                                                              1
-                                                          ? AppColor
-                                                              .primaryColor
-                                                          : Colors.black,
-                                                    ),
-                                                    Text(
-                                                      translation(context).copy,
-                                                      style: TextStyle(
-                                                          color: _selectedItems
-                                                                      .length ==
-                                                                  1
-                                                              ? AppColor
-                                                                  .primaryColor
-                                                              : Colors.black,
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : GestureDetector(
-                                                onTap: () async {
-                                                  if (_selectedItems
-                                                      .isNotEmpty) {
-                                                    if (_selectedItems.length >=
-                                                        2) {
-                                                      if (_selectedItems.every((element) =>
-                                                          element
-                                                              .toLowerCase()
-                                                              .endsWith(
-                                                                  '.jpg') ||
-                                                          element
-                                                              .toLowerCase()
-                                                              .endsWith(
-                                                                  '.jpeg') ||
-                                                          element
-                                                              .toLowerCase()
-                                                              .endsWith(
-                                                                  '.png'))) {
-                                                        await showDialog(
-                                                          context: context,
-                                                          builder: (context) {
-                                                            TextEditingController
-                                                                renameController =
-                                                                TextEditingController();
-                                                            return AlertDialog(
-                                                              title: const Text(
-                                                                  "PDF"),
-                                                              content:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    renameController,
-                                                                keyboardType:
-                                                                    TextInputType
-                                                                        .text,
-                                                                textInputAction:
-                                                                    TextInputAction
-                                                                        .done,
-                                                                autofocus: true,
-                                                                validator:
-                                                                    (value) {
-                                                                  if (value!
-                                                                      .isEmpty) {
-                                                                    return translation(
-                                                                            context)
-                                                                        .pleaseEnterFileName;
-                                                                  }
-                                                                  return null;
-                                                                },
-                                                                decoration:
-                                                                    InputDecoration(
-                                                                  hintText: translation(
-                                                                          context)
-                                                                      .enterFileName,
-                                                                  focusedBorder:
-                                                                      const OutlineInputBorder(
-                                                                    borderSide:
-                                                                        BorderSide(
-                                                                            color:
-                                                                                AppColor.primaryColor),
-                                                                  ),
-                                                                  contentPadding:
-                                                                      const EdgeInsets
-                                                                          .symmetric(
-                                                                          horizontal:
-                                                                              10),
-                                                                ),
-                                                              ),
-                                                              actions: [
-                                                                TextButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                  child: Text(
-                                                                      translation(
-                                                                              context)
-                                                                          .cancel),
-                                                                ),
-                                                                TextButton(
-                                                                  onPressed:
-                                                                      () async {
-                                                                    if (renameController
-                                                                        .text
-                                                                        .isNotEmpty) {
-                                                                      AppHelper.showTopSnackBar(
-                                                                          context,
-                                                                          "PDF save successfully in Document Folder");
-
-                                                                      Navigator.pop(
-                                                                          context); // Close the current dialog
-                                                                      // Set target path
-                                                                      String
-                                                                          fileName =
-                                                                          renameController
-                                                                              .text;
-
-                                                                      await homePageProvider
-                                                                          .createPDFFromImages(
-                                                                        images: _selectedItems
-                                                                            .map((e) =>
-                                                                                File(e))
-                                                                            .toList(),
-                                                                        directoryPath:
-                                                                            widget.directoryPath,
-                                                                        context:
-                                                                            context,
-                                                                        fileName:
-                                                                            fileName,
-                                                                      )
-                                                                          .then(
-                                                                              (value) async {
-                                                                        if (value !=
-                                                                            null) {
-                                                                          // Save the PDF in the target folder
-
-                                                                          // Update the UI or perform any additional actions
-                                                                          allFiles =
-                                                                              homePageProvider.getFileList(widget.directoryPath);
-
-                                                                          if (widget.directoryPath.split("/").last ==
-                                                                              "ID Card") {
-                                                                            homePageProvider.addIdCardImage(value);
-                                                                          } else if (widget.directoryPath.split("/").last ==
-                                                                              "Document") {
-                                                                            homePageProvider.addDocumentImage(value);
-                                                                          }
-                                                                          // Clear selections and update state
-                                                                          setState(
-                                                                              () {
-                                                                            _selectedItems.clear();
-                                                                            _isLongPressed =
-                                                                                false;
-                                                                          });
-
-                                                                          // Show success popup
-                                                                        }
-                                                                      });
-                                                                    } else {
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .clearSnackBars();
-                                                                      ScaffoldMessenger.of(
-                                                                              context)
-                                                                          .showSnackBar(
-                                                                        SnackBar(
-                                                                          duration:
-                                                                              const Duration(seconds: 1),
-                                                                          content:
-                                                                              Text(
-                                                                            translation(context).pleaseEnterFileName,
-                                                                            style:
-                                                                                const TextStyle(color: Colors.white),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    }
-                                                                  },
-                                                                  child: Text(
-                                                                      translation(
-                                                                              context)
-                                                                          .ok),
-                                                                ),
-                                                              ],
-                                                            );
-                                                          },
-                                                        );
-                                                      } else {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .clearSnackBars();
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          SnackBar(
-                                                            duration:
-                                                                const Duration(
-                                                                    seconds: 1),
-                                                            content: Text(
-                                                              translation(
-                                                                      context)
-                                                                  .pleaseSelectImagesOnly,
-                                                              style:
-                                                                  const TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }
-                                                    }
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .clearSnackBars();
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        duration:
-                                                            const Duration(
-                                                                seconds: 1),
-                                                        content: Text(
-                                                          translation(context)
-                                                              .pleaseSelectFirst,
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppAssets.merge,
-                                                      height: 18,
-                                                      width: 18,
-                                                      fit: BoxFit.fill,
-                                                      color: _selectedItems
-                                                                  .length >=
-                                                              2
-                                                          ? AppColor
-                                                              .primaryColor
-                                                          : Colors.black,
-                                                    ),
-                                                    Text(
-                                                      translation(context)
-                                                          .merge,
-                                                      style: TextStyle(
-                                                          color: _selectedItems
-                                                                      .length >=
-                                                                  2
-                                                              ? AppColor
-                                                                  .primaryColor
-                                                              : Colors.black,
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            if (_selectedItems.isNotEmpty) {
-                                              showNormalAlertDialogue(
-                                                context: context,
-                                                title:
-                                                    translation(context).alert,
-                                                content: translation(context)
-                                                    .areYouSureYouWantToDeleteTheSelectedItems,
-                                                onOkText:
-                                                    translation(context).ok,
-                                                onCancelText:
-                                                    translation(context).cancel,
-                                                onOk: () async {
-                                                  Navigator.pop(context);
-                                                  setState(() {
-                                                    isDeleteLoading = true;
-                                                  });
-                                                  for (int i = 0;
-                                                      i < _selectedItems.length;
-                                                      i++) {
-                                                    var item = _selectedItems
-                                                        .elementAt(i);
-                                                    var fileSystemEntity =
-                                                        FileSystemEntity
-                                                            .typeSync(item);
-                                                    if (fileSystemEntity ==
-                                                        FileSystemEntityType
-                                                            .file) {
-                                                      try {
-                                                        File file = File(item);
-                                                        if (item
-                                                            .split("/")
-                                                            .contains(
-                                                                "Document")) {
-                                                          homePageProvider
-                                                              .removeDocumentImage(
-                                                                  item);
-                                                        } else if (item
-                                                            .split("/")
-                                                            .contains(
-                                                                "ID Card")) {
-                                                          homePageProvider
-                                                              .removeIdCardImage(
-                                                                  item);
-                                                        } else if (item
-                                                            .split("/")
-                                                            .contains(
-                                                                "QR Code")) {
-                                                          homePageProvider
-                                                              .removeQrCode(
-                                                                  item);
-                                                        } else {
-                                                          homePageProvider
-                                                              .removeBarCode(
-                                                                  item);
-                                                        }
-                                                        file.deleteSync();
-                                                      } catch (e) {
-                                                        print(
-                                                            "Error deleting file $item: $e");
-                                                      }
-                                                    } else if (fileSystemEntity ==
-                                                        FileSystemEntityType
-                                                            .directory) {
-                                                      Directory directory =
-                                                          Directory(item);
-                                                      List<FileSystemEntity>
-                                                          entities =
-                                                          directory.listSync();
-                                                      if (entities.isEmpty) {
-                                                        directory.deleteSync(
-                                                            recursive: true);
-                                                      } else {
-                                                        for (var entity
-                                                            in entities) {
-                                                          if (entity.path
-                                                              .split("/")
-                                                              .contains(
-                                                                  "Document")) {
-                                                            homePageProvider
-                                                                .removeDocumentImage(
-                                                                    entity
-                                                                        .path);
-                                                          } else if (entity.path
-                                                              .split("/")
-                                                              .contains(
-                                                                  "ID Card")) {
-                                                            homePageProvider
-                                                                .removeIdCardImage(
-                                                                    entity
-                                                                        .path);
-                                                          } else if (entity.path
-                                                              .split("/")
-                                                              .contains(
-                                                                  "QR Code")) {
-                                                            homePageProvider
-                                                                .removeQrCode(
-                                                                    entity
-                                                                        .path);
-                                                          } else {
-                                                            homePageProvider
-                                                                .removeBarCode(
-                                                                    entity
-                                                                        .path);
-                                                          }
-                                                        }
-                                                        directory.deleteSync(
-                                                            recursive: true);
-                                                      }
-                                                    }
-                                                  }
-                                                  allFiles = homePageProvider
-                                                      .getFileList(
-                                                          widget.directoryPath);
-
-                                                  setState(() {
-                                                    _selectedItems.clear();
-                                                    _isLongPressed = false;
-                                                    isDeleteLoading = false;
-                                                  });
-                                                },
-                                                onCancel: () {
-                                                  Navigator.pop(context);
-                                                },
-                                              );
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .clearSnackBars();
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  duration: const Duration(
-                                                      seconds: 1),
-                                                  content: Text(
-                                                    translation(context)
-                                                        .pleaseSelectFirst,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              SvgPicture.asset(
-                                                AppAssets.delete,
-                                                width: 24,
-                                                height: 24,
-                                                color: _selectedItems.isNotEmpty
-                                                    ? AppColor.primaryColor
-                                                    : Colors.black,
-                                              ),
-                                              Text(
-                                                translation(context).delete,
-                                                style: TextStyle(
-                                                    color: _selectedItems
-                                                            .isNotEmpty
-                                                        ? AppColor.primaryColor
-                                                        : Colors.black,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              // Column(
+                              //   children: [
+                              //     Container(
+                              //       alignment: Alignment.center,
+                              //       height: 75,
+                              //       width: MediaQuery.of(context).size.width,
+                              //       child: myBanner != null
+                              //           ? AdWidget(ad: myBanner!)
+                              //           : const SizedBox(),
+                              //     ),
+                              //     const SizedBox(
+                              //       height: 2,
+                              //     ),
+                              //
+                              //   ],
+                              // ),
                             ],
                           );
                         }
@@ -2893,6 +1994,924 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                   },
                 ),
               ),
+        bottomNavigationBar:  Container(
+          height: size.width >= 600 ? 100 : 70,
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(
+              horizontal: 8.0),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment:
+            MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  if (_selectedItems.every(
+                          (element) =>
+                      element
+                          .toLowerCase()
+                          .endsWith('.jpg') ||
+                          element
+                              .toLowerCase()
+                              .endsWith('.txt') ||
+                          element
+                              .toLowerCase()
+                              .endsWith('.pdf') ||
+                          element
+                              .toLowerCase()
+                              .endsWith(
+                              '.jpeg') ||
+                          element
+                              .toLowerCase()
+                              .endsWith(
+                              '.png')) &&
+                      _selectedItems.isNotEmpty) {
+                    await showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        List<String> directories =
+                        getSubdirectoriesSyncForIos(
+                            widget.directoryPath);
+                        directories.remove(
+                            widget.directoryPath);
+                        log(directories.toString());
+
+                        return SizedBox(
+                          height:
+                          MediaQuery.of(context)
+                              .size
+                              .height *
+                              0.5,
+                          child:
+                          directories.isNotEmpty
+                              ? Padding(
+                            padding: const EdgeInsets
+                                .symmetric(
+                                horizontal:
+                                20.0,
+                                vertical:
+                                10),
+                            child: ListView(
+                              scrollDirection:
+                              Axis.vertical,
+                              children: List.generate(
+                                  directories
+                                      .length,
+                                      (index) {
+                                    return ListTile(
+                                      leading:
+                                      const Icon(
+                                        Icons
+                                            .folder,
+                                        color: AppColor
+                                            .primaryColor,
+                                        size:
+                                        40,
+                                      ),
+                                      title: Text(directories[
+                                      index]
+                                          .split(
+                                          '/')
+                                          .last),
+                                      onTap:
+                                          () async {
+                                        var conflictResult =
+                                        homePageProvider.checkIfFilesExistInDirectory(
+                                          targetDirectoryPath:
+                                          directories[index],
+                                          filePaths:
+                                          _selectedItems.toList(),
+                                        );
+
+                                        if (conflictResult) {
+                                          showDialog(
+                                            context:
+                                            context,
+                                            builder:
+                                                (context) {
+                                              return AlertDialog(
+                                                title: Text(translation(context).conflictAlert),
+                                                content: Text(translation(context).fileConflictAlertContent),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text(translation(context).cancel),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      homePageProvider.moveFilesToDirectory(
+                                                        targetDirectoryPath: directories[index],
+                                                        filePaths: _selectedItems.toList(),
+                                                      );
+                                                      setState(() {
+                                                        _selectedItems.clear();
+                                                        _isLongPressed = false;
+                                                      });
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      allFiles = homePageProvider.getFileList(widget.directoryPath);
+                                                    },
+                                                    child: Text(translation(context).duplicate),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          homePageProvider
+                                              .moveFilesToDirectory(
+                                            targetDirectoryPath:
+                                            directories[index],
+                                            filePaths:
+                                            _selectedItems.toList(),
+                                          );
+                                          setState(
+                                                  () {
+                                                _selectedItems.clear();
+                                                _isLongPressed =
+                                                false;
+                                              });
+                                          Navigator.pop(
+                                              context);
+                                          allFiles =
+                                              homePageProvider.getFileList(widget.directoryPath);
+                                        }
+
+                                        // homePageProvider.moveFilesToDirectory(
+                                        //   targetDirectoryPath: directories[index],
+                                        //   filePaths: _selectedItems.toList(),
+                                        //   context: context,
+                                        // );
+                                        // setState(() {
+                                        //   _selectedItems.clear();
+                                        //   _isLongPressed = false;
+                                        // });
+                                        // Navigator.pop(context);
+                                        // allFiles = homePageProvider.getFileList(widget.directoryPath);
+                                      },
+                                    );
+                                  }),
+                            ),
+                          )
+                              : Center(
+                            child: Text(
+                              translation(
+                                  context)
+                                  .noDirectoryFound,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else if (_selectedItems.isEmpty) {
+                    ScaffoldMessenger.of(context)
+                        .clearSnackBars();
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          translation(context)
+                              .pleaseSelectFirst,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        duration: const Duration(
+                            seconds: 1),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .clearSnackBars();
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          translation(context)
+                              .pleaseSelectFileOnly,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        duration: const Duration(
+                            seconds: 1),
+                      ),
+                    );
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment.center,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      AppAssets.move,
+                      height:AppHelper.isIpad(context)?28: 20,
+                      width:AppHelper.isIpad(context)?28: 20,
+                      fit: BoxFit.fill,
+                      color: _selectedItems.isNotEmpty
+                          ? AppColor.primaryColor
+                          : Colors.black,
+                    ),
+                    Text(
+                      translation(context).move,
+                      style: TextStyle(
+                          color: _selectedItems
+                              .isNotEmpty
+                              ? AppColor.primaryColor
+                              : Colors.black,
+                          fontSize: 12,
+                          fontWeight:
+                          FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  if (_selectedItems.isNotEmpty) {
+                    if (_selectedItems.every(
+                            (element) =>
+                        element
+                            .toLowerCase()
+                            .endsWith('.jpg') ||
+                            element
+                                .toLowerCase()
+                                .endsWith('.pdf') ||
+                            element
+                                .toLowerCase()
+                                .endsWith('.jpeg') ||
+                            element
+                                .toLowerCase()
+                                .endsWith('.png'))) {
+                      if (isShareIng) {
+                        return;
+                      } else {
+                        isShareIng = true;
+                        await Share.shareXFiles(
+                            _selectedItems
+                                .map((e) =>
+                                XFile(e))
+                                .toList())
+                            .then((value) {
+                          isShareIng = false;
+                          setState(() {
+                            _selectedItems.clear();
+                            _isLongPressed = false;
+                          });
+                        });
+                      }
+                    } else if (_selectedItems.every(
+                            (element) => element
+                            .toLowerCase()
+                            .endsWith('.txt')) &&
+                        _selectedItems.length == 1) {
+                      String text = await File(
+                          _selectedItems.first)
+                          .readAsString();
+                      if (isShareIng) {
+                        return;
+                      } else {
+                        isShareIng = true;
+                        await Share.share(text)
+                            .then((value) {
+                          isShareIng = false;
+                        });
+                      }
+                    } else if (_selectedItems.every(
+                            (element) => element
+                            .toLowerCase()
+                            .endsWith('.txt')) &&
+                        _selectedItems.length > 1) {
+                      ScaffoldMessenger.of(context)
+                          .clearSnackBars();
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(
+                        const SnackBar(
+                          duration:
+                          Duration(seconds: 1),
+                          content: Text(
+                            "Please select one text file only",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context)
+                          .clearSnackBars();
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(
+                        SnackBar(
+                          duration: const Duration(
+                              seconds: 1),
+                          content: Text(
+                            translation(context)
+                                .pleaseSelectFileOnly,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .clearSnackBars();
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                      SnackBar(
+                        duration: const Duration(
+                            seconds: 1),
+                        content: Text(
+                          translation(context)
+                              .pleaseSelectFirst,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment.center,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      AppAssets.share,
+                      height:AppHelper.isIpad(context)?28: 20,
+                      width:AppHelper.isIpad(context)?28: 20,
+                      fit: BoxFit.fill,
+                      color: _selectedItems.isNotEmpty
+                          ? AppColor.primaryColor
+                          : Colors.black,
+                    ),
+                    Text(
+                      translation(context).share,
+                      style: TextStyle(
+                          color: _selectedItems
+                              .isNotEmpty
+                              ? AppColor.primaryColor
+                              : Colors.black,
+                          fontSize: 12,
+                          fontWeight:
+                          FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+              widget.directoryPath
+                  .endsWith("QR Code") ||
+                  widget.directoryPath
+                      .endsWith("Bar Code") ||
+                  isSubfolderOfQRCode(
+                      widget.directoryPath)
+                  ? GestureDetector(
+                onTap: () async {
+                  if (_selectedItems
+                      .isNotEmpty) {
+                    if (_selectedItems.length ==
+                        1 &&
+                        _selectedItems.first
+                            .toLowerCase()
+                            .endsWith('.txt')) {
+                      String text = await File(
+                          _selectedItems
+                              .first)
+                          .readAsString();
+                      Clipboard.setData(
+                          ClipboardData(
+                              text: text))
+                          .then((value) {
+                        ScaffoldMessenger.of(
+                            context)
+                            .showSnackBar(
+                          SnackBar(
+                            duration:
+                            const Duration(
+                                seconds: 1),
+                            content: Text(
+                              translation(
+                                  context)
+                                  .textCopied,
+                              style:
+                              const TextStyle(
+                                color: Colors
+                                    .white,
+                              ),
+                            ),
+                          ),
+                        );
+                      });
+                    } else {
+                      ScaffoldMessenger.of(
+                          context)
+                          .showSnackBar(
+                        SnackBar(
+                          duration:
+                          const Duration(
+                              seconds: 1),
+                          content: Text(
+                            translation(context)
+                                .pleaseSelectOneTextOnly,
+                            style:
+                            const TextStyle(
+                              color:
+                              Colors.white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(
+                        context)
+                        .showSnackBar(
+                      SnackBar(
+                        duration:
+                        const Duration(
+                            seconds: 1),
+                        content: Text(
+                          translation(context)
+                              .pleaseSelectFirst,
+                          style:
+                          const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment.center,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.copy,
+                      size:AppHelper.isIpad(context)?35: 20,
+                      color: _selectedItems
+                          .length ==
+                          1
+                          ? AppColor
+                          .primaryColor
+                          : Colors.black,
+                    ),
+                    Text(
+                      translation(context).copy,
+                      style: TextStyle(
+                          color: _selectedItems
+                              .length ==
+                              1
+                              ? AppColor
+                              .primaryColor
+                              : Colors.black,
+                          fontSize: 12,
+                          fontWeight:
+                          FontWeight.w500),
+                    ),
+                  ],
+                ),
+              )
+                  : GestureDetector(
+                onTap: () async {
+                  if (_selectedItems
+                      .isNotEmpty) {
+                    if (_selectedItems.length >=
+                        2) {
+                      if (_selectedItems.every((element) =>
+                      element
+                          .toLowerCase()
+                          .endsWith(
+                          '.jpg') ||
+                          element
+                              .toLowerCase()
+                              .endsWith(
+                              '.jpeg') ||
+                          element
+                              .toLowerCase()
+                              .endsWith(
+                              '.png'))) {
+                        await showDialog(
+                          context: context,
+                          builder: (context) {
+                            TextEditingController
+                            renameController =
+                            TextEditingController();
+                            return AlertDialog(
+                              title: SizedBox(
+                                width: AppHelper.isIpad(context)?350:300,
+                                child: const Text(
+                                    "PDF"),
+                              ),
+                              content:
+                              TextFormField(
+                                controller:
+                                renameController,
+                                keyboardType:
+                                TextInputType
+                                    .text,
+                                textInputAction:
+                                TextInputAction
+                                    .done,
+                                autofocus: true,
+                                validator:
+                                    (value) {
+                                  if (value!
+                                      .isEmpty) {
+                                    return translation(
+                                        context)
+                                        .pleaseEnterFileName;
+                                  }
+                                  return null;
+                                },
+                                decoration:
+                                InputDecoration(
+                                  hintText: translation(
+                                      context)
+                                      .enterFileName,
+                                  focusedBorder:
+                                  const OutlineInputBorder(
+                                    borderSide:
+                                    BorderSide(
+                                        color:
+                                        AppColor.primaryColor),
+                                  ),
+                                  contentPadding:
+                                  const EdgeInsets
+                                      .symmetric(
+                                      horizontal:
+                                      10),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed:
+                                      () {
+                                    Navigator.pop(
+                                        context);
+                                  },
+                                  child: Text(
+                                      translation(
+                                          context)
+                                          .cancel),
+                                ),
+                                TextButton(
+                                  onPressed:
+                                      () async {
+                                    if (renameController
+                                        .text
+                                        .isNotEmpty) {
+                                      AppHelper.showTopSnackBar(
+                                          context,
+                                          "PDF save successfully in Document Folder");
+
+                                      Navigator.pop(
+                                          context); // Close the current dialog
+                                      // Set target path
+                                      String
+                                      fileName =
+                                          renameController
+                                              .text;
+
+                                      await homePageProvider
+                                          .createPDFFromImages(
+                                        images: _selectedItems
+                                            .map((e) =>
+                                            File(e))
+                                            .toList(),
+                                        directoryPath:
+                                        widget.directoryPath,
+                                        context:
+                                        context,
+                                        fileName:
+                                        fileName,
+                                      )
+                                          .then(
+                                              (value) async {
+                                            if (value !=
+                                                null) {
+                                              // Save the PDF in the target folder
+
+                                              // Update the UI or perform any additional actions
+                                              allFiles =
+                                                  homePageProvider.getFileList(widget.directoryPath);
+
+                                              if (widget.directoryPath.split("/").last ==
+                                                  "ID Card") {
+                                                homePageProvider.addIdCardImage(value);
+                                              } else if (widget.directoryPath.split("/").last ==
+                                                  "Document") {
+                                                homePageProvider.addDocumentImage(value);
+                                              }
+                                              // Clear selections and update state
+                                              setState(
+                                                      () {
+                                                    _selectedItems.clear();
+                                                    _isLongPressed =
+                                                    false;
+                                                  });
+
+                                              // Show success popup
+                                            }
+                                          });
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                          context)
+                                          .clearSnackBars();
+                                      ScaffoldMessenger.of(
+                                          context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          duration:
+                                          const Duration(seconds: 1),
+                                          content:
+                                          Text(
+                                            translation(context).pleaseEnterFileName,
+                                            style:
+                                            const TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                      translation(
+                                          context)
+                                          .ok),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        ScaffoldMessenger.of(
+                            context)
+                            .clearSnackBars();
+                        ScaffoldMessenger.of(
+                            context)
+                            .showSnackBar(
+                          SnackBar(
+                            duration:
+                            const Duration(
+                                seconds: 1),
+                            content: Text(
+                              translation(
+                                  context)
+                                  .pleaseSelectImagesOnly,
+                              style:
+                              const TextStyle(
+                                color: Colors
+                                    .white,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  } else {
+                    ScaffoldMessenger.of(
+                        context)
+                        .clearSnackBars();
+                    ScaffoldMessenger.of(
+                        context)
+                        .showSnackBar(
+                      SnackBar(
+                        duration:
+                        const Duration(
+                            seconds: 1),
+                        content: Text(
+                          translation(context)
+                              .pleaseSelectFirst,
+                          style:
+                          const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment.center,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      AppAssets.merge,
+                      height:AppHelper.isIpad(context)?25: 18,
+                      width:AppHelper.isIpad(context)?25: 18,
+                      fit: BoxFit.fill,
+                      color: _selectedItems
+                          .length >=
+                          2
+                          ? AppColor
+                          .primaryColor
+                          : Colors.black,
+                    ),
+                    Text(
+                      translation(context)
+                          .merge,
+                      style: TextStyle(
+                          color: _selectedItems
+                              .length >=
+                              2
+                              ? AppColor
+                              .primaryColor
+                              : Colors.black,
+                          fontSize: 12,
+                          fontWeight:
+                          FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  if (_selectedItems.isNotEmpty) {
+                    showNormalAlertDialogue(
+                      context: context,
+                      title:
+                      translation(context).alert,
+                      content: translation(context)
+                          .areYouSureYouWantToDeleteTheSelectedItems,
+                      onOkText:
+                      translation(context).ok,
+                      onCancelText:
+                      translation(context).cancel,
+                      onOk: () async {
+                        Navigator.pop(context);
+                        setState(() {
+                          isDeleteLoading = true;
+                        });
+                        for (int i = 0;
+                        i < _selectedItems.length;
+                        i++) {
+                          var item = _selectedItems
+                              .elementAt(i);
+                          var fileSystemEntity =
+                          FileSystemEntity
+                              .typeSync(item);
+                          if (fileSystemEntity ==
+                              FileSystemEntityType
+                                  .file) {
+                            try {
+                              File file = File(item);
+                              if (item
+                                  .split("/")
+                                  .contains(
+                                  "Document")) {
+                                homePageProvider
+                                    .removeDocumentImage(
+                                    item);
+                              } else if (item
+                                  .split("/")
+                                  .contains(
+                                  "ID Card")) {
+                                homePageProvider
+                                    .removeIdCardImage(
+                                    item);
+                              } else if (item
+                                  .split("/")
+                                  .contains(
+                                  "QR Code")) {
+                                homePageProvider
+                                    .removeQrCode(
+                                    item);
+                              } else {
+                                homePageProvider
+                                    .removeBarCode(
+                                    item);
+                              }
+                              file.deleteSync();
+                            } catch (e) {
+                              print(
+                                  "Error deleting file $item: $e");
+                            }
+                          } else if (fileSystemEntity ==
+                              FileSystemEntityType
+                                  .directory) {
+                            Directory directory =
+                            Directory(item);
+                            List<FileSystemEntity>
+                            entities =
+                            directory.listSync();
+                            if (entities.isEmpty) {
+                              directory.deleteSync(
+                                  recursive: true);
+                            } else {
+                              for (var entity
+                              in entities) {
+                                if (entity.path
+                                    .split("/")
+                                    .contains(
+                                    "Document")) {
+                                  homePageProvider
+                                      .removeDocumentImage(
+                                      entity
+                                          .path);
+                                } else if (entity.path
+                                    .split("/")
+                                    .contains(
+                                    "ID Card")) {
+                                  homePageProvider
+                                      .removeIdCardImage(
+                                      entity
+                                          .path);
+                                } else if (entity.path
+                                    .split("/")
+                                    .contains(
+                                    "QR Code")) {
+                                  homePageProvider
+                                      .removeQrCode(
+                                      entity
+                                          .path);
+                                } else {
+                                  homePageProvider
+                                      .removeBarCode(
+                                      entity
+                                          .path);
+                                }
+                              }
+                              directory.deleteSync(
+                                  recursive: true);
+                            }
+                          }
+                        }
+                        allFiles = homePageProvider
+                            .getFileList(
+                            widget.directoryPath);
+
+                        setState(() {
+                          _selectedItems.clear();
+                          _isLongPressed = false;
+                          isDeleteLoading = false;
+                        });
+                      },
+                      onCancel: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context)
+                        .clearSnackBars();
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                      SnackBar(
+                        duration: const Duration(
+                            seconds: 1),
+                        content: Text(
+                          translation(context)
+                              .pleaseSelectFirst,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment:
+                  MainAxisAlignment.center,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      AppAssets.delete,
+                      width:AppHelper.isIpad(context)?35: 24,
+                      height:AppHelper.isIpad(context)?35: 24,
+                      color: _selectedItems.isNotEmpty
+                          ? AppColor.primaryColor
+                          : Colors.black,
+                    ),
+                    Text(
+                      translation(context).delete,
+                      style: TextStyle(
+                          color: _selectedItems
+                              .isNotEmpty
+                              ? AppColor.primaryColor
+                              : Colors.black,
+                          fontSize: 12,
+                          fontWeight:
+                          FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

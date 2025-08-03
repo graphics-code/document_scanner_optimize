@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                 width: 28,
               )),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            padding:  EdgeInsets.symmetric(horizontal:AppHelper.isIpad(context)? 35:15),
             child: GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -242,8 +242,8 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: SvgPicture.asset(
                   AppAssets.search,
-                  height: 28,
-                  width: 28,
+                  height:AppHelper.isIpad(context)?40: 28,
+                  width:AppHelper.isIpad(context)?40: 28,
                 )),
           ),
           // IconButton(
@@ -291,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     width: MediaQuery.sizeOf(context).width,
                     alignment: Alignment.center,
-                    height: size.width >= 600 ? 120 : 100,
+                    height: size.width >= 600 ? 170 : 100,
                     child: Row(
                       mainAxisAlignment: size.width >= 600
                           ? MainAxisAlignment.spaceAround
@@ -409,17 +409,17 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             children: [
                               CircleAvatar(
-                                radius: size.width >= 600 ? 35 : 30,
+                                radius: size.width >= 600 ? 50 : 30,
                                 backgroundColor: cameraItem.color,
                                 child: SvgPicture.asset(cameraItem.icon,
-                                    height: size.width >= 600 ? 30 : 25,
-                                    width: size.width >= 600 ? 30 : 25),
+                                    height: size.width >= 600 ? 45 : 25,
+                                    width: size.width >= 600 ? 45 : 25),
                               ),
                               SizedBox(
-                                width: size.width >= 600 ? 100 : 67,
+                                width: size.width >= 600 ? 150 : 67,
                                 child: Text(
                                   getCameraModeName(cameraItem.name, context),
-                                  style: const TextStyle(fontSize: 12),
+                                  style:  TextStyle(fontSize:AppHelper.isIpad(context)?18: 12),
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,
                                 ),
@@ -433,7 +433,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     width: MediaQuery.sizeOf(context).width,
-                    height: 100,
+                    height:AppHelper.isIpad(context)? 120:100,
                     alignment: Alignment.center,
                     child: Row(
                       mainAxisAlignment: size.width >= 600
@@ -453,7 +453,7 @@ class _HomePageState extends State<HomePage> {
                                 ));
                           },
                           child: Container(
-                            width: size.width >= 600 ? 90 : 70,
+                            width: size.width >= 600 ? 120 : 70,
                             alignment: Alignment.center,
                             decoration: const BoxDecoration(
                               image: DecorationImage(
@@ -468,14 +468,14 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Icon(
                                   Icons.folder,
-                                  size: size.width >= 600 ? 50 : 40,
+                                  size: size.width >= 600 ? 60 : 40,
                                   color: AppColor.primaryColor,
                                 ),
                                 Text(
                                   path.basename(directory.path),
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     color: Colors.black,
-                                    fontSize: 12,
+                                    fontSize:AppHelper.isIpad(context)?18: 12,
                                     fontWeight: FontWeight.w400,
                                   ),
                                   overflow: TextOverflow.ellipsis,
