@@ -435,34 +435,34 @@ class _BottomBarState extends State<BottomBar> {
                 selectedIndex: _currentIndex,
                 destinations: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 40.0),
+                    padding: const EdgeInsets.only(right: 40.0,top: 20),
                     child: NavigationDestination(
                       icon: SvgPicture.asset(
                         AppAssets.homeOutline,
-                        width: size.width >= 600 ? 30 : 30,
-                        height: size.width >= 600 ? 30 : 30,
+                        width: size.width >= 600 ? 40 : 30,
+                        height: size.width >= 600 ? 40 : 30,
                         color: Colors.black,
                       ),
                       selectedIcon: SvgPicture.asset(
                         AppAssets.homeFill,
-                        width: size.width >= 600 ? 30 : 25,
-                        height: size.width >= 600 ? 30 : 25,
+                        width: size.width >= 600 ? 40 : 25,
+                        height: size.width >= 600 ? 40 : 25,
                         color: AppColor.primaryColor,
                       ),
                       label: translation(context).home,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
+                    padding: const EdgeInsets.only(left: 40.0,top: 20),
                     child: NavigationDestination(
                       icon: SvgPicture.asset(AppAssets.settingOutline,
-                          width: size.width >= 600 ? 30 : 25,
-                          height: size.width >= 600 ? 30 : 25,
+                          width: size.width >= 600 ? 40 : 25,
+                          height: size.width >= 600 ? 40 : 25,
                           color: Colors.black),
                       selectedIcon: SvgPicture.asset(
                         AppAssets.settingFill,
-                        width: size.width >= 600 ? 30 : 25,
-                        height: size.width >= 600 ? 30 : 25,
+                        width: size.width >= 600 ? 40 : 25,
+                        height: size.width >= 600 ? 40 : 25,
                         color: AppColor.primaryColor,
                       ),
                       label: translation(context).settings,

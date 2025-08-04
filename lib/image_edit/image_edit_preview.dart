@@ -179,10 +179,11 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                     children: [
                                       const Text(''),
                                       Text(
-                                        translation(context).documentFiles,
+                                        translation(context).documentFiles!,
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 20,
+                                          decoration: TextDecoration.none,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),

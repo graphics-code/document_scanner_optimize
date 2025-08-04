@@ -208,6 +208,7 @@ class _HomePageState extends State<HomePage> {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: Text(translation(context).docScanner),
         titleTextStyle: const TextStyle(
           fontSize: 28,
@@ -215,20 +216,20 @@ class _HomePageState extends State<HomePage> {
           fontWeight: FontWeight.w500,
         ),
         actions: [
-          GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const DirectoryCreatePage(),
-                  ),
-                );
-              },
-              child: SvgPicture.asset(
-                AppAssets.create_folder,
-                height: 28,
-                width: 28,
-              )),
+          // GestureDetector(
+          //     onTap: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => const DirectoryCreatePage(),
+          //         ),
+          //       );
+          //     },
+          //     child: SvgPicture.asset(
+          //       AppAssets.create_folder,
+          //       height: 28,
+          //       width: 28,
+          //     )),
           Padding(
             padding:  EdgeInsets.symmetric(horizontal:AppHelper.isIpad(context)? 35:15),
             child: GestureDetector(
@@ -433,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     width: MediaQuery.sizeOf(context).width,
-                    height:AppHelper.isIpad(context)? 120:100,
+                    height:AppHelper.isIpad(context)? 170:100,
                     alignment: Alignment.center,
                     child: Row(
                       mainAxisAlignment: size.width >= 600
@@ -453,11 +454,13 @@ class _HomePageState extends State<HomePage> {
                                 ));
                           },
                           child: Container(
-                            width: size.width >= 600 ? 120 : 70,
+
+                            width:AppHelper.isIpad(context)?140: 90,
+                            height:AppHelper.isIpad(context)?140: 100,
                             alignment: Alignment.center,
                             decoration: const BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage('assets/icons/folder_bg.png'),
+                                image: AssetImage('assets/icons/folder_bg.png',),
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -468,7 +471,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Icon(
                                   Icons.folder,
-                                  size: size.width >= 600 ? 60 : 40,
+                                  size: size.width >= 600 ? 65 : 40,
                                   color: AppColor.primaryColor,
                                 ),
                                 Text(
@@ -495,7 +498,7 @@ class _HomePageState extends State<HomePage> {
                         : Row(
                             children: [
                               SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.235,
+                                width: MediaQuery.sizeOf(context).width * 0.21,
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount: homePageProvider
@@ -523,8 +526,11 @@ class _HomePageState extends State<HomePage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            width: 90,
-                                            height: 100,
+                                            margin: EdgeInsets.only(left: 30),
+                                            width:AppHelper.isIpad(context)?100: 90,
+                                            height:AppHelper.isIpad(context)?120: 100,
+
+
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -562,7 +568,8 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       );
-                                    } else if (imageFile.path
+                                    }
+                                    else if (imageFile.path
                                         .toLowerCase()
                                         .endsWith('.pdf')) {
                                       return GestureDetector(
@@ -572,8 +579,10 @@ class _HomePageState extends State<HomePage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            width: 90,
-                                            height: 100,
+                                            margin: EdgeInsets.only(left: 30),
+                                            width:AppHelper.isIpad(context)?70: 90,
+                                            height:AppHelper.isIpad(context)?120: 100,
+                                            alignment: Alignment.center,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -614,7 +623,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.235,
+                                width: MediaQuery.sizeOf(context).width * 0.25,
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount:
@@ -642,7 +651,9 @@ class _HomePageState extends State<HomePage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            height: 100,
+                                            margin: EdgeInsets.only(left: 58),
+                                            width:AppHelper.isIpad(context)?70: 90,
+                                            height:AppHelper.isIpad(context)?120: 100,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -689,8 +700,9 @@ class _HomePageState extends State<HomePage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            width: 90,
-                                            height: 100,
+                                            margin: EdgeInsets.only(left: 62),
+                                            width:AppHelper.isIpad(context)?70: 90,
+                                            height:AppHelper.isIpad(context)?120: 100,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -731,7 +743,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.235,
+                                width: MediaQuery.sizeOf(context).width * 0.25,
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount:
@@ -803,8 +815,9 @@ class _HomePageState extends State<HomePage> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
-                                          width: 90,
-                                          height: 100,
+                                          margin: EdgeInsets.only(left: 54),
+                                          width:AppHelper.isIpad(context)?70: 90,
+                                          height:AppHelper.isIpad(context)?120: 100,
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -818,6 +831,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: SvgPicture.asset(
                                                     AppAssets.txt),
                                               ),
+                                              SizedBox(height: 10,),
                                               SizedBox(
                                                 height: 20,
                                                 child: Text(
@@ -840,7 +854,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.235,
+                                width: MediaQuery.sizeOf(context).width * 0.24,
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount:
@@ -912,8 +926,9 @@ class _HomePageState extends State<HomePage> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
-                                          width: 90,
-                                          height: 100,
+                                          margin: EdgeInsets.only(left: 45),
+                                          width:AppHelper.isIpad(context)?70: 90,
+                                          height:AppHelper.isIpad(context)?120: 100,
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -927,6 +942,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: SvgPicture.asset(
                                                     AppAssets.txt),
                                               ),
+                                              SizedBox(height: 10,),
                                               SizedBox(
                                                 height: 20,
                                                 child: Text(

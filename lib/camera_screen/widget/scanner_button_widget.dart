@@ -1,3 +1,4 @@
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -142,7 +143,7 @@ class ToggleFlashlightButton extends StatelessWidget {
           case TorchState.auto:
             return IconButton(
               color: Colors.white,
-              iconSize: 25.0,
+              iconSize:AppHelper.isIpad(context)?35: 25.0,
               icon: const Icon(Icons.flash_auto),
               onPressed: () async {
                 await controller.toggleTorch();
@@ -151,7 +152,7 @@ class ToggleFlashlightButton extends StatelessWidget {
           case TorchState.off:
             return IconButton(
               color: Colors.white,
-              iconSize: 25.0,
+              iconSize:AppHelper.isIpad(context)?35: 25.0,
               icon: const Icon(Icons.flash_off),
               onPressed: () async {
                 await controller.toggleTorch();
@@ -160,18 +161,18 @@ class ToggleFlashlightButton extends StatelessWidget {
           case TorchState.on:
             return IconButton(
               color: Colors.white,
-              iconSize: 25.0,
+              iconSize:AppHelper.isIpad(context)?35: 25.0,
               icon: const Icon(Icons.flash_on),
               onPressed: () async {
                 await controller.toggleTorch();
               },
             );
           case TorchState.unavailable:
-            return const SizedBox.square(
+            return  SizedBox.square(
               dimension: 48.0,
               child: Icon(
                 Icons.no_flash,
-                size: 25.0,
+                size:AppHelper.isIpad(context)?35: 25.0,
                 color: Colors.grey,
               ),
             );

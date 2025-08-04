@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:scan/scan.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import '../../utils/helper.dart';
+
 class AnalyzeImageButton extends StatelessWidget {
   AnalyzeImageButton({
     required this.controller,
@@ -74,8 +76,8 @@ class AnalyzeImageButton extends StatelessWidget {
         }
         return IconButton(
           color: Colors.white,
-          icon: const Icon(Icons.image_outlined),
-          iconSize: 32,
+          icon:  const Icon(Icons.image_outlined),
+          iconSize:AppHelper.isIpad(context)?38: 32,
           onPressed: () => _onPressed(context),
         );
       },

@@ -26,6 +26,7 @@ Future<void> showQrAndBarCodeDialogue(
         child: Dialog(
           child: Container(
             height: 250,
+            width: AppHelper.isIpad(context)?500:400,
             padding: const EdgeInsets.all(18.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -436,7 +437,8 @@ Future<void> showQrAndBarCodeViewDialogue(
       return Dialog(
         alignment: Alignment.center,
         child: Container(
-            height: 250,
+            height: 260,
+            width: 500,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.grey.shade200,

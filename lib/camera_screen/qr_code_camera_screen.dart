@@ -7,6 +7,7 @@ import 'package:doc_scanner/camera_screen/widget/zoom_scale_slider.dart';
 import 'package:doc_scanner/core/local_storage.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/utils/app_constant.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -250,8 +251,8 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
             child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  width: 125,
-                  height: 60,
+                  width:AppHelper.isIpad(context)?180: 125,
+                  height:AppHelper.isIpad(context)?70: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     color: Colors.black.withOpacity(0.4),

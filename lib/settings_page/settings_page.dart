@@ -50,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(
           translation(context).settings,
           style:  TextStyle(
-            fontSize:AppHelper.isIpad(context)?30: 20,
+            fontSize:AppHelper.isIpad(context)?25: 20,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -127,9 +127,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  const Icon(
+                   Icon(
                     Icons.arrow_forward_ios,
-                    size: 15,
+                    size:AppHelper.isIpad(context)?20: 15,
                   ),
                 ],
               ),
@@ -188,50 +188,74 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               child: Column(
                 children: [
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(6),
-                      onTap: () {
-                        if (Platform.isIOS) {
-                          Share.share(
-                            'https://apps.apple.com/app/id6472610820',
-                          );
-                        } else if (Platform.isAndroid) {
-                          Share.share(
-                            'https://play.google.com/store/apps/details?id=com.documentscannerpdfscanner_',
+                  Builder(
+                    builder: (context) => GestureDetector(
+                      onTap: () async {
+
+
+
+                        // Prepare share content
+                        final shareUrl = Platform.isAndroid
+                            ? 'https://play.google.com/store/apps/details?id=com.documentscannerpdfscanner_'
+                            : 'https://apps.apple.com/app/id6472610820';
+
+                        final shareText = 'Check out this awesome app: $shareUrl';
+
+                        try {
+                          // Get position for iPad share sheet anchor
+                          final box = context.findRenderObject() as RenderBox?;
+                          final position = box!.localToGlobal(Offset.zero) & box.size;
+
+                          if (Platform.isIOS || Platform.isMacOS) {
+                            await Share.share(
+                              shareText,
+                              sharePositionOrigin: position,
+                              subject: 'Check out this app!',
+                            );
+                          } else {
+                            await Share.share(shareText);
+                          }
+                        } catch (e) {
+                          debugPrint('Sharing error: $e');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to share: ${e.toString()}')),
                           );
                         }
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                        decoration: BoxDecoration(
+
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                         child: Row(
                           children: [
                             SvgPicture.asset(
                               AppAssets.shareWithFriend,
-                              height: 20,
-                              width: 20,
+                              height:AppHelper.isIpad(context)?35: 20,
+                              width:AppHelper.isIpad(context)?35: 20,
                             ),
-                            SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.015,
-                            ),
+                            const SizedBox(width: 12),
                             Text(
-                              translation(context).shareWithFriend,
-                              style: const TextStyle(
+                              'Share with Friends',
+                              style:  TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 17,
-                              ),
+                                 fontSize: AppHelper.isIpad(context)?20: 17,
+                              )
+
                             ),
                             const Spacer(),
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 15,
+                             Icon(Icons.arrow_forward_ios,
+                              size:AppHelper.isIpad(context)?20: 15,
                             ),
                           ],
                         ),
                       ),
                     ),
                   ),
+
+
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.012,
                   ),
@@ -283,24 +307,24 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             SvgPicture.asset(
                               AppAssets.rateUs,
-                              height: 20,
-                              width: 20,
+                              height:AppHelper.isIpad(context)?35: 20,
+                              width:AppHelper.isIpad(context)?35: 20,
                             ),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.015,
                             ),
                             Text(
                               translation(context).rateUs,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 17,
+                                fontSize: AppHelper.isIpad(context)?20: 17,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                             const Spacer(),
-                            const Icon(
+                             Icon(
                               Icons.arrow_forward_ios,
-                              size: 15,
+                              size:AppHelper.isIpad(context)?20: 15,
                             ),
                           ],
                         ),
@@ -349,23 +373,23 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             SvgPicture.asset(
                               AppAssets.privacyPolicy,
-                              height: 20,
-                              width: 20,
+                              height:AppHelper.isIpad(context)?35: 20,
+                              width:AppHelper.isIpad(context)?35: 20,
                             ),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.015,
                             ),
                             Text(
                               translation(context).privacyPolicy,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 17,
+                              fontSize: AppHelper.isIpad(context)?20: 17,
                               ),
                             ),
                             const Spacer(),
-                            const Icon(
+                             Icon(
                               Icons.arrow_forward_ios,
-                              size: 15,
+                              size:AppHelper.isIpad(context)?20: 15,
                             ),
                           ],
                         ),
@@ -414,23 +438,23 @@ class _SettingsPageState extends State<SettingsPage> {
                           children: [
                             SvgPicture.asset(
                               AppAssets.termsCondition,
-                              height: 20,
-                              width: 20,
+                              height:AppHelper.isIpad(context)?35: 20,
+                              width:AppHelper.isIpad(context)?35: 20,
                             ),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.015,
                             ),
                             Text(
                               translation(context).termsAndConditions,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 17,
+                                  fontSize: AppHelper.isIpad(context)?20: 17
                               ),
                             ),
                             const Spacer(),
-                            const Icon(
+                             Icon(
                               Icons.arrow_forward_ios,
-                              size: 15,
+                              size:AppHelper.isIpad(context)?20: 15,
                             ),
                           ],
                         ),

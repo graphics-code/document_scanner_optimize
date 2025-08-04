@@ -1,3 +1,4 @@
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -42,6 +43,7 @@ class _ZoomScaleSliderState extends State<ZoomScaleSlider> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
                 onTap: () {
@@ -54,7 +56,8 @@ class _ZoomScaleSliderState extends State<ZoomScaleSlider> {
                   color: Colors.white,
                 ),
               ),
-              Expanded(
+              SizedBox(
+                width:AppHelper.isIpad(context)? 500:0,
                 child: Slider(
                   min: minZoom,
                   max: maxZoom,

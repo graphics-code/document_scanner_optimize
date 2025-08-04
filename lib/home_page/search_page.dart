@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
+import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:open_filex/open_filex.dart';
@@ -122,10 +123,11 @@ class _SearchPageState extends State<SearchPage> {
                   GridView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     itemCount: homeProvider.filteredItems.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
-                    crossAxisCount: 3,
-                    height: screenSize.width>=600 ? 130: 100,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount:AppHelper.isIpad(context)? 4:3,
+                    // height: screenSize.width>=600 ? 130: 100,
                     crossAxisSpacing: 10,
+                      childAspectRatio: 1.1,
                     mainAxisSpacing: 10,
                 ),
                 itemBuilder: (context, index) {
@@ -152,9 +154,9 @@ class _SearchPageState extends State<SearchPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
+                             Icon(
                               Icons.folder,
-                              size: 50,
+                              size:AppHelper.isIpad(context)?100: 40,
                               color: AppColor.primaryColor,
                             ),
                             Text(filePath.split('/').last),
@@ -186,10 +188,11 @@ class _SearchPageState extends State<SearchPage> {
                               File(
                                 filePath,
                               ),
-                              width: 100,
-                              height: 60,
+                              width:AppHelper.isIpad(context)?150: 100,
+                              height:AppHelper.isIpad(context)?100: 60,
                             ),
                             Text(
+                              style: TextStyle( fontSize:AppHelper.isIpad(context)?15: 12,),
                               filePath.split('/').last,
                               overflow: TextOverflow.ellipsis,
                             )
@@ -217,9 +220,10 @@ class _SearchPageState extends State<SearchPage> {
                           children: [
                             SvgPicture.asset(
                               AppAssets.txt,
-                              width: 100,
-                              height: 60,
+                              width:AppHelper.isIpad(context)?150: 100,
+                              height:AppHelper.isIpad(context)?100: 60,
                             ),
+                            SizedBox(height: 10,),
                             Text(
                               filePath.split('/').last,
                               overflow: TextOverflow.ellipsis,
@@ -245,8 +249,8 @@ class _SearchPageState extends State<SearchPage> {
                           children: [
                             SvgPicture.asset(
                              AppAssets.pdf,
-                              width: 100,
-                              height: 60,
+                              width:AppHelper.isIpad(context)?150: 100,
+                              height:AppHelper.isIpad(context)?100: 60,
                             ),
                             Text(
                               filePath.split('/').last,
