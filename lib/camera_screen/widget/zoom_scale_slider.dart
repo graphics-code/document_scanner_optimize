@@ -57,7 +57,7 @@ class _ZoomScaleSliderState extends State<ZoomScaleSlider> {
                 ),
               ),
               SizedBox(
-                width:AppHelper.isIpad(context)? 500:0,
+                width:AppHelper.isIpad(context)? 500:250,
                 child: Slider(
                   min: minZoom,
                   max: maxZoom,

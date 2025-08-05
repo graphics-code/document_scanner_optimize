@@ -402,7 +402,7 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                     return Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        height: MediaQuery.sizeOf(context).height * 0.29,
+                        height:AppHelper.isIpad(context)? MediaQuery.sizeOf(context).height * 0.29:MediaQuery.sizeOf(context).height * 0.35,
                         width: MediaQuery.sizeOf(context).width,
                         decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -610,6 +610,7 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                                 onTap: () async {
                                   await showDialog(
                                     context: context,
+
                                     builder: (context) {
                                       TextEditingController renameController =
                                           TextEditingController();
@@ -620,6 +621,7 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                                           return AlertDialog(
                                             title: SizedBox(
                                               width: AppHelper.isIpad(context)?350:300,
+
                                               child: Text(
                                                   translation(context).savePdf),
                                             ),

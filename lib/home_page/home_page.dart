@@ -291,6 +291,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     width: MediaQuery.sizeOf(context).width,
+                   
                     alignment: Alignment.center,
                     height: size.width >= 600 ? 170 : 100,
                     child: Row(
@@ -436,6 +437,7 @@ class _HomePageState extends State<HomePage> {
                     width: MediaQuery.sizeOf(context).width,
                     height:AppHelper.isIpad(context)? 170:100,
                     alignment: Alignment.center,
+
                     child: Row(
                       mainAxisAlignment: size.width >= 600
                           ? MainAxisAlignment.spaceAround
@@ -455,7 +457,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Container(
 
-                            width:AppHelper.isIpad(context)?140: 90,
+                            width:AppHelper.isIpad(context)?140: 70,
                             height:AppHelper.isIpad(context)?140: 100,
                             alignment: Alignment.center,
                             decoration: const BoxDecoration(
@@ -492,13 +494,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Expanded(
                     child: homePageProvider.isHistoryLoading
-                        ? const Center(
+                        ?  Center(
                             child: CircularProgressIndicator(),
                           )
                         : Row(
                             children: [
                               SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.21,
+                                width: AppHelper.isIpad(context)? MediaQuery.sizeOf(context).width * 0.21:   MediaQuery.sizeOf(context).width * 0.235,
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount: homePageProvider
@@ -526,7 +528,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            margin: EdgeInsets.only(left: 30),
+                                            margin: EdgeInsets.only(left:AppHelper.isIpad(context)? 30:0),
                                             width:AppHelper.isIpad(context)?100: 90,
                                             height:AppHelper.isIpad(context)?120: 100,
 
@@ -542,7 +544,7 @@ class _HomePageState extends State<HomePage> {
                                                   MainAxisAlignment.spaceAround,
                                               children: [
                                                 SizedBox(
-                                                  height: 60,
+                                                  height:AppHelper.isIpad(context)? 60:50,
                                                   child: Image.file(
                                                     imageFile,
                                                   ),
@@ -579,7 +581,8 @@ class _HomePageState extends State<HomePage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            margin: EdgeInsets.only(left: 30),
+                                            margin: EdgeInsets.only(left:AppHelper.isIpad(context)? 30:0),
+
                                             width:AppHelper.isIpad(context)?70: 90,
                                             height:AppHelper.isIpad(context)?120: 100,
                                             alignment: Alignment.center,
@@ -592,7 +595,7 @@ class _HomePageState extends State<HomePage> {
                                             child: Column(
                                               children: [
                                                 SizedBox(
-                                                  height: 60,
+                                                  height:AppHelper.isIpad(context)? 60:50,
                                                   child: SvgPicture.asset(
                                                       AppAssets.pdf),
                                                 ),
@@ -623,7 +626,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.25,
+                                width:AppHelper.isIpad(context)? MediaQuery.sizeOf(context).width * 0.25:  MediaQuery.sizeOf(context).width * 0.235,
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount:
@@ -651,7 +654,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            margin: EdgeInsets.only(left: 58),
+                                            margin: EdgeInsets.only(left:AppHelper.isIpad(context)? 58:0),
                                             width:AppHelper.isIpad(context)?70: 90,
                                             height:AppHelper.isIpad(context)?120: 100,
                                             decoration: BoxDecoration(
@@ -700,7 +703,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
-                                            margin: EdgeInsets.only(left: 62),
+                                            margin: EdgeInsets.only(left:AppHelper.isIpad(context)? 62:0),
                                             width:AppHelper.isIpad(context)?70: 90,
                                             height:AppHelper.isIpad(context)?120: 100,
                                             decoration: BoxDecoration(
@@ -743,7 +746,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.25,
+                                width:AppHelper.isIpad(context)? MediaQuery.sizeOf(context).width * 0.25: MediaQuery.sizeOf(context).width * 0.235,
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount:
@@ -815,7 +818,7 @@ class _HomePageState extends State<HomePage> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
-                                          margin: EdgeInsets.only(left: 54),
+                                          margin: EdgeInsets.only(left: AppHelper.isIpad(context)? 54:0),
                                           width:AppHelper.isIpad(context)?70: 90,
                                           height:AppHelper.isIpad(context)?120: 100,
                                           decoration: BoxDecoration(
@@ -831,7 +834,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: SvgPicture.asset(
                                                     AppAssets.txt),
                                               ),
-                                              SizedBox(height: 10,),
+                                           AppHelper.isIpad(context)?   SizedBox(height: 10,):Container(),
                                               SizedBox(
                                                 height: 20,
                                                 child: Text(
@@ -854,7 +857,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.24,
+                                width:AppHelper.isIpad(context)? MediaQuery.sizeOf(context).width * 0.24:  MediaQuery.sizeOf(context).width * 0.235,
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   itemCount:
@@ -926,7 +929,7 @@ class _HomePageState extends State<HomePage> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
-                                          margin: EdgeInsets.only(left: 45),
+                                          margin: EdgeInsets.only(left: AppHelper.isIpad(context)? 45:0),
                                           width:AppHelper.isIpad(context)?70: 90,
                                           height:AppHelper.isIpad(context)?120: 100,
                                           decoration: BoxDecoration(
@@ -942,7 +945,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: SvgPicture.asset(
                                                     AppAssets.txt),
                                               ),
-                                              SizedBox(height: 10,),
+                                              AppHelper.isIpad(context)?   SizedBox(height: 10,):Container(),
                                               SizedBox(
                                                 height: 20,
                                                 child: Text(

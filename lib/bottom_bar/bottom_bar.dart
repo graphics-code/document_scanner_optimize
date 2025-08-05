@@ -400,6 +400,7 @@ class _BottomBarState extends State<BottomBar> {
                 height: size.width >= 600 ? 30 : 28)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
+          height:AppHelper.isIpad(context)?90: 60,
           surfaceTintColor: Colors.grey,
           shape: const CircularNotchedRectangle(),
           notchMargin: 10.0,
@@ -435,7 +436,7 @@ class _BottomBarState extends State<BottomBar> {
                 selectedIndex: _currentIndex,
                 destinations: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 40.0,top: 20),
+                    padding:  EdgeInsets.only(right: 40.0,top: AppHelper.isIpad(context)? 20:3),
                     child: NavigationDestination(
                       icon: SvgPicture.asset(
                         AppAssets.homeOutline,
@@ -453,7 +454,7 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 40.0,top: 20),
+                    padding:  EdgeInsets.only(left: 40.0,top: AppHelper.isIpad(context)? 20:3),
                     child: NavigationDestination(
                       icon: SvgPicture.asset(AppAssets.settingOutline,
                           width: size.width >= 600 ? 40 : 25,

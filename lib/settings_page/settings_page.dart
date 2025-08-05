@@ -238,7 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             const SizedBox(width: 12),
                             Text(
-                              'Share with Friends',
+                                translation(context).shareWithFriend,
                               style:  TextStyle(
                                 fontWeight: FontWeight.w600,
                                  fontSize: AppHelper.isIpad(context)?20: 17,

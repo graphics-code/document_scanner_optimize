@@ -142,7 +142,7 @@ class _AddSignatureState extends State<AddSignature> {
       ),
       bottomNavigationBar: Container(
         color: const Color(0xff1E1F20),
-        height: AppHelper.isIpad(context) ? 95 : 70,
+        height: AppHelper.isIpad(context) ? 95 : 90,
         padding: const EdgeInsets.only(left: 10.0, bottom: 12.0, right: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

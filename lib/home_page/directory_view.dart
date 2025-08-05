@@ -84,6 +84,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                         fontSize: 15,
                       fontWeight: FontWeight.bold
                     ),),
+
                     // Align(
                     //   alignment: Alignment.topRight,
                     //   child: IconButton(onPressed: (){
@@ -93,6 +94,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                     // )
                   ],
                 ),
+                SizedBox(height: 10,),
 
                 TextField(
                   controller: _controller,
@@ -247,6 +249,34 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
     }
     return false;
   }
+  final allPaths = [
+    "/.../Doc Scanner/ID Card",
+    "/.../Doc Scanner/QR Code",
+    "/.../Doc Scanner/Bar Code",
+    "/.../Doc Scanner/Document",
+  ];
+
+  bool isLastCategory(String directoryPath, List<String> allPaths) {
+    final categories = ["ID Card", "QR Code", "Bar Code", "Document"];
+
+    // Extract last segment from each path
+    final foundCategories = allPaths.map((path) {
+      final parts = path.split('/');
+      return parts.isNotEmpty ? parts.last.trim() : '';
+    }).where((part) => categories.contains(part)).toList();
+
+    // If no valid category is found, return false
+    if (foundCategories.isEmpty) return false;
+
+    // Get the last category found from the list
+    final lastCategory = foundCategories.last;
+
+    // Get last segment of current directoryPath
+    final current = directoryPath.split('/').last.trim();
+
+    return current == lastCategory;
+  }
+
 
 
   @override
@@ -254,6 +284,11 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
     print("Hello Matching == ${widget.directoryPath.split('/').last}");
     allFiles = Provider.of<HomePageProvider>(context, listen: false)
         .getFileList(widget.directoryPath);
+
+    print("check this file ${widget.directoryPath}");
+
+
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       rootDirectory = await getApplicationDocumentsDirectory();
     });
@@ -411,6 +446,11 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                         ),
                                       ],
                                     ),
+                                    (widget.directoryPath.endsWith("Document") ||
+                                        widget.directoryPath.endsWith("ID Card") ||
+                                        widget.directoryPath.endsWith("QR Code") ||
+                                        widget.directoryPath.endsWith("Bar Code"))
+                                        ?
                                     Padding(
                                       padding:  EdgeInsets.only(right:AppHelper.isIpad(context)? 20:5),
                                       child: GestureDetector(
@@ -423,7 +463,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                             height: 28,
                                             width: 28,
                                           )),
-                                    ),
+                                    ):Container(),
                                   ],
                                 ),
                               ),
@@ -525,6 +565,11 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                     !_isLongPressed
                                         ? Row(
                                           children: [
+                                            (widget.directoryPath.endsWith("Document") ||
+                                                widget.directoryPath.endsWith("ID Card") ||
+                                                widget.directoryPath.endsWith("QR Code") ||
+                                                widget.directoryPath.endsWith("Bar Code"))
+                                                ?
                                             GestureDetector(
                                                 onTap: () {
                                                   _showCenterDialog(context);
@@ -534,7 +579,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                   AppAssets.create_folder,
                                                   height:AppHelper.isIpad(context)?32: 28,
                                                   width: AppHelper.isIpad(context)?32: 28,
-                                                )),
+                                                )):Container(),
                                             SizedBox(width:AppHelper.isIpad(context)? 20:10,),
 
 
@@ -606,7 +651,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
 
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10,
-                                    childAspectRatio: 1.1,
+                                    childAspectRatio: AppHelper.isIpad(context)? 1.1:  1.2,
 
                                   ),
                                   itemBuilder: (context, index) {
@@ -713,11 +758,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                           return Align(
                                                             alignment: Alignment.bottomCenter,
                                                             child: Container(
-                                                              height: MediaQuery
-                                                                          .sizeOf(
-                                                                              context)
-                                                                      .height *
-                                                                  0.2,
+                                                              height:AppHelper.isIpad(context)? MediaQuery.sizeOf(context).height * 0.2:MediaQuery.sizeOf(context).height * 0.22,
                                                               width: MediaQuery
                                                                       .sizeOf(
                                                                           context)
@@ -976,8 +1017,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                           alignment: Alignment.topRight,
                                           children: [
                                             Container(
-                                        width: 195,
-                                        height: 177,
+                                        width:AppHelper.isIpad(context)? 195:150,
+                                        height:AppHelper.isIpad(context)? 177:150,
 
 
                                         decoration: BoxDecoration(
@@ -998,7 +1039,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                       filePath,
                                                     ),
                                                     width:AppHelper.isIpad(context)?150: 100,
-                                                    height:AppHelper.isIpad(context)?100: 60,
+                                                    height:AppHelper.isIpad(context)?100: 50,
                                                   ),
                                                   Text(
                                                     filePath.split('/').last,
@@ -1455,9 +1496,9 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                   SvgPicture.asset(
                                                     AppAssets.txt,
                                                     width:AppHelper.isIpad(context)?150: 100,
-                                                    height:AppHelper.isIpad(context)?100: 60,
+                                                    height:AppHelper.isIpad(context)?100: 50,
                                                   ),
-                                                  SizedBox(height: 10,),
+                                             AppHelper.isIpad(context)?     SizedBox(height: 10,):Container(),
                                                   Padding(
                                                     padding: const EdgeInsets.all(8.0),
                                                     child: Text(
@@ -1794,7 +1835,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                   SvgPicture.asset(
                                                     AppAssets.pdf,
                                                     width:AppHelper.isIpad(context)?150: 100,
-                                                    height:AppHelper.isIpad(context)?100: 60,
+                                                    height:AppHelper.isIpad(context)?100: 50,
                                                   ),
                                                   Text(
                                                     filePath.split('/').last,
@@ -2279,7 +2320,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                 ),
               ),
         bottomNavigationBar:  Container(
-          height: size.width >= 600 ? 100 : 70,
+          height: size.width >= 600 ? 100 : 90,
           color: Colors.white,
           padding: const EdgeInsets.symmetric(
               horizontal: 8.0),
@@ -2288,7 +2329,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
             mainAxisAlignment:
             MainAxisAlignment.spaceAround,
             children: [
-              GestureDetector(
+          AppHelper.isIpad(context)?    GestureDetector(
                 onTap: () async {
                   if (_selectedItems.every(
                           (element) =>
@@ -2336,7 +2377,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                 .white,
                             borderRadius: BorderRadius.circular(10),
                             child: SizedBox(
-                              height:450,
+                              height: 450,
                               child:
                               directories.isNotEmpty
                                   ? Padding(
@@ -2526,7 +2567,233 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                     ),
                   ],
                 ),
-              ),
+              )
+              :  GestureDetector(
+            onTap: () async {
+              if (_selectedItems.every(
+                      (element) =>
+                  element
+                      .toLowerCase()
+                      .endsWith('.jpg') ||
+                      element
+                          .toLowerCase()
+                          .endsWith('.txt') ||
+                      element
+                          .toLowerCase()
+                          .endsWith('.pdf') ||
+                      element
+                          .toLowerCase()
+                          .endsWith(
+                          '.jpeg') ||
+                      element
+                          .toLowerCase()
+                          .endsWith(
+                          '.png')) &&
+                  _selectedItems.isNotEmpty) {
+                await showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    List<String> directories =
+                    getSubdirectoriesSyncForIos(
+                        widget.directoryPath);
+                    directories.remove(
+                        widget.directoryPath);
+                    log(directories.toString());
+
+                    return SizedBox(
+                      height:
+                      MediaQuery.of(context)
+                          .size
+                          .height *
+                          0.5,
+                      child:
+                      directories.isNotEmpty
+                          ? Padding(
+                        padding: const EdgeInsets
+                            .symmetric(
+                            horizontal:
+                            20.0,
+                            vertical:
+                            10),
+                        child: ListView(
+                          scrollDirection:
+                          Axis.vertical,
+                          children: List.generate(
+                              directories
+                                  .length,
+                                  (index) {
+                                return ListTile(
+                                  leading:
+                                  const Icon(
+                                    Icons
+                                        .folder,
+                                    color: AppColor
+                                        .primaryColor,
+                                    size:
+                                    40,
+                                  ),
+                                  title: Text(directories[
+                                  index]
+                                      .split(
+                                      '/')
+                                      .last),
+                                  onTap:
+                                      () async {
+                                    var conflictResult =
+                                    homePageProvider.checkIfFilesExistInDirectory(
+                                      targetDirectoryPath:
+                                      directories[index],
+                                      filePaths:
+                                      _selectedItems.toList(),
+                                    );
+
+                                    if (conflictResult) {
+                                      showDialog(
+                                        context:
+                                        context,
+                                        builder:
+                                            (context) {
+                                          return AlertDialog(
+                                            title: Text(translation(context).conflictAlert),
+                                            content: Text(translation(context).fileConflictAlertContent),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(translation(context).cancel),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  homePageProvider.moveFilesToDirectory(
+                                                    targetDirectoryPath: directories[index],
+                                                    filePaths: _selectedItems.toList(),
+                                                  );
+                                                  setState(() {
+                                                    _selectedItems.clear();
+                                                    _isLongPressed = false;
+                                                  });
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  allFiles = homePageProvider.getFileList(widget.directoryPath);
+                                                },
+                                                child: Text(translation(context).duplicate),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      homePageProvider
+                                          .moveFilesToDirectory(
+                                        targetDirectoryPath:
+                                        directories[index],
+                                        filePaths:
+                                        _selectedItems.toList(),
+                                      );
+                                      setState(
+                                              () {
+                                            _selectedItems.clear();
+                                            _isLongPressed =
+                                            false;
+                                          });
+                                      Navigator.pop(
+                                          context);
+                                      allFiles =
+                                          homePageProvider.getFileList(widget.directoryPath);
+                                    }
+
+                                    // homePageProvider.moveFilesToDirectory(
+                                    //   targetDirectoryPath: directories[index],
+                                    //   filePaths: _selectedItems.toList(),
+                                    //   context: context,
+                                    // );
+                                    // setState(() {
+                                    //   _selectedItems.clear();
+                                    //   _isLongPressed = false;
+                                    // });
+                                    // Navigator.pop(context);
+                                    // allFiles = homePageProvider.getFileList(widget.directoryPath);
+                                  },
+                                );
+                              }),
+                        ),
+                      )
+                          : Center(
+                        child: Text(
+                          translation(
+                              context)
+                              .noDirectoryFound,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else if (_selectedItems.isEmpty) {
+                ScaffoldMessenger.of(context)
+                    .clearSnackBars();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      translation(context)
+                          .pleaseSelectFirst,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    duration: const Duration(
+                        seconds: 1),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context)
+                    .clearSnackBars();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      translation(context)
+                          .pleaseSelectFileOnly,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    duration: const Duration(
+                        seconds: 1),
+                  ),
+                );
+              }
+            },
+            child: Column(
+              mainAxisAlignment:
+              MainAxisAlignment.center,
+              crossAxisAlignment:
+              CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  AppAssets.move,
+                  height: 20,
+                  width: 20,
+                  fit: BoxFit.fill,
+                  color: _selectedItems.isNotEmpty
+                      ? AppColor.primaryColor
+                      : Colors.black,
+                ),
+                Text(
+                  translation(context).move,
+                  style: TextStyle(
+                      color: _selectedItems
+                          .isNotEmpty
+                          ? AppColor.primaryColor
+                          : Colors.black,
+                      fontSize: 12,
+                      fontWeight:
+                      FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
               GestureDetector(
                 onTap: () async {
                   if (_selectedItems.isNotEmpty) {

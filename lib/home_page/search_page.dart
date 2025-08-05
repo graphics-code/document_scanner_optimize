@@ -221,7 +221,7 @@ class _SearchPageState extends State<SearchPage> {
                             SvgPicture.asset(
                               AppAssets.txt,
                               width:AppHelper.isIpad(context)?150: 100,
-                              height:AppHelper.isIpad(context)?100: 60,
+                              height:AppHelper.isIpad(context)?100: 50,
                             ),
                             SizedBox(height: 10,),
                             Text(

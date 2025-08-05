@@ -158,7 +158,7 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                         return Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            height: MediaQuery.sizeOf(context).height * 0.3,
+                            height:AppHelper.isIpad(context)? MediaQuery.sizeOf(context).height * 0.3: MediaQuery.sizeOf(context).height * 0.35,
                             width: MediaQuery.sizeOf(context).width,
                             decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.only(
