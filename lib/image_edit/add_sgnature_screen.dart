@@ -39,6 +39,7 @@ class _AddSignatureState extends State<AddSignature> {
   bool drawSignature = false;
   final GlobalKey _globalKey = GlobalKey();
   bool initialShowActionIcons = true;
+  bool isScaleView = true;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +67,7 @@ class _AddSignatureState extends State<AddSignature> {
             onPressed: () {
               setState(() {
                 initialShowActionIcons = false;
+                isScaleView=false;
               });
 
               Future.delayed(const Duration(milliseconds: 500), () async {
@@ -105,6 +107,26 @@ class _AddSignatureState extends State<AddSignature> {
                   fit: BoxFit.cover,
                 ),
               ),
+
+              if (processedImageBytes != null)
+                InteractiveBox(
+
+
+
+
+                  initialSize: const Size(200, 200),
+                  includedActions: [
+                    ControlActionType.move,
+                    ControlActionType.scale,
+                    ControlActionType.rotate,
+                    ControlActionType.delete,
+
+                  ],
+                  initialShowActionIcons: isScaleView,
+                  child: Image.memory(processedImageBytes!),
+                ),
+
+
               if (signaturePath != null)
                 InteractiveBox(
                   initialPosition: const Offset(50, 200),
@@ -249,7 +271,7 @@ class _AddSignatureState extends State<AddSignature> {
     );
 
     try {
-      final uri = Uri.parse('https://removebackground-036fcb96c69b.herokuapp.com/remove-background');
+      final uri = Uri.parse('https://web-production-b9813.up.railway.app/remove-background');
       final request = http.MultipartRequest('POST', uri);
 
       final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';

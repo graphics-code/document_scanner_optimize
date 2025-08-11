@@ -15,12 +15,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '20'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '2.0.0'
 }
 
 def keystoreProperties = new Properties()
@@ -29,10 +29,9 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-
 android {
     namespace "com.documentscannerpdfscanner_"
-    compileSdk 34
+    compileSdk 36
     ndkVersion = "25.1.8937393"
 
     compileOptions {
@@ -52,14 +51,13 @@ android {
     defaultConfig {
         applicationId "com.documentscannerpdfscanner_"
         minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         ndk {
             abiFilters "arm64-v8a", "armeabi-v7a" // Remove x86 if not targeting emulators
         }
     }
-
 
     signingConfigs {
         release {
@@ -69,7 +67,6 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-
 
     buildTypes {
         release {
@@ -89,4 +86,3 @@ dependencies {
     implementation 'com.google.android.gms:play-services-mlkit-document-scanner:16.0.0-beta1'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 }
-
