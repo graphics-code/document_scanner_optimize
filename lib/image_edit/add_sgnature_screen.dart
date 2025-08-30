@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/utils/app_color.dart';
-import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +12,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:interactive_box/interactive_box.dart';
 import 'package:provider/provider.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 import '../camera_screen/provider/camera_provider.dart';
 import '../localaization/language_constant.dart';
 import '../utils/app_assets.dart';
@@ -37,6 +39,7 @@ class _AddSignatureState extends State<AddSignature> {
   bool drawSignature = false;
   final GlobalKey _globalKey = GlobalKey();
   bool initialShowActionIcons = true;
+  bool isScaleView = true;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,7 @@ class _AddSignatureState extends State<AddSignature> {
             onPressed: () {
               setState(() {
                 initialShowActionIcons = false;
+                isScaleView=false;
               });
 
               Future.delayed(const Duration(milliseconds: 500), () async {
@@ -103,6 +107,26 @@ class _AddSignatureState extends State<AddSignature> {
                   fit: BoxFit.cover,
                 ),
               ),
+
+              if (processedImageBytes != null)
+                InteractiveBox(
+
+
+
+
+                  initialSize: const Size(200, 200),
+                  includedActions: [
+                    ControlActionType.move,
+                    ControlActionType.scale,
+                    ControlActionType.rotate,
+                    ControlActionType.delete,
+
+                  ],
+                  initialShowActionIcons: isScaleView,
+                  child: Image.memory(processedImageBytes!),
+                ),
+
+
               if (signaturePath != null)
                 InteractiveBox(
                   initialPosition: const Offset(50, 200),
@@ -132,18 +156,18 @@ class _AddSignatureState extends State<AddSignature> {
                   child: drawSignature == true
                       ? SvgPicture.string(signaturePath!, fit: BoxFit.cover)
                       : Image.memory(
-                          Uint8List.fromList(signaturePath!.codeUnits),
-                          fit: BoxFit.cover,
-                        ),
+                    Uint8List.fromList(signaturePath!.codeUnits),
+                    fit: BoxFit.cover,
+                  ),
                 ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: BottomAppBar(
         color: const Color(0xff1E1F20),
-        height: AppHelper.isIpad(context) ? 95 : 90,
-        padding: const EdgeInsets.only(left: 10.0, bottom: 12.0, right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        surfaceTintColor: const Color(0xff1E1F20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -172,7 +196,7 @@ class _AddSignatureState extends State<AddSignature> {
                 drawSignature = false;
               },
               iconPath:
-                  AppAssets.gallery, // Replace with your desired gallery icon
+              AppAssets.gallery, // Replace with your desired gallery icon
             ),
           ],
         ),
@@ -188,7 +212,7 @@ class _AddSignatureState extends State<AddSignature> {
       double pixelRatio = MediaQuery.of(context).devicePixelRatio;
       ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
       ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      await image.toByteData(format: ui.ImageByteFormat.png);
 
       return byteData!.buffer.asUint8List();
     } catch (e) {
@@ -196,21 +220,121 @@ class _AddSignatureState extends State<AddSignature> {
     }
   }
 
+  Uint8List? processedImageBytes;
+
   Future<void> importFromGallery() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes();
-      setState(() {
-        signaturePath =
-            null; // Clear any SVG path (optional, if only one image at a time is allowed)
-      });
+      final file = File(pickedFile.path);
 
-      // Display the imported image using InteractiveBox
-      setState(() {
-        signaturePath = String.fromCharCodes(bytes);
-      });
+      try {
+        final processedBytes = await removeImageBackground(
+          context: context,
+          imageFile: file,
+        );
+
+        setState(() {
+          processedImageBytes = processedBytes;
+        });
+      } catch (e) {
+        // Error already handled in removeImageBackground
+      }
+    }
+  }
+  Future<Uint8List> removeImageBackground({
+    required BuildContext context,
+    required File imageFile,
+  }) async {
+    final progressNotifier = ValueNotifier<double>(0);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Processing Image'),
+        content: ValueListenableBuilder<double>(
+          valueListenable: progressNotifier,
+          builder: (context, progress, _) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LinearProgressIndicator(value: progress),
+                const SizedBox(height: 12),
+                Text('${(progress * 100).toStringAsFixed(0)}% completed'),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+
+    try {
+      final uri = Uri.parse('https://web-production-b9813.up.railway.app/remove-background');
+      final request = http.MultipartRequest('POST', uri);
+
+      final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';
+      final fileLength = await imageFile.length();
+      final fileStream = imageFile.openRead();
+
+      int bytesSent = 0;
+      final streamWithProgress = fileStream.transform<List<int>>(
+        StreamTransformer.fromHandlers(
+          handleData: (data, sink) {
+            bytesSent += data.length;
+            progressNotifier.value = bytesSent / fileLength * 0.5; // Upload progress
+            sink.add(data);
+          },
+        ),
+      );
+
+      final multipartFile = http.MultipartFile(
+        'image',
+        streamWithProgress,
+        fileLength,
+        filename: imageFile.path.split('/').last,
+        contentType: MediaType.parse(mimeType),
+      );
+
+      request.files.add(multipartFile);
+      final streamedResponse = await request.send();
+
+      if (streamedResponse.statusCode == 200) {
+        final contentLength = streamedResponse.contentLength ?? 0;
+        List<int> bytes = [];
+        int downloaded = 0;
+
+        await for (var chunk in streamedResponse.stream) {
+          bytes.addAll(chunk);
+          downloaded += chunk.length;
+          if (contentLength > 0) {
+            progressNotifier.value = 0.5 + (downloaded / contentLength) * 0.5;
+          }
+        }
+
+        Navigator.of(context).pop(); // Close dialog
+        return Uint8List.fromList(bytes);
+      } else {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed: Image should be clear'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        throw Exception('Failed to process image');
+      }
+    } catch (e) {
+      Navigator.of(context).pop();
+      print('Error: ${e.toString()}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      rethrow;
     }
   }
 }
