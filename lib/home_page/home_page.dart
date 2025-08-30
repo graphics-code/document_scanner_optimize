@@ -190,6 +190,21 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  String getFolderModeName(String name, BuildContext context) {
+    switch (name) {
+      case "Document":
+        return translation(context).documents;
+      case "ID Card":
+        return translation(context).idCard;
+      case "QR Code":
+        return translation(context).qrCode;
+      case "Bar Code":
+        return translation(context).barCode;
+      default:
+        return "";
+    }
+  }
+
   void _openBrowserWithSearch(String query) async {
     // Encode the query to make it URL-safe
     final encodedQuery = Uri.encodeComponent(query);
@@ -259,8 +274,8 @@ class _HomePageState extends State<HomePage> {
                             },
                             child: SvgPicture.asset(
                               AppAssets.search,
-                              height:AppHelper.isTablet(context)?32: 28,
-                              width:AppHelper.isTablet(context)?32: 28,
+                              height: AppHelper.isTablet(context) ? 32 : 28,
+                              width: AppHelper.isTablet(context) ? 32 : 28,
                             )),
                       ),
                       // IconButton(
@@ -420,7 +435,11 @@ class _HomePageState extends State<HomePage> {
                                       child: Text(
                                         getCameraModeName(
                                             cameraItem.name, context),
-                                        style:  TextStyle(fontSize:AppHelper.isTablet(context)?14: 12),
+                                        style: TextStyle(
+                                            fontSize:
+                                                AppHelper.isTablet(context)
+                                                    ? 14
+                                                    : 12),
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
                                       ),
@@ -477,10 +496,14 @@ class _HomePageState extends State<HomePage> {
                                         color: AppColor.primaryColor,
                                       ),
                                       Text(
-                                        path.basename(directory.path),
-                                        style:  TextStyle(
+                                        getFolderModeName(
+                                            path.basename(directory.path),
+                                            context),
+                                        style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: AppHelper.isTablet(context)?14: 12,
+                                          fontSize: AppHelper.isTablet(context)
+                                              ? 14
+                                              : 12,
                                           fontWeight: FontWeight.w400,
                                         ),
                                         overflow: TextOverflow.ellipsis,
