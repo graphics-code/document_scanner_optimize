@@ -171,7 +171,20 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
-
+  String getFolderModeName(String name, BuildContext context) {
+    switch (name) {
+      case "Document":
+        return translation(context).documents;
+      case "ID Card":
+        return translation(context).idCard;
+      case "QR Code":
+        return translation(context).qrCode;
+      case "Bar Code":
+        return translation(context).barCode;
+      default:
+        return "";
+    }
+  }
   String getCameraModeName(String name, BuildContext context) {
     switch (name) {
       case "Document":
@@ -477,7 +490,9 @@ class _HomePageState extends State<HomePage> {
                                   color: AppColor.primaryColor,
                                 ),
                                 Text(
-                                  path.basename(directory.path),
+                                    getFolderModeName(
+                                        path.basename(directory.path),
+                                        context),
                                   style:  TextStyle(
                                     color: Colors.black,
                                     fontSize:AppHelper.isIpad(context)?18: 12,

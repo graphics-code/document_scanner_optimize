@@ -271,7 +271,7 @@ class _AddSignatureState extends State<AddSignature> {
     );
 
     try {
-      final uri = Uri.parse('https://web-production-b9813.up.railway.app/remove-background');
+      final uri = Uri.parse('https://bg-production.up.railway.app/remove-background');
       final request = http.MultipartRequest('POST', uri);
 
       final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';
