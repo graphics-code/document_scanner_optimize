@@ -17,7 +17,7 @@ allprojects {
             if (project.plugins.hasPlugin("com.android.application") ||
                     project.plugins.hasPlugin("com.android.library")) {
                 project.android {
-                    compileSdkVersion 34
+                    compileSdkVersion 36
                     buildToolsVersion "34.0.0"
                 }
             }
@@ -36,7 +36,3 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
-
-//dependencies {
-//    implementation 'com.google.mlkit:document-scanner:16.0.0-beta1'
-//}

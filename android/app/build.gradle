@@ -15,12 +15,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '20'
+    flutterVersionCode = '21'  // Increment version code
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '2.0.0'
+    flutterVersionName = '2.0.1'  // Update version name
 }
 
 def keystoreProperties = new Properties()
@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "com.documentscannerpdfscanner_"
     compileSdk 36
-    ndkVersion = "25.1.8937393"
+    ndkVersion = "26.1.10909125"  // Update to latest stable NDK
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -55,7 +55,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         ndk {
-            abiFilters "arm64-v8a", "armeabi-v7a" // Remove x86 if not targeting emulators
+            abiFilters "arm64-v8a", "armeabi-v7a"
         }
     }
 
@@ -74,6 +74,21 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            
+            // Add 16KB page size alignment
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
+        }
+    }
+    
+    // Add packaging options for 16KB support
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging false
+        }
+        dex {
+            useLegacyPackaging false
         }
     }
 }
