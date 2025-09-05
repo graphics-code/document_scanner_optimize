@@ -214,11 +214,13 @@ class CameraProvider extends ChangeNotifier {
       for (int i = 1; i <= totalPages; i++) {
         final page = await pdfDocument.getPage(i);
 
-        // Render page as image
+// Increase DPI by multiplying width/height
+        final scale = 3.0; // try 2.0 or 3.0 for sharper text
         final pageImage = await page.render(
-          width: page.width, // you can control resolution here
-          height: page.height,
+          width: (page.width * scale).toDouble(),
+          height: (page.height * scale).toDouble(),
           format: PdfPageImageFormat.png,
+          backgroundColor: '#FFFFFFFF', // optional: white background
         );
 
         final imageByte = pageImage!.bytes;
