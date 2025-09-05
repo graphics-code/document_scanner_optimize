@@ -246,7 +246,8 @@ class _AddSignatureState extends State<AddSignature> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Processing Image'),
+        title: const SizedBox(
+            height: 50, width: 500, child: Text('Processing Image')),
         content: ValueListenableBuilder<double>(
           valueListenable: progressNotifier,
           builder: (context, progress, _) {
@@ -264,7 +265,10 @@ class _AddSignatureState extends State<AddSignature> {
     );
 
     try {
-      final uri = Uri.parse('https://bg-production.up.railway.app');
+      // ✅ Use your API URL directly
+      String apiUrl = "https://bg-production.up.railway.app";
+
+      final uri = Uri.parse('$apiUrl/remove-background');
       final request = http.MultipartRequest('POST', uri);
 
       final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';
@@ -276,8 +280,7 @@ class _AddSignatureState extends State<AddSignature> {
         StreamTransformer.fromHandlers(
           handleData: (data, sink) {
             bytesSent += data.length;
-            progressNotifier.value =
-                bytesSent / fileLength * 0.5; // Upload progress
+            progressNotifier.value = bytesSent / fileLength * 0.5;
             sink.add(data);
           },
         ),
@@ -292,6 +295,7 @@ class _AddSignatureState extends State<AddSignature> {
       );
 
       request.files.add(multipartFile);
+
       final streamedResponse = await request.send();
 
       if (streamedResponse.statusCode == 200) {
@@ -307,7 +311,7 @@ class _AddSignatureState extends State<AddSignature> {
           }
         }
 
-        Navigator.of(context).pop(); // Close dialog
+        Navigator.of(context).pop();
         return Uint8List.fromList(bytes);
       } else {
         Navigator.of(context).pop();
@@ -317,11 +321,11 @@ class _AddSignatureState extends State<AddSignature> {
             backgroundColor: Colors.red,
           ),
         );
-        throw Exception('Failed to process image');
+        throw Exception(
+            'Server returned status code: ${streamedResponse.statusCode}');
       }
     } catch (e) {
       Navigator.of(context).pop();
-      print('Error: ${e.toString()}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),

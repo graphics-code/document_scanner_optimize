@@ -78,6 +78,7 @@ dependencies:
   flutter_local_notifications:
   http_parser:
   mime:
+  cloud_firestore:
 
  
 

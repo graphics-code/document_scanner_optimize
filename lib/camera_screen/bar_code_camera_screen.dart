@@ -1,11 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:doc_scanner/camera_screen/provider/camera_provider.dart';
-import 'package:doc_scanner/camera_screen/widget/analyzee_image.dart';
 import 'package:doc_scanner/camera_screen/widget/scanner_button_widget.dart';
 import 'package:doc_scanner/camera_screen/widget/scanner_error_widget.dart';
 import 'package:doc_scanner/camera_screen/widget/zoom_scale_slider.dart';
 import 'package:doc_scanner/core/local_storage.dart';
-import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/utils/app_constant.dart';
 import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';

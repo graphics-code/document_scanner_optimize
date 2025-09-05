@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
@@ -5,7 +7,6 @@ import 'package:doc_scanner/camera_screen/bar_code_camera_screen.dart';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/camera_screen/qr_code_camera_screen.dart';
 import 'package:doc_scanner/google_ads_helper/google_ads_helper.dart';
-import 'package:doc_scanner/home_page/directory_create_page.dart';
 import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
 import 'package:doc_scanner/home_page/search_page.dart';
 import 'package:doc_scanner/image_edit/id_card_image_view.dart';
@@ -21,6 +22,7 @@ import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:url_launcher/url_launcher.dart';
 import '../camera_screen/provider/camera_provider.dart';
@@ -38,8 +40,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void>? _launched;
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -106,8 +106,8 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: Text("Update Required"),
-          content: Text(
+          title: const Text("Update Required"),
+          content: const Text(
               "A new version of the app is available. Please update to continue."),
           actions: [
             TextButton(
@@ -118,12 +118,12 @@ class _HomePageState extends State<HomePage> {
                   await launch(url);
                 }
               },
-              child: Text("Update"),
+              child: const Text("Update"),
             ),
             TextButton(
               onPressed: () {
                 // Exit app
-                Future.delayed(Duration(milliseconds: 200), () {
+                Future.delayed(const Duration(milliseconds: 200), () {
                   // Use SystemNavigator.pop() or exit(0)
                   // SystemNavigator.pop(); // if in main page
                   // or
@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                       Duration.zero, () => Navigator.of(context).pop());
                 });
               },
-              child: Text("Exit"),
+              child: const Text("Exit"),
             ),
           ],
         );
@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                 ? AppBar(
                     elevation: 0,
                     backgroundColor: const Color(0xff30312C),
-                    title: Text(
+                    title: const Text(
                       "",
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
