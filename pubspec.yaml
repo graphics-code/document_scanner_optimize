@@ -39,7 +39,7 @@ dependencies:
   flutter_flip_card: ^0.0.6
   merge_image:
     path: package/merge_image
-  intl: ^0.19.0
+  intl: ^0.20.2
   badges: ^3.1.2
   audioplayers: ^6.1.0
   vibration: ^2.0.1
@@ -48,24 +48,23 @@ dependencies:
   path_provider: ^2.1.5
   image: ^4.1.7
   extended_image: ^8.2.0
-  image_editor: ^1.5.1
+  image_editor: ^1.6.0
   hand_signature: ^3.0.2
   interactive_box: ^0.4.0
   google_mlkit_text_recognition: ^0.15.0
   pdf: ^3.10.8
-  pdfx: ^2.8.0
+  pdfx: ^2.9.2
   share_plus: ^10.1.2
   colorfilter_generator: ^0.0.8
   screenshot: ^3.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_image_compress: ^2.2.0
+  flutter_image_compress: ^2.4.0
   device_info_plus: ^10.1.0
   google_mobile_ads: ^5.2.0
   flutter_launcher_icons: ^0.13.1
   file_picker: ^8.0.5
-  pdf_render: ^1.4.12
-  gal: ^2.3.0
+  gal: ^2.3.2
   firebase_core: ^3.8.1
   firebase_crashlytics: ^4.2.0
   in_app_review: ^2.0.9

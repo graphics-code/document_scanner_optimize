@@ -1,16 +1,15 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 import 'package:gal/gal.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
+import 'package:pdf/pdf.dart' hide PdfDocument;
+import 'package:pdfx/pdfx.dart';
 import 'package:provider/provider.dart';
-import 'package:pdf_render/pdf_render.dart' as pdfRender;
 import '../model/image_model.dart';
 
 class CameraProvider extends ChangeNotifier {
@@ -48,7 +47,7 @@ class CameraProvider extends ChangeNotifier {
   List<String> _idCardImages = [];
   List<String> get idCardImages => _idCardImages;
 
-   addIdCardImage(String imagePath) {
+  addIdCardImage(String imagePath) {
     _idCardImages.add(imagePath);
     notifyListeners();
   }
@@ -208,15 +207,22 @@ class CameraProvider extends ChangeNotifier {
     try {
       _pdfConverting = true;
       notifyListeners();
-      final doc = await pdfRender.PdfDocument.openFile(pdfFile.path);
-      final totalPages = doc.pageCount;
+
+      final pdfDocument = await PdfDocument.openFile(pdfFile.path);
+      final totalPages = pdfDocument.pagesCount;
 
       for (int i = 1; i <= totalPages; i++) {
-        final page = await doc.getPage(i);
-        final pageImage = await page.render();
-        final pngBytes = await pageImage.createImageIfNotAvailable();
-        final byteData = await pngBytes.toByteData(format: ImageByteFormat.png);
-        final imageByte = byteData!.buffer.asUint8List();
+        final page = await pdfDocument.getPage(i);
+
+        // Render page as image
+        final pageImage = await page.render(
+          width: page.width, // you can control resolution here
+          height: page.height,
+          format: PdfPageImageFormat.png,
+        );
+
+        final imageByte = pageImage!.bytes;
+
         final fileName = DateFormat('yyyyMMdd_SSSS').format(DateTime.now());
         _imageList.add(
           ImageModel(
@@ -225,9 +231,12 @@ class CameraProvider extends ChangeNotifier {
             docType: 'Document',
           ),
         );
-        pageImage.dispose();
+
+        await page.close();
       }
-      await doc.dispose();
+
+      await pdfDocument.close();
+
       _pdfConverting = false;
       notifyListeners();
       return true;

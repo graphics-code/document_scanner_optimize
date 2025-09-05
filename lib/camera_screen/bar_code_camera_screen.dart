@@ -128,7 +128,7 @@ class _BarCodeCameraScreenState extends State<BarCodeCameraScreen> {
                   }
                 }
               },
-              errorBuilder: (context, error, child) {
+              errorBuilder: (context, error) {
                 return ScannerErrorWidget(error: error);
               },
             ),

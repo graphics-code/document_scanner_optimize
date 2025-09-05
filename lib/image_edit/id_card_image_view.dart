@@ -82,10 +82,7 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
         pixelRatio: pixelRatio,
       );
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
-      if (byteData == null) {
-        throw Exception("Failed to capture widget to image.");
-      }
-      return byteData.buffer.asUint8List();
+      return byteData!.buffer.asUint8List();
     } catch (e) {
       throw Exception("Error capturing image: $e");
     }

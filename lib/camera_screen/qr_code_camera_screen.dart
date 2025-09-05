@@ -205,7 +205,7 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
                   }
                 }
               },
-              errorBuilder: (context, error, child) {
+              errorBuilder: (context, error) {
                 return ScannerErrorWidget(error: error);
               },
             ),

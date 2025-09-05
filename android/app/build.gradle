@@ -50,13 +50,23 @@ android {
 
     defaultConfig {
         applicationId "com.documentscannerpdfscanner_"
-        minSdkVersion 21
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         ndk {
             abiFilters "arm64-v8a", "armeabi-v7a"
         }
+        
+        // Add 16KB page size support
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+            }
+        }
+        
+        // Enable 16KB page size support in manifest
+        manifestPlaceholders = [enableOnBackInvokedCallback: "true"]
     }
 
     signingConfigs {
@@ -84,12 +94,10 @@ android {
     
     // Add packaging options for 16KB support
     packagingOptions {
-        jniLibs {
-            useLegacyPackaging false
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
-        dex {
-            useLegacyPackaging false
-        }
+        // Native libraries are automatically aligned for 16KB page sizes in AGP 8.1+
     }
 }
 
@@ -100,4 +108,5 @@ flutter {
 dependencies {
     implementation 'com.google.android.gms:play-services-mlkit-document-scanner:16.0.0-beta1'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    implementation 'com.google.mlkit:text-recognition:16.0.1'
 }

@@ -15,9 +15,9 @@
     <application
         android:label="Doc Scan"
         android:requestLegacyExternalStorage="true"
-        android:name="${applicationName}"
         android:usesCleartextTraffic="true"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -48,6 +48,10 @@
             android:name="flutterEmbedding"
             android:value="2" />
         
+        <!-- Support for 16KB page sizes -->
+        <property 
+            android:name="android.app.PROPERTY_UNCOMPRESSED_NATIVE_LIBS_REQUIRED" 
+            android:value="false" />
      
     </application>
     <!-- Required to query activities that can process text, see:
