@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, use_build_context_synchronously
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously, empty_catches
 
 import 'dart:developer';
 import 'dart:io';
@@ -59,11 +59,12 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
       throw 'Could not launch $url';
     }
   }
+
   Future<bool> _directoryExistsWithCaseInsensitive(
       Directory parentDirectory, String directoryName) async {
     try {
       final List<FileSystemEntity> entities =
-      await parentDirectory.list().toList();
+          await parentDirectory.list().toList();
       for (final entity in entities) {
         if (entity is Directory &&
             entity.path.split('/').last.toLowerCase() ==
@@ -83,17 +84,17 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
   }) async {
     Directory rootDirectory = await getApplicationDocumentsDirectory();
     final documentDirectory =
-    Directory('${rootDirectory.path}/Doc Scanner/Document');
+        Directory('${rootDirectory.path}/Doc Scanner/Document');
     final idCardDirectory =
-    Directory('${rootDirectory.path}/Doc Scanner/ID Card');
+        Directory('${rootDirectory.path}/Doc Scanner/ID Card');
     final qrCodeDirectory =
-    Directory('${rootDirectory.path}/Doc Scanner/QR Code');
+        Directory('${rootDirectory.path}/Doc Scanner/QR Code');
     final barCodeDirectory =
-    Directory('${rootDirectory.path}/Doc Scanner/Bar Code');
+        Directory('${rootDirectory.path}/Doc Scanner/Bar Code');
 
     try {
       if (await _directoryExistsWithCaseInsensitive(
-          documentDirectory, directoryName) ||
+              documentDirectory, directoryName) ||
           await _directoryExistsWithCaseInsensitive(
               idCardDirectory, directoryName) ||
           await _directoryExistsWithCaseInsensitive(
@@ -103,7 +104,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
         return false;
       } else {
         final newCreatedDirectory =
-        Directory('${targetDirectory.path}/$directoryName');
+            Directory('${targetDirectory.path}/$directoryName');
         await newCreatedDirectory.create(recursive: true);
         return true;
       }
@@ -112,11 +113,11 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
     }
   }
 
-
   void _showCenterDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevents dialog from closing by tapping outside
+      barrierDismissible:
+          false, // Prevents dialog from closing by tapping outside
       builder: (BuildContext context) {
         TextEditingController _controller = TextEditingController();
 
@@ -133,54 +134,56 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Folder",style: TextStyle(
-                      fontSize: 15
-                    ),),
-                    IconButton(onPressed: (){
-                      Navigator.pop(context);
-
-                    }, icon: Icon(Icons.close,size: AppHelper.isTablet(context)?15:12,))
+                    const Text(
+                      "Folder",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: AppHelper.isTablet(context) ? 15 : 12,
+                        ))
                   ],
                 ),
-
                 TextField(
                   controller: _controller,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Enter Name',
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 20),
-
-
-
-
                 ElevatedButton(
                   onPressed: () async {
-
-                      if (_controller.text.trim().isNotEmpty) {
-                        FocusScope.of(context).unfocus();
-                        bool created = await createDirectory(
-                            targetDirectory: Directory(widget.directoryPath),
-                            directoryName: _controller.text);
-                        if (created) {
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (_)=>DirectoryDetailsPage( directoryPath: '${widget.directoryPath}',)));
-                        }
-                        setState(() {
-                          _directoryAlreadyExists = !created;
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              translation(context).pleaseEnterADirectoryName,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
+                    if (_controller.text.trim().isNotEmpty) {
+                      FocusScope.of(context).unfocus();
+                      bool created = await createDirectory(
+                          targetDirectory: Directory(widget.directoryPath),
+                          directoryName: _controller.text);
+                      if (created) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DirectoryDetailsPage(
+                                      directoryPath: widget.directoryPath,
+                                    )));
                       }
-
+                      setState(() {
+                        _directoryAlreadyExists = !created;
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            translation(context).pleaseEnterADirectoryName,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: const Text('Create Folder'),
                 ),
@@ -191,9 +194,9 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
       },
     );
   }
+
   @override
   void initState() {
-    print("Hello Matching == ${widget.directoryPath.split('/').last}");
     allFiles = Provider.of<HomePageProvider>(context, listen: false)
         .getFileList(widget.directoryPath);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -206,7 +209,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
   BannerAd buildBannerAd() {
     return BannerAd(
       size: AdSize.banner,
-      request: AdRequest(),
+      request: const AdRequest(),
       adUnitId: AdHelper.bannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
@@ -285,34 +288,35 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                 Row(
-                                   children: [
-                                     IconButton(
-                                         onPressed: () {
-                                           Navigator.pop(context);
-                                         },
-                                         style: IconButton.styleFrom(
-                                           padding: EdgeInsets.zero,
-                                         ),
-                                         icon: const Icon(Icons.arrow_back)),
-                                     Text(
-                                       widget.directoryPath.split('/').last,
-                                       style: const TextStyle(
-                                         fontSize: 20,
-                                         fontWeight: FontWeight.w500,
-                                       ),
-                                     ),
-                                   ],
-                                 ),
-
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            style: IconButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                            ),
+                                            icon: const Icon(Icons.arrow_back)),
+                                        Text(
+                                          widget.directoryPath.split('/').last,
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                     GestureDetector(
-                                        onTap: () {
-
-                                        },
+                                        onTap: () {},
                                         child: SvgPicture.asset(
                                           AppAssets.create_folder,
-                                          height:AppHelper.isTablet(context)?32: 28,
-                                          width:AppHelper.isTablet(context)?32: 28,
+                                          height: AppHelper.isTablet(context)
+                                              ? 32
+                                              : 28,
+                                          width: AppHelper.isTablet(context)
+                                              ? 32
+                                              : 28,
                                         )),
                                   ],
                                 ),
@@ -349,39 +353,48 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                       Row(
-                                           children: [
-                                             IconButton(
-                                                 onPressed: () {
-                                                   Navigator.pop(context);
-                                                 },
-                                                 style: IconButton.styleFrom(
-                                                   padding: EdgeInsets.zero,
-                                                 ),
-                                                 icon: Platform.isAndroid
-                                                     ? const Icon(Icons.arrow_back)
-                                                     : const Icon(
-                                                     Icons.arrow_back_ios)),
-                                             Text(
-                                               widget.directoryPath.split('/').last,
-                                               style: const TextStyle(
-                                                 fontSize: 20,
-                                                 fontWeight: FontWeight.w500,
-                                               ),
-                                             ),
-                                           ],
-                                       ),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                style: IconButton.styleFrom(
+                                                  padding: EdgeInsets.zero,
+                                                ),
+                                                icon: Platform.isAndroid
+                                                    ? const Icon(
+                                                        Icons.arrow_back)
+                                                    : const Icon(
+                                                        Icons.arrow_back_ios)),
+                                            Text(
+                                              widget.directoryPath
+                                                  .split('/')
+                                                  .last,
+                                              style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                         Padding(
-                                          padding: const EdgeInsets.only(right: 10),
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
                                           child: GestureDetector(
                                               onTap: () {
                                                 _showCenterDialog(context);
-
                                               },
                                               child: SvgPicture.asset(
                                                 AppAssets.create_folder,
-                                                height:AppHelper.isTablet(context)?32: 28,
-                                                width:AppHelper.isTablet(context)?32: 28,
+                                                height:
+                                                    AppHelper.isTablet(context)
+                                                        ? 32
+                                                        : 28,
+                                                width:
+                                                    AppHelper.isTablet(context)
+                                                        ? 32
+                                                        : 28,
                                               )),
                                         ),
                                       ],
@@ -490,37 +503,48 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                               ),
                                         !_isLongPressed
                                             ? Row(
-                                              children: [
-
-                                                TextButton(
-                                                    style: IconButton.styleFrom(
-                                                      padding: EdgeInsets.zero,
-                                                    ),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        _isLongPressed = true;
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      translation(context).select,
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
+                                                children: [
+                                                  TextButton(
+                                                      style:
+                                                          IconButton.styleFrom(
+                                                        padding:
+                                                            EdgeInsets.zero,
                                                       ),
-                                                    )),
-                                                SizedBox(width: 10,),
-
-                                                GestureDetector(
-                                                    onTap: () {
-                                                      _showCenterDialog(context);
-
-                                                    },
-                                                    child: SvgPicture.asset(
-                                                      AppAssets.create_folder,
-                                                      height:AppHelper.isTablet(context)?32: 28,
-                                                      width:AppHelper.isTablet(context)?32: 28,
-                                                    )),
-                                              ],
-                                            )
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _isLongPressed = true;
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                        translation(context)
+                                                            .select,
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                        ),
+                                                      )),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  GestureDetector(
+                                                      onTap: () {
+                                                        _showCenterDialog(
+                                                            context);
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                        AppAssets.create_folder,
+                                                        height:
+                                                            AppHelper.isTablet(
+                                                                    context)
+                                                                ? 32
+                                                                : 28,
+                                                        width:
+                                                            AppHelper.isTablet(
+                                                                    context)
+                                                                ? 32
+                                                                : 28,
+                                                      )),
+                                                ],
+                                              )
                                             : _isLongPressed &&
                                                     _selectedItems.isNotEmpty
                                                 ? TextButton(
@@ -609,18 +633,26 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         CrossAxisAlignment
                                                             .center,
                                                     children: [
-                                                       Icon(
+                                                      Icon(
                                                         Icons.folder,
                                                         color: AppColor
                                                             .primaryColor,
-                                                        size:AppHelper.isTablet(context)?60: 40,
+                                                        size:
+                                                            AppHelper.isTablet(
+                                                                    context)
+                                                                ? 60
+                                                                : 40,
                                                       ),
                                                       Text(
                                                         filePath
                                                             .split('/')
                                                             .last,
-                                                        style:  TextStyle(
-                                                          fontSize:AppHelper.isTablet(context)?15: 12,
+                                                        style: TextStyle(
+                                                          fontSize: AppHelper
+                                                                  .isTablet(
+                                                                      context)
+                                                              ? 15
+                                                              : 12,
                                                         ),
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -633,8 +665,13 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         child: SizedBox(
                                                           height: 30,
                                                           width: 30,
-                                                          child: Transform.scale(
-                                                            scale: AppHelper.isTablet(context)? 1.3:1,
+                                                          child:
+                                                              Transform.scale(
+                                                            scale: AppHelper
+                                                                    .isTablet(
+                                                                        context)
+                                                                ? 1.3
+                                                                : 1,
                                                             child: Checkbox(
                                                               shape:
                                                                   const CircleBorder(),
@@ -644,8 +681,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                               side: const BorderSide(
                                                                   color: Color(
                                                                       0xFFBEBEBE)),
-                                                              onChanged:
-                                                                  (bool? value) {
+                                                              onChanged: (bool?
+                                                                  value) {
                                                                 setState(() {
                                                                   if (value ==
                                                                       true) {
@@ -664,10 +701,14 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         ),
                                                       )
                                                     : InkWell(
-                                                        child:  Icon(
+                                                        child: Icon(
                                                           Icons.more_vert,
                                                           color: Colors.black,
-                                                          size:AppHelper.isTablet(context)?25: 20,
+                                                          size: AppHelper
+                                                                  .isTablet(
+                                                                      context)
+                                                              ? 25
+                                                              : 20,
                                                         ),
                                                         onTap: () {
                                                           showModalBottomSheet(
@@ -928,8 +969,12 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         filePath
                                                             .split('/')
                                                             .last,
-                                                        style:  TextStyle(
-                                                          fontSize:AppHelper.isTablet(context)?15: 12,
+                                                        style: TextStyle(
+                                                          fontSize: AppHelper
+                                                                  .isTablet(
+                                                                      context)
+                                                              ? 15
+                                                              : 12,
                                                         ),
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -942,10 +987,13 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         child: SizedBox(
                                                           height: 30,
                                                           width: 30,
-                                                          child: Transform.scale(
-                                                            scale: AppHelper.isTablet(context)? 1.3:1,
-
-
+                                                          child:
+                                                              Transform.scale(
+                                                            scale: AppHelper
+                                                                    .isTablet(
+                                                                        context)
+                                                                ? 1.3
+                                                                : 1,
                                                             child: Checkbox(
                                                               side: const BorderSide(
                                                                   color: Color(
@@ -955,8 +1003,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                               activeColor: AppColor
                                                                   .primaryColor,
                                                               value: isSelected,
-                                                              onChanged:
-                                                                  (bool? value) {
+                                                              onChanged: (bool?
+                                                                  value) {
                                                                 setState(() {
                                                                   if (value ==
                                                                       true) {
@@ -975,10 +1023,14 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         ),
                                                       )
                                                     : InkWell(
-                                                        child:  Icon(
+                                                        child: Icon(
                                                           Icons.more_vert,
                                                           color: Colors.black,
-                                                          size:AppHelper.isTablet(context)?25: 20,
+                                                          size: AppHelper
+                                                                  .isTablet(
+                                                                      context)
+                                                              ? 25
+                                                              : 20,
                                                         ),
                                                         onTap: () {
                                                           showModalBottomSheet(
@@ -1364,8 +1416,13 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         child: SizedBox(
                                                           height: 30,
                                                           width: 30,
-                                                          child: Transform.scale(
-                                                            scale: AppHelper.isTablet(context)? 1.3:1,
+                                                          child:
+                                                              Transform.scale(
+                                                            scale: AppHelper
+                                                                    .isTablet(
+                                                                        context)
+                                                                ? 1.3
+                                                                : 1,
                                                             child: Checkbox(
                                                               side: const BorderSide(
                                                                   color: Color(
@@ -1375,8 +1432,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                               activeColor: AppColor
                                                                   .primaryColor,
                                                               value: isSelected,
-                                                              onChanged:
-                                                                  (bool? value) {
+                                                              onChanged: (bool?
+                                                                  value) {
                                                                 setState(() {
                                                                   if (value ==
                                                                       true) {
@@ -1395,10 +1452,14 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         ),
                                                       )
                                                     : InkWell(
-                                                        child:  Icon(
+                                                        child: Icon(
                                                           Icons.more_vert,
                                                           color: Colors.black,
-                                                          size:AppHelper.isTablet(context)?25: 20,
+                                                          size: AppHelper
+                                                                  .isTablet(
+                                                                      context)
+                                                              ? 25
+                                                              : 20,
                                                         ),
                                                         onTap: () {
                                                           showModalBottomSheet(
@@ -1668,8 +1729,13 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         child: SizedBox(
                                                           height: 30,
                                                           width: 30,
-                                                          child: Transform.scale(
-                                                            scale: AppHelper.isTablet(context)? 1.3:1,
+                                                          child:
+                                                              Transform.scale(
+                                                            scale: AppHelper
+                                                                    .isTablet(
+                                                                        context)
+                                                                ? 1.3
+                                                                : 1,
                                                             child: Checkbox(
                                                               side: const BorderSide(
                                                                   color: Color(
@@ -1679,8 +1745,8 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                               activeColor: AppColor
                                                                   .primaryColor,
                                                               value: isSelected,
-                                                              onChanged:
-                                                                  (bool? value) {
+                                                              onChanged: (bool?
+                                                                  value) {
                                                                 setState(() {
                                                                   if (value ==
                                                                       true) {
@@ -1699,10 +1765,14 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                         ),
                                                       )
                                                     : InkWell(
-                                                        child:  Icon(
+                                                        child: Icon(
                                                           Icons.more_vert,
                                                           color: Colors.black,
-                                                      size:AppHelper.isTablet(context)?25: 20,
+                                                          size: AppHelper
+                                                                  .isTablet(
+                                                                      context)
+                                                              ? 25
+                                                              : 20,
                                                         ),
                                                         onTap: () {
                                                           showModalBottomSheet(
@@ -1947,8 +2017,6 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
 
                                                                               // Show success message
                                                                               AppHelper.showTopSnackBar(context, "PDF File saved to Documents folder");
-
-                                                                              print("Holl print");
                                                                             } catch (e) {
                                                                               // Handle any errors
                                                                               AppHelper.showTopSnackBar(context, "Failed to save file: $e");
@@ -2042,8 +2110,11 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                       Container(
                                         height: size.width >= 600 ? 100 : 70,
                                         color: Colors.white,
-                                        padding:  EdgeInsets.symmetric(
-                                            horizontal: AppHelper.isTablet(context)?30: 8.0),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                AppHelper.isTablet(context)
+                                                    ? 30
+                                                    : 8.0),
                                         alignment: Alignment.center,
                                         child: Row(
                                           mainAxisAlignment:
@@ -2244,8 +2315,14 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                 children: [
                                                   SvgPicture.asset(
                                                     AppAssets.move,
-                                                    height:AppHelper.isTablet(context)?24: 20,
-                                                    width:AppHelper.isTablet(context)?24: 20,
+                                                    height: AppHelper.isTablet(
+                                                            context)
+                                                        ? 24
+                                                        : 20,
+                                                    width: AppHelper.isTablet(
+                                                            context)
+                                                        ? 24
+                                                        : 20,
                                                     fit: BoxFit.fill,
                                                     color: _selectedItems
                                                             .isNotEmpty
@@ -2260,7 +2337,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                             ? AppColor
                                                                 .primaryColor
                                                             : Colors.black,
-                                                        fontSize:12,
+                                                        fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
@@ -2394,8 +2471,14 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                 children: [
                                                   SvgPicture.asset(
                                                     AppAssets.share,
-                                                    height:AppHelper.isTablet(context)?24: 20,
-                                                    width: AppHelper.isTablet(context)?24: 20,
+                                                    height: AppHelper.isTablet(
+                                                            context)
+                                                        ? 24
+                                                        : 20,
+                                                    width: AppHelper.isTablet(
+                                                            context)
+                                                        ? 24
+                                                        : 20,
                                                     fit: BoxFit.fill,
                                                     color: _selectedItems
                                                             .isNotEmpty
@@ -2572,10 +2655,13 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                                 return AlertDialog(
                                                                   title:
                                                                       SizedBox(
-                                                                        width: AppHelper.isTablet(context)?300:250,
-                                                                        child: const Text(
-                                                                            "PDF"),
-                                                                      ),
+                                                                    width: AppHelper.isTablet(
+                                                                            context)
+                                                                        ? 300
+                                                                        : 250,
+                                                                    child: const Text(
+                                                                        "PDF"),
+                                                                  ),
                                                                   content:
                                                                       TextFormField(
                                                                     controller:
@@ -2758,8 +2844,16 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                       children: [
                                                         SvgPicture.asset(
                                                           AppAssets.merge,
-                                                          height: AppHelper.isTablet(context)?24: 20,
-                                                          width: AppHelper.isTablet(context)?24: 20,
+                                                          height: AppHelper
+                                                                  .isTablet(
+                                                                      context)
+                                                              ? 24
+                                                              : 20,
+                                                          width: AppHelper
+                                                                  .isTablet(
+                                                                      context)
+                                                              ? 24
+                                                              : 20,
                                                           fit: BoxFit.fill,
                                                           color: _selectedItems
                                                                       .length >=
@@ -2850,10 +2944,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                                       item);
                                                             }
                                                             file.deleteSync();
-                                                          } catch (e) {
-                                                            print(
-                                                                "Error deleting file $item: $e");
-                                                          }
+                                                          } catch (e) {}
                                                         } else if (fileSystemEntity ==
                                                             FileSystemEntityType
                                                                 .directory) {
@@ -2953,8 +3044,14 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                                 children: [
                                                   SvgPicture.asset(
                                                     AppAssets.delete,
-                                                    width: AppHelper.isTablet(context)?29: 20,
-                                                    height: AppHelper.isTablet(context)?29: 20,
+                                                    width: AppHelper.isTablet(
+                                                            context)
+                                                        ? 29
+                                                        : 20,
+                                                    height: AppHelper.isTablet(
+                                                            context)
+                                                        ? 29
+                                                        : 20,
                                                     color: _selectedItems
                                                             .isNotEmpty
                                                         ? AppColor.primaryColor

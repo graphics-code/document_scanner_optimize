@@ -67,7 +67,7 @@ class _AddSignatureState extends State<AddSignature> {
             onPressed: () {
               setState(() {
                 initialShowActionIcons = false;
-                isScaleView=false;
+                isScaleView = false;
               });
 
               Future.delayed(const Duration(milliseconds: 500), () async {
@@ -107,26 +107,18 @@ class _AddSignatureState extends State<AddSignature> {
                   fit: BoxFit.cover,
                 ),
               ),
-
               if (processedImageBytes != null)
                 InteractiveBox(
-
-
-
-
                   initialSize: const Size(200, 200),
                   includedActions: [
                     ControlActionType.move,
                     ControlActionType.scale,
                     ControlActionType.rotate,
                     ControlActionType.delete,
-
                   ],
                   initialShowActionIcons: isScaleView,
                   child: Image.memory(processedImageBytes!),
                 ),
-
-
               if (signaturePath != null)
                 InteractiveBox(
                   initialPosition: const Offset(50, 200),
@@ -243,6 +235,7 @@ class _AddSignatureState extends State<AddSignature> {
       }
     }
   }
+
   Future<Uint8List> removeImageBackground({
     required BuildContext context,
     required File imageFile,
@@ -271,7 +264,7 @@ class _AddSignatureState extends State<AddSignature> {
     );
 
     try {
-      final uri = Uri.parse('https://web-production-b9813.up.railway.app/remove-background');
+      final uri = Uri.parse('https://bg-production.up.railway.app');
       final request = http.MultipartRequest('POST', uri);
 
       final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';
@@ -283,7 +276,8 @@ class _AddSignatureState extends State<AddSignature> {
         StreamTransformer.fromHandlers(
           handleData: (data, sink) {
             bytesSent += data.length;
-            progressNotifier.value = bytesSent / fileLength * 0.5; // Upload progress
+            progressNotifier.value =
+                bytesSent / fileLength * 0.5; // Upload progress
             sink.add(data);
           },
         ),

@@ -10,7 +10,6 @@ import 'package:doc_scanner/home_page/home_page.dart';
 import 'package:doc_scanner/image_edit/id_card_image_view.dart';
 import 'package:doc_scanner/image_edit/image_edit_preview.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
-import 'package:doc_scanner/main.dart';
 import 'package:doc_scanner/settings_page/settings_page.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
@@ -27,7 +26,6 @@ import 'package:provider/provider.dart';
 import '../camera_screen/model/image_model.dart';
 import '../camera_screen/provider/camera_provider.dart';
 import '../image_edit/image_preview.dart';
-import 'package:http/http.dart' as http;
 
 class BottomBar extends StatefulWidget {
   final bool? shouldShowReview;
