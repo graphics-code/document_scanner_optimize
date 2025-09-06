@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/utils/app_color.dart';
@@ -148,9 +149,9 @@ class _AddSignatureState extends State<AddSignature> {
                   child: drawSignature == true
                       ? SvgPicture.string(signaturePath!, fit: BoxFit.cover)
                       : Image.memory(
-                          Uint8List.fromList(signaturePath!.codeUnits),
-                          fit: BoxFit.cover,
-                        ),
+                    Uint8List.fromList(signaturePath!.codeUnits),
+                    fit: BoxFit.cover,
+                  ),
                 ),
             ],
           ),
@@ -188,7 +189,7 @@ class _AddSignatureState extends State<AddSignature> {
                 drawSignature = false;
               },
               iconPath:
-                  AppAssets.gallery, // Replace with your desired gallery icon
+              AppAssets.gallery, // Replace with your desired gallery icon
             ),
           ],
         ),
@@ -201,10 +202,12 @@ class _AddSignatureState extends State<AddSignature> {
       RenderRepaintBoundary boundary = _globalKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
       log(boundary.size.toString());
-      double pixelRatio = MediaQuery.of(context).devicePixelRatio;
+      double pixelRatio = MediaQuery
+          .of(context)
+          .devicePixelRatio;
       ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
       ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      await image.toByteData(format: ui.ImageByteFormat.png);
 
       return byteData!.buffer.asUint8List();
     } catch (e) {
@@ -245,28 +248,38 @@ class _AddSignatureState extends State<AddSignature> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const SizedBox(
-            height: 50, width: 500, child: Text('Processing Image')),
-        content: ValueListenableBuilder<double>(
-          valueListenable: progressNotifier,
-          builder: (context, progress, _) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                LinearProgressIndicator(value: progress),
-                const SizedBox(height: 12),
-                Text('${(progress * 100).toStringAsFixed(0)}% completed'),
-              ],
-            );
-          },
-        ),
-      ),
+      builder: (context) =>
+          AlertDialog(
+            title: const SizedBox(
+                height: 50, width: 500, child: Text('Processing Image')),
+            content: ValueListenableBuilder<double>(
+              valueListenable: progressNotifier,
+              builder: (context, progress, _) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    LinearProgressIndicator(value: progress),
+                    const SizedBox(height: 12),
+                    Text('${(progress * 100).toStringAsFixed(0)}% completed'),
+                  ],
+                );
+              },
+            ),
+          ),
     );
 
     try {
-      // ✅ Use your API URL directly
-      String apiUrl = "https://bg-production.up.railway.app";
+
+      final doc = await FirebaseFirestore.instance
+          .collection("url")
+          .doc("nKUcqqAEXW6BBkYSU7QN")
+          .get();
+
+      if (!doc.exists || doc.data() == null || doc.data()!["bg"] == null) {
+        throw Exception("API URL not found in Firestore.");
+      }
+
+      String apiUrl = doc.data()!["bg"]; // 🔹 field name = bg
 
       final uri = Uri.parse('$apiUrl/remove-background');
       final request = http.MultipartRequest('POST', uri);
@@ -290,7 +303,9 @@ class _AddSignatureState extends State<AddSignature> {
         'image',
         streamWithProgress,
         fileLength,
-        filename: imageFile.path.split('/').last,
+        filename: imageFile.path
+            .split('/')
+            .last,
         contentType: MediaType.parse(mimeType),
       );
 
