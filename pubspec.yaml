@@ -83,8 +83,6 @@ dependencies:
   google_mobile_ads: ^5.1.0
   package_info_plus: ^8.3.0
   firebase_messaging: ^15.2.10
-  cloud_firestore: ^5.6.0
-  internet_connection_checker_plus: ^2.2.0
   flutter_local_notifications:
 
 
