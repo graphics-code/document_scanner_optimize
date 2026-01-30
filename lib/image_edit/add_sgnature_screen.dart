@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/utils/app_color.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:interactive_box/interactive_box.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -192,11 +194,36 @@ class _AddSignatureState extends State<AddSignature> {
             ImageEditButton(
               title: translation(context).gallery,
               onTap: () async {
-                await importFromGallery();
-                drawSignature = false;
+                final hasInternet =
+                    await InternetConnection().hasInternetAccess;
+
+                if (!hasInternet) {
+                  NoInternetOverlay.show(context);
+                  return;
+                }
+
+                setState(() {
+                  drawSignature = false;
+                });
+
+                final picker = ImagePicker();
+                final pickedFile =
+                    await picker.pickImage(source: ImageSource.gallery);
+
+                if (pickedFile == null) return;
+
+                final inputFile = File(pickedFile.path);
+
+                Uint8List? removedBgBytes = await removeImageBackground(
+                    context: context, imageFile: inputFile);
+
+                if (removedBgBytes == null) return;
+
+                setState(() {
+                  processedImageBytes = removedBgBytes;
+                });
               },
-              iconPath:
-              AppAssets.gallery, // Replace with your desired gallery icon
+              iconPath: AppAssets.gallery,
             ),
           ],
         ),
@@ -222,28 +249,7 @@ class _AddSignatureState extends State<AddSignature> {
 
   Uint8List? processedImageBytes;
 
-  Future<void> importFromGallery() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      final file = File(pickedFile.path);
-
-      try {
-        final processedBytes = await removeImageBackground(
-          context: context,
-          imageFile: file,
-        );
-
-        setState(() {
-          processedImageBytes = processedBytes;
-        });
-      } catch (e) {
-        // Error already handled in removeImageBackground
-      }
-    }
-  }
-  Future<Uint8List> removeImageBackground({
+  Future<Uint8List?> removeImageBackground({
     required BuildContext context,
     required File imageFile,
   }) async {
@@ -271,7 +277,20 @@ class _AddSignatureState extends State<AddSignature> {
     );
 
     try {
-      final uri = Uri.parse('https://bg-production.up.railway.app/remove-background');
+      String? bgRemovalUrl = await _getBgRemovalUrlFromFirestore();
+      if (bgRemovalUrl == null) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to get server configuration'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return null;
+      }
+
+      final uri = Uri.parse('$bgRemovalUrl/remove-background');
+      debugPrint('remove background $bgRemovalUrl/remove-background');
       final request = http.MultipartRequest('POST', uri);
 
       final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';
@@ -283,7 +302,8 @@ class _AddSignatureState extends State<AddSignature> {
         StreamTransformer.fromHandlers(
           handleData: (data, sink) {
             bytesSent += data.length;
-            progressNotifier.value = bytesSent / fileLength * 0.5; // Upload progress
+            progressNotifier.value =
+                bytesSent / fileLength * 0.5; // Upload: 0–50%
             sink.add(data);
           },
         ),
@@ -298,6 +318,7 @@ class _AddSignatureState extends State<AddSignature> {
       );
 
       request.files.add(multipartFile);
+
       final streamedResponse = await request.send();
 
       if (streamedResponse.statusCode == 200) {
@@ -309,32 +330,73 @@ class _AddSignatureState extends State<AddSignature> {
           bytes.addAll(chunk);
           downloaded += chunk.length;
           if (contentLength > 0) {
-            progressNotifier.value = 0.5 + (downloaded / contentLength) * 0.5;
+            progressNotifier.value =
+                0.5 + (downloaded / contentLength) * 0.5; // Download: 50–100%
           }
         }
 
-        Navigator.of(context).pop(); // Close dialog
+        Navigator.of(context).pop(); // Close progress dialog
         return Uint8List.fromList(bytes);
       } else {
+        await streamedResponse.stream.bytesToString();
+
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed: Image should be clear'),
+            content: Text('Failed: Image Should be Clear'),
             backgroundColor: Colors.red,
           ),
         );
-        throw Exception('Failed to process image');
+        return null;
       }
     } catch (e) {
       Navigator.of(context).pop();
-      print('Error: ${e.toString()}');
+      debugPrint('Exception: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
+        const SnackBar(
+          content: Text('Something went wrong while processing the image.'),
           backgroundColor: Colors.red,
         ),
       );
-      rethrow;
+      return null;
     }
+  }
+
+  Future<String?> _getBgRemovalUrlFromFirestore() async {
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('url')
+          .doc('1PUfdpAh3l4P3dE52iKZ')
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        return data['bg'] as String?;
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error fetching bgRemovalUrl from Firestore: $e');
+      return null;
+    }
+  }
+}
+
+/// Shows a no-internet overlay/dialog when there is no connection.
+class NoInternetOverlay {
+  static void show(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(translation(context).noInternetConnection),
+        content: Text(translation(context).noInternetConnection),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }
