@@ -6,7 +6,6 @@ import 'package:doc_scanner/bottom_bar/bottom_bar.dart';
 import 'package:doc_scanner/google_ads_helper/google_ads_helper.dart';
 import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
-import 'package:doc_scanner/main.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
@@ -42,10 +41,10 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
   late Future<List<String>> allFiles;
   bool isDeleteLoading = false;
   bool isShareIng = false;
-  bool _directoryAlreadyExists = false;
   late Directory rootDirectory;
   String subFilePath = "";
   BannerAd? myBanner;
+  bool _isBannerLoaded = false;
   void _openBrowserWithSearch(String query) async {
     // Encode the query to make it URL-safe
     final encodedQuery = Uri.encodeComponent(query);
@@ -171,9 +170,6 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                       directoryPath: widget.directoryPath,
                                     )));
                       }
-                      setState(() {
-                        _directoryAlreadyExists = !created;
-                      });
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -197,12 +193,12 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
 
   @override
   void initState() {
+    super.initState();
     allFiles = Provider.of<HomePageProvider>(context, listen: false)
         .getFileList(widget.directoryPath);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       rootDirectory = await getApplicationDocumentsDirectory();
     });
-    super.initState();
     myBanner = buildBannerAd()..load();
   }
 
@@ -215,12 +211,19 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
         onAdLoaded: (Ad ad) {
           log('${ad.runtimeType} loaded.');
           myBanner = ad as BannerAd;
-          myBanner!.load();
+          if (!mounted) return;
+          setState(() {
+            _isBannerLoaded = true;
+          });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           log('${ad.runtimeType} failed to load: $error.');
           ad.dispose();
-          bannerReady = true;
+          if (!mounted) return;
+          setState(() {
+            _isBannerLoaded = false;
+            myBanner = null;
+          });
         },
         onAdOpened: (Ad ad) {
           log('${ad.runtimeType} onAdOpened.');
@@ -231,6 +234,12 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    myBanner?.dispose();
+    super.dispose();
   }
 
   bool isSubfolderOfQRCode(String directoryPath) {
@@ -2098,15 +2107,15 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                   ),
                                   Column(
                                     children: [
-                                      // Container(
-                                      //   alignment: Alignment.center,
-                                      //   height: 100,
-                                      //   width:
-                                      //       MediaQuery.of(context).size.width,
-                                      //   child: myBanner != null
-                                      //       ? AdWidget(ad: myBanner!)
-                                      //       : const SizedBox(),
-                                      // ),
+                                      if (_isBannerLoaded && myBanner != null)
+                                        SizedBox(
+                                          height: myBanner!.size.height
+                                              .toDouble(),
+                                          width: double.infinity,
+                                          child: AdWidget(ad: myBanner!),
+                                        )
+                                      else
+                                        const SizedBox.shrink(),
                                       Container(
                                         height: size.width >= 600 ? 100 : 70,
                                         color: Colors.white,

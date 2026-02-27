@@ -228,89 +228,79 @@ class _HomePageState extends State<HomePage> {
         valueListenable: interstitialReadyNotifier,
         builder: (context, interstitialReady, _) {
           return Scaffold(
-            appBar: interstitialReady == true
-                ? AppBar(
-                    elevation: 0,
-                    backgroundColor: const Color(0xff30312C),
-                    title: const Text(
-                      "",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    centerTitle: true,
-                  )
-                : AppBar(
-                    title: Text(translation(context).docScanner),
-                    titleTextStyle: const TextStyle(
-                      fontSize: 28,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    actions: [
-                      // GestureDetector(
-                      //     onTap: () {
-                      //       Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //           builder: (context) =>
-                      //               const DirectoryCreatePage(),
-                      //         ),
-                      //       );
-                      //     },
-                      //     child: SvgPicture.asset(
-                      //       AppAssets.create_folder,
-                      //       height:AppHelper.isTablet(context)?32: 28,
-                      //       width:AppHelper.isTablet(context)?32: 28,
-                      //     )),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SearchPage(),
-                                ),
-                              );
-                            },
-                            child: SvgPicture.asset(
-                              AppAssets.search,
-                              height: AppHelper.isTablet(context) ? 32 : 28,
-                              width: AppHelper.isTablet(context) ? 32 : 28,
-                            )),
-                      ),
-                      // IconButton(
-                      //   onPressed: () async {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => const DirectoryCreatePage(),
-                      //       ),
-                      //     );
-                      //
-                      //   },
-                      //   icon:  Icon(
-                      //     Icons.create_new_folder,
-                      //     color: AppColor.primaryColor,
-                      //     size: size.width >= 600? 30: 25,
-                      //   ),
-                      // ),
-                      // IconButton(
-                      //   onPressed: () async {
-                      //
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => const SearchPage(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   icon:  Icon(
-                      //     Icons.search,
-                      //     size: size.width >= 600? 30: 25,
-                      //   ),
-                      // ),
-                    ],
-                  ),
+            appBar: AppBar(
+              title: Text(translation(context).docScanner),
+              titleTextStyle: const TextStyle(
+                fontSize: 28,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+              actions: [
+                // GestureDetector(
+                //     onTap: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) =>
+                //               const DirectoryCreatePage(),
+                //         ),
+                //       );
+                //     },
+                //     child: SvgPicture.asset(
+                //       AppAssets.create_folder,
+                //       height:AppHelper.isTablet(context)?32: 28,
+                //       width:AppHelper.isTablet(context)?32: 28,
+                //     )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SearchPage(),
+                          ),
+                        );
+                      },
+                      child: SvgPicture.asset(
+                        AppAssets.search,
+                        height: AppHelper.isTablet(context) ? 32 : 28,
+                        width: AppHelper.isTablet(context) ? 32 : 28,
+                      )),
+                ),
+                // IconButton(
+                //   onPressed: () async {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => const DirectoryCreatePage(),
+                //       ),
+                //     );
+                //
+                //   },
+                //   icon:  Icon(
+                //     Icons.create_new_folder,
+                //     color: AppColor.primaryColor,
+                //     size: size.width >= 600? 30: 25,
+                //   ),
+                // ),
+                // IconButton(
+                //   onPressed: () async {
+                //
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => const SearchPage(),
+                //       ),
+                //     );
+                //   },
+                //   icon:  Icon(
+                //     Icons.search,
+                //     size: size.width >= 600? 30: 25,
+                //   ),
+                // ),
+              ],
+            ),
             body: cameraProvider.pdfConverting
                 ? const Center(
                     child: CircularProgressIndicator(),

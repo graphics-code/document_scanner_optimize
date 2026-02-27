@@ -597,6 +597,7 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () async {
+                                final pageContext = context;
                                 await showDialog(
                                   context: context,
                                   builder: (context) {
@@ -661,35 +662,52 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                                                       isSaving =
                                                           true; // Show progress indicator
                                                     });
-                                                    Uint8List imageBytes =
-                                                        await captureWidgetToImage();
-                                                    await exportToPdf(
+                                                    try {
+                                                      Uint8List imageBytes =
+                                                          await captureWidgetToImage();
+                                                      await exportToPdf(
                                                         renameController.text
                                                             .trim(),
-                                                        imageBytes);
+                                                        imageBytes,
+                                                      );
 
-                                                    cameraProvider
-                                                        .clearIdCardImages();
-                                                    Navigator
-                                                        .pushAndRemoveUntil(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) {
-                                                          return const BottomBar();
-                                                        },
-                                                      ),
-                                                      (route) => false,
-                                                    ).then(
-                                                      (value) {
-                                                        setState(() {
-                                                          isSaving =
-                                                              false; // Hide progress indicator
-                                                        });
-                                                      },
-                                                    );
-                                                    AppHelper.showTopSnackBar(
-                                                        context,
-                                                        "PDF save successfully in Document Folder");
+                                                      if (!context.mounted) {
+                                                        return;
+                                                      }
+
+                                                      setState(() {
+                                                        isSaving = false;
+                                                      });
+
+                                                      Navigator.pop(
+                                                          context); // Close dialog
+
+                                                      cameraProvider
+                                                          .clearIdCardImages();
+
+                                                      AppHelper.showTopSnackBar(
+                                                        pageContext,
+                                                        "PDF save successfully in Document Folder",
+                                                      );
+
+                                                      if (!mounted) return;
+                                                      Navigator.pushAndRemoveUntil(
+                                                        pageContext,
+                                                        MaterialPageRoute(
+                                                          builder: (context) {
+                                                            return const BottomBar();
+                                                          },
+                                                        ),
+                                                        (route) => false,
+                                                      );
+                                                    } catch (e) {
+                                                      if (!context.mounted) {
+                                                        return;
+                                                      }
+                                                      setState(() {
+                                                        isSaving = false;
+                                                      });
+                                                    }
                                                   }
                                                 },
                                                 child: Text(

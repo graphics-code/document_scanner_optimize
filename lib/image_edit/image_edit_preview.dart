@@ -226,7 +226,9 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                             builder: (context, setState) {
                                           return AlertDialog(
                                             title: SizedBox(
-                                              width: AppHelper.isTablet(context)?250:200,
+                                              width: AppHelper.isTablet(context)
+                                                  ? 250
+                                                  : 200,
                                               child: Text(
                                                 translation(context).renameFile,
                                                 style: const TextStyle(
@@ -573,9 +575,12 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                           builder: (context, setState) {
                                             return AlertDialog(
                                               title: SizedBox(
-                                                width: AppHelper.isTablet(context)?350:300,
-                                                child: Text(
-                                                    translation(context).savePdf),
+                                                width:
+                                                    AppHelper.isTablet(context)
+                                                        ? 350
+                                                        : 300,
+                                                child: Text(translation(context)
+                                                    .savePdf),
                                               ),
                                               content: isSaving
                                                   ? ConstrainedBox(
@@ -635,38 +640,34 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                                             });
                                                             cameProvider
                                                                 .createPDFFromByte(
-                                                                    context:
-                                                                        context,
-                                                                    fileName:
-                                                                        renameController
-                                                                            .text)
+                                                              context: context,
+                                                              fileName:
+                                                                  renameController
+                                                                      .text,
+                                                            )
                                                                 .then((value) {
                                                               cameraProvider
                                                                   .clearImageList();
-                                                              Navigator.pushAndRemoveUntil(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                                  return const BottomBar(
-                                                                    shouldShowReview:
-                                                                        true,
-                                                                  );
-                                                                },
-                                                              ),
-                                                                  (route) =>
-                                                                      false).then(
-                                                                (value) {
-                                                                  setState(() {
-                                                                    isSaving =
-                                                                        false; // Hide progress indicator
-                                                                  });
-                                                                },
+                                                              Navigator
+                                                                  .pushAndRemoveUntil(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return const BottomBar(
+                                                                      shouldShowReview:
+                                                                          true,
+                                                                    );
+                                                                  },
+                                                                ),
+                                                                (route) =>
+                                                                    false,
                                                               );
                                                               AppHelper
                                                                   .showTopSnackBar(
-                                                                      context,
-                                                                      "PDF save successfully in Document Folder");
+                                                                context,
+                                                                "PDF save successfully in Document Folder",
+                                                              );
                                                             });
                                                           }
                                                         },

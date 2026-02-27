@@ -5,6 +5,15 @@ import 'package:doc_scanner/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+void _disposeInterstitial() {
+  try {
+    myInterstitial?.dispose();
+  } catch (_) {}
+  myInterstitial = null;
+  interstitialReady = false;
+  interstitialReadyNotifier.value = false;
+}
+
 class AdHelper {
   static String get bannerAdUnitId {
     if (Platform.isAndroid) {
@@ -31,12 +40,13 @@ class AdHelper {
 }
 
 void createInterstitialAd() {
+  _disposeInterstitial();
+
   InterstitialAd.load(
     adUnitId: AdHelper.interstitialAdUnitId,
     request: const AdRequest(),
     adLoadCallback: InterstitialAdLoadCallback(
       onAdLoaded: (InterstitialAd ad) {
-        print("sonar bal load hoiche");
         log('${ad.runtimeType} loaded.');
         interstitialReady = true;
         interstitialReadyNotifier.value = true;
@@ -44,7 +54,7 @@ void createInterstitialAd() {
       },
       onAdFailedToLoad: (LoadAdError error) {
         log('InterstitialAd failed to load: $error.');
-        myInterstitial = null;
+        _disposeInterstitial();
       },
     ),
   );
@@ -54,33 +64,34 @@ void finish(BuildContext context, [Object? result]) {
   if (Navigator.canPop(context)) Navigator.pop(context, result);
 }
 
-void showInterstitialAd(BuildContext context) async {
-  if (myInterstitial == null) {
+void showInterstitialAd(BuildContext context) {
+  if (myInterstitial == null || !interstitialReady) {
     log('attempt to show interstitial before loaded.');
-    finish(context);
+    // Optional: just return instead of popping
+    // finish(context);
     return;
   }
 
   myInterstitial!.fullScreenContentCallback = FullScreenContentCallback(
     onAdShowedFullScreenContent: (InterstitialAd ad) =>
-        print('ad onAdShowedFullScreenContent.'),
+        log('ad onAdShowedFullScreenContent.'),
     onAdClicked: (ad) {
       interstitialReady = false;
       interstitialReadyNotifier.value = false;
     },
     onAdDismissedFullScreenContent: (InterstitialAd ad) {
       log('$ad onAdDismissedFullScreenContent.');
-      interstitialReadyNotifier.value = false;
-      interstitialReady = false;
-
-      myInterstitial!.dispose();
+      _disposeInterstitial();
+      createInterstitialAd(); // preload next
     },
     onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
       log('$ad onAdFailedToShowFullScreenContent: $error');
-      interstitialReadyNotifier.value = false;
-      interstitialReady = false;
-      myInterstitial!.dispose();
+      _disposeInterstitial();
+      createInterstitialAd(); // preload next
     },
   );
+
+  interstitialReady = false;
+  interstitialReadyNotifier.value = false;
   myInterstitial!.show();
 }
