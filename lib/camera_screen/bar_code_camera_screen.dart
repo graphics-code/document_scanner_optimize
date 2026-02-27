@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:doc_scanner/camera_screen/provider/camera_provider.dart';
 import 'package:doc_scanner/camera_screen/widget/scanner_button_widget.dart';

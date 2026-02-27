@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/utils/app_color.dart';
@@ -111,7 +110,7 @@ class _AddSignatureState extends State<AddSignature> {
               if (processedImageBytes != null)
                 InteractiveBox(
                   initialSize: const Size(200, 200),
-                  includedActions: [
+                  includedActions: const [
                     ControlActionType.move,
                     ControlActionType.scale,
                     ControlActionType.rotate,
@@ -270,18 +269,9 @@ class _AddSignatureState extends State<AddSignature> {
 
     try {
 
-      final doc = await FirebaseFirestore.instance
-          .collection("url")
-          .doc("nKUcqqAEXW6BBkYSU7QN")
-          .get();
+      
 
-      if (!doc.exists || doc.data() == null || doc.data()!["bg"] == null) {
-        throw Exception("API URL not found in Firestore.");
-      }
-
-      String apiUrl = doc.data()!["bg"]; // 🔹 field name = bg
-
-      final uri = Uri.parse('$apiUrl/remove-background');
+      final uri = Uri.parse('https://app4.clippingworld.com/remove-background');
       final request = http.MultipartRequest('POST', uri);
 
       final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';

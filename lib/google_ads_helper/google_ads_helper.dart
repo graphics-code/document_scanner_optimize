@@ -33,7 +33,7 @@ class AdHelper {
 void createInterstitialAd() {
   InterstitialAd.load(
     adUnitId: AdHelper.interstitialAdUnitId,
-    request: AdRequest(),
+    request: const AdRequest(),
     adLoadCallback: InterstitialAdLoadCallback(
       onAdLoaded: (InterstitialAd ad) {
         print("sonar bal load hoiche");

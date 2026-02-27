@@ -50,7 +50,8 @@ Future<void> setupFirebaseMessaging() async {
     );
 
     await flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(android: androidSettings, iOS: iosSettings),
+      settings: const InitializationSettings(
+          android: androidSettings, iOS: iosSettings),
       onDidReceiveNotificationResponse: (details) {
         // Handle notification tap when app is in foreground
       },
@@ -105,10 +106,11 @@ Future<void> _showNotification(String title, String body) async {
   const DarwinNotificationDetails iosDetails = DarwinNotificationDetails();
 
   await flutterLocalNotificationsPlugin.show(
-    0,
-    title,
-    body,
-    const NotificationDetails(android: androidDetails, iOS: iosDetails),
+    id: 0,
+    title: title,
+    body: body,
+    notificationDetails:
+        const NotificationDetails(android: androidDetails, iOS: iosDetails),
     payload: 'notification_payload',
   );
 }
@@ -120,12 +122,6 @@ void _handleNotificationTap(RemoteMessage message) {
     });
     return;
   }
-
-  // Handle navigation based on message data
-  // Example:
-  // Navigator.of(navigatorKey.currentContext!).push(MaterialPageRoute(
-  //   builder: (context) => NotificationScreen(message: message),
-  // ));
 }
 
 void main() async {
@@ -140,11 +136,6 @@ void main() async {
     setupFirebaseMessaging();
   });
 
-  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  // PlatformDispatcher.instance.onError = (error, stack) {
-  //   FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-  //   return true;
-  // };
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await LocalStorage().init();
   await AppHelper().createDirectories();
