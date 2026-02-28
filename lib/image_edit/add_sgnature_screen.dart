@@ -275,17 +275,7 @@ class _AddSignatureState extends State<AddSignature> {
     );
 
     try {
-      String? bgRemovalUrl = await _getBgRemovalUrlFromFirestore();
-      if (bgRemovalUrl == null) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to get server configuration'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return null;
-      }
+      String? bgRemovalUrl = "https://app4.clippingworld.com";
 
       final uri = Uri.parse("$bgRemovalUrl/remove-background");
       print("remove background $bgRemovalUrl/remove-background");
@@ -356,25 +346,6 @@ class _AddSignatureState extends State<AddSignature> {
           backgroundColor: Colors.red,
         ),
       );
-      return null;
-    }
-  }
-
-  Future<String?> _getBgRemovalUrlFromFirestore() async {
-    try {
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-          .collection('url')
-          .doc('nKUcqqAEXW6BBkYSU7QN')
-          .get();
-
-      if (documentSnapshot.exists) {
-        Map<String, dynamic> data =
-            documentSnapshot.data() as Map<String, dynamic>;
-        return data['bg'] as String?;
-      }
-      return null;
-    } catch (e) {
-      print('Error fetching bgRemovalUrl from Firestore: $e');
       return null;
     }
   }
