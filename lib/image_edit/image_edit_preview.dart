@@ -29,7 +29,6 @@ class EditImagePreview extends StatefulWidget {
 }
 
 class _EditImagePreviewState extends State<EditImagePreview> {
-  final GlobalKey _globalKey = GlobalKey();
   int _currentIndex = 0;
   bool isSaving = false;
   final PageController _pageController = PageController();
@@ -179,7 +178,7 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                                     children: [
                                       const Text(''),
                                       Text(
-                                        translation(context).documentFiles!,
+                                        translation(context).documentFiles,
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 20,

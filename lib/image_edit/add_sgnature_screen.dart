@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -6,7 +8,6 @@ import 'dart:typed_data';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/utils/app_color.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -113,7 +114,7 @@ class _AddSignatureState extends State<AddSignature> {
               if (processedImageBytes != null)
                 InteractiveBox(
                   initialSize: const Size(200, 200),
-                  includedActions: [
+                  includedActions: const [
                     ControlActionType.move,
                     ControlActionType.scale,
                     ControlActionType.rotate,

@@ -103,8 +103,8 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: Text("Update Required"),
-          content: Text(
+          title: const Text("Update Required"),
+          content: const Text(
               "A new version of the app is available. Please update to continue."),
           actions: [
             TextButton(
@@ -115,12 +115,12 @@ class _HomePageState extends State<HomePage> {
                   await launch(url);
                 }
               },
-              child: Text("Update"),
+              child: const Text("Update"),
             ),
             TextButton(
               onPressed: () {
                 // Exit app
-                Future.delayed(Duration(milliseconds: 200), () {
+                Future.delayed(const Duration(milliseconds: 200), () {
                   // Use SystemNavigator.pop() or exit(0)
                   // SystemNavigator.pop(); // if in main page
                   // or
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                       Duration.zero, () => Navigator.of(context).pop());
                 });
               },
-              child: Text("Exit"),
+              child: const Text("Exit"),
             ),
           ],
         );
@@ -159,14 +159,14 @@ class _HomePageState extends State<HomePage> {
         );
       } else if (newStatus.isPermanentlyDenied) {
         AppHelper.showTopSnackBar(context, "Permission is required!");
-        Future.delayed(Duration(seconds: 3), () {
+        Future.delayed(const Duration(seconds: 3), () {
           openAppSettings();
         });
       }
     } else if (status.isPermanentlyDenied) {
       AppHelper.showTopSnackBar(context, "Permission is required!");
 
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 3), () {
         openAppSettings();
       });
     }
@@ -509,7 +509,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Expanded(
                     child: homePageProvider.isHistoryLoading
-                        ?  Center(
+                        ?  const Center(
                             child: CircularProgressIndicator(),
                           )
                         : Row(
@@ -849,7 +849,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: SvgPicture.asset(
                                                     AppAssets.txt),
                                               ),
-                                           AppHelper.isIpad(context)?   SizedBox(height: 10,):Container(),
+                                           AppHelper.isIpad(context)?   const SizedBox(height: 10,):Container(),
                                               SizedBox(
                                                 height: 20,
                                                 child: Text(
@@ -960,7 +960,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: SvgPicture.asset(
                                                     AppAssets.txt),
                                               ),
-                                              AppHelper.isIpad(context)?   SizedBox(height: 10,):Container(),
+                                              AppHelper.isIpad(context)?   const SizedBox(height: 10,):Container(),
                                               SizedBox(
                                                 height: 20,
                                                 child: Text(

@@ -12,7 +12,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 // import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
 import 'model/image_model.dart';
 
@@ -142,19 +141,6 @@ class _CameraScreenState extends State<CameraScreen> {
   //     checkPermission();
   //   }
   // }
-  void _openBrowserWithSearch(String query) async {
-    // Encode the query to make it URL-safe
-    final encodedQuery = Uri.encodeComponent(query);
-    // Form the Google search URL
-    final url = 'https://www.google.com/search?q=$encodedQuery';
-
-    // Check if the URL can be launched
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
