@@ -28,6 +28,13 @@
 	<string>ca-app-pub-9877635475483541~5230100748</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app needs local network access for Flutter debugging.</string>
+	<key>NSBonjourServices</key>
+	<array>
+    	<string>_flutter-tether._tcp</string>
+	</array>
+
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
