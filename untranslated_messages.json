@@ -1,0 +1,40 @@
+{
+  "ar": [
+    "folderAlreadyExists",
+    "fileAlreadyExists"
+  ],
+
+  "bn": [
+    "folderAlreadyExists",
+    "fileAlreadyExists"
+  ],
+
+  "fr": [
+    "reframe"
+  ],
+
+  "hi": [
+    "useFaceId",
+    "imageToTextOcr",
+    "shareFilesInTxtFormatWithoutRestrictions",
+    "errorCreatingPdf"
+  ],
+
+  "id": [
+    "imageToTextOcr",
+    "unlimitedUse1Week199Week"
+  ],
+
+  "ja": [
+    "imageToTextOcr",
+    "errorCreatingPdf"
+  ],
+
+  "ko": [
+    "errorCreatingPdf"
+  ],
+
+  "ru": [
+    "exit"
+  ]
+}

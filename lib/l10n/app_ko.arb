@@ -106,7 +106,7 @@
   "pressAgainToExit": "종료하려면 다시 누르세요",
   "idCardImagePreview": "신분증 이미지 미리보기",
   "errorReadingFile": "파일을 읽는 중 오류가 발생했습니다.",
-  "errorCreatingPDF": "PDF 작성 중 오류 발생",
+  "errorCreatingPdf": "PDF 작성 중 오류 발생",
   "alreadyExistsInTheDestinationDirectory": "대상 디렉터리에 이미 존재합니다",
   "doesNotExist": "존재하지 않는다",
   "pleaseSelectFileOnly": "파일만 선택하세요",

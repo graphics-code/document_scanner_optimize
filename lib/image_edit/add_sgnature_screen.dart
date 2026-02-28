@@ -2,13 +2,16 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'dart:typed_data';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:interactive_box/interactive_box.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +70,7 @@ class _AddSignatureState extends State<AddSignature> {
             onPressed: () {
               setState(() {
                 initialShowActionIcons = false;
-                isScaleView=false;
+                isScaleView = false;
               });
 
               Future.delayed(const Duration(milliseconds: 500), () async {
@@ -107,26 +110,18 @@ class _AddSignatureState extends State<AddSignature> {
                   fit: BoxFit.cover,
                 ),
               ),
-
               if (processedImageBytes != null)
                 InteractiveBox(
-
-
-
-
                   initialSize: const Size(200, 200),
                   includedActions: [
                     ControlActionType.move,
                     ControlActionType.scale,
                     ControlActionType.rotate,
                     ControlActionType.delete,
-
                   ],
                   initialShowActionIcons: isScaleView,
                   child: Image.memory(processedImageBytes!),
                 ),
-
-
               if (signaturePath != null)
                 InteractiveBox(
                   initialPosition: const Offset(50, 200),
@@ -156,9 +151,9 @@ class _AddSignatureState extends State<AddSignature> {
                   child: drawSignature == true
                       ? SvgPicture.string(signaturePath!, fit: BoxFit.cover)
                       : Image.memory(
-                    Uint8List.fromList(signaturePath!.codeUnits),
-                    fit: BoxFit.cover,
-                  ),
+                          Uint8List.fromList(signaturePath!.codeUnits),
+                          fit: BoxFit.cover,
+                        ),
                 ),
             ],
           ),
@@ -192,11 +187,41 @@ class _AddSignatureState extends State<AddSignature> {
             ImageEditButton(
               title: translation(context).gallery,
               onTap: () async {
-                await importFromGallery();
-                drawSignature = false;
+                final hasInternet =
+                    await InternetConnectionChecker().hasConnection;
+
+                if (!hasInternet) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('No internet connection'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
+                final picker = ImagePicker();
+                final pickedFile =
+                    await picker.pickImage(source: ImageSource.gallery);
+
+                if (pickedFile == null) return;
+
+                final inputFile = File(pickedFile.path);
+
+                Uint8List? removedBgBytes = await removeImageBackground(
+                  context: context,
+                  imageFile: inputFile,
+                );
+
+                if (removedBgBytes == null) return;
+
+                setState(() {
+                  processedImageBytes = removedBgBytes;
+                  drawSignature = false;
+                });
               },
               iconPath:
-              AppAssets.gallery, // Replace with your desired gallery icon
+                  AppAssets.gallery, // Replace with your desired gallery icon
             ),
           ],
         ),
@@ -212,7 +237,7 @@ class _AddSignatureState extends State<AddSignature> {
       double pixelRatio = MediaQuery.of(context).devicePixelRatio;
       ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
       ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
+          await image.toByteData(format: ui.ImageByteFormat.png);
 
       return byteData!.buffer.asUint8List();
     } catch (e) {
@@ -222,29 +247,7 @@ class _AddSignatureState extends State<AddSignature> {
 
   Uint8List? processedImageBytes;
 
-  Future<void> importFromGallery() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      final file = File(pickedFile.path);
-
-      try {
-        final processedBytes = await removeImageBackground(
-          context: context,
-          imageFile: file,
-        );
-
-        setState(() {
-          processedImageBytes = processedBytes;
-        });
-      } catch (e) {
-        // Error already handled in removeImageBackground
-      }
-    }
-  }
-
-  Future<Uint8List> removeImageBackground({
+  Future<Uint8List?> removeImageBackground({
     required BuildContext context,
     required File imageFile,
   }) async {
@@ -272,7 +275,20 @@ class _AddSignatureState extends State<AddSignature> {
     );
 
     try {
-      final uri = Uri.parse('https://bg-production.up.railway.app/remove-background');
+      String? bgRemovalUrl = await _getBgRemovalUrlFromFirestore();
+      if (bgRemovalUrl == null) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to get server configuration'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return null;
+      }
+
+      final uri = Uri.parse("$bgRemovalUrl/remove-background");
+      print("remove background $bgRemovalUrl/remove-background");
       final request = http.MultipartRequest('POST', uri);
 
       final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';
@@ -284,7 +300,8 @@ class _AddSignatureState extends State<AddSignature> {
         StreamTransformer.fromHandlers(
           handleData: (data, sink) {
             bytesSent += data.length;
-            progressNotifier.value = bytesSent / fileLength * 0.5; // Upload progress
+            progressNotifier.value =
+                bytesSent / fileLength * 0.5; // Upload: 0–50%
             sink.add(data);
           },
         ),
@@ -310,32 +327,55 @@ class _AddSignatureState extends State<AddSignature> {
           bytes.addAll(chunk);
           downloaded += chunk.length;
           if (contentLength > 0) {
-            progressNotifier.value = 0.5 + (downloaded / contentLength) * 0.5;
+            progressNotifier.value =
+                0.5 + (downloaded / contentLength) * 0.5; // Download: 50–100%
           }
         }
 
         Navigator.of(context).pop(); // Close dialog
         return Uint8List.fromList(bytes);
       } else {
+        final responseBody = await streamedResponse.stream.bytesToString();
+        print('Error Response: $responseBody');
+
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed: Image should be clear'),
+            content: Text('Failed: Image Should be Clear'),
             backgroundColor: Colors.red,
           ),
         );
-        throw Exception('Failed to process image');
+        return null;
       }
     } catch (e) {
       Navigator.of(context).pop();
-      print('Error: ${e.toString()}');
+      print('Exception while removing background: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
+        const SnackBar(
+          content: Text('Something went wrong while processing the image.'),
           backgroundColor: Colors.red,
         ),
       );
-      rethrow;
+      return null;
+    }
+  }
+
+  Future<String?> _getBgRemovalUrlFromFirestore() async {
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('url')
+          .doc('nKUcqqAEXW6BBkYSU7QN')
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+        return data['bg'] as String?;
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching bgRemovalUrl from Firestore: $e');
+      return null;
     }
   }
 }

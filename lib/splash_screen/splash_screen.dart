@@ -1,7 +1,14 @@
-import 'dart:async';
+import 'package:doc_scanner/core/local_storage.dart';
+import 'package:doc_scanner/utils/app_assets.dart';
+import 'package:doc_scanner/utils/firebase_messageing.dart';
+import 'package:doc_scanner/utils/helper.dart';
+import 'package:doc_scanner/utils/local_notification.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:nb_utils/nb_utils.dart';
 import '../bottom_bar/bottom_bar.dart';
-import '../utils/app_assets.dart';
+import '../firebase_options.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,16 +20,40 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(seconds: 3), () {
-        Navigator.pushAndRemoveUntil(
-            context, MaterialPageRoute(builder: (context) => const BottomBar()),
-            (route) {
-          return false;
-        });
-      });
-    });
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initAndNavigate());
+  }
+
+  Future<void> _initAndNavigate() async {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      await LocalStorage().init();
+      await initialize();
+      await AppHelper().createDirectories();
+      MobileAds.instance.initialize();
+
+      Future.delayed(const Duration(seconds: 5), () async {
+        final localNotificationsService = LocalNotificationsService.instance();
+        await localNotificationsService.init();
+        final firebaseMessagingService = FirebaseMessagingService.instance();
+        await firebaseMessagingService.init(
+          localNotificationsService: localNotificationsService,
+        );
+      });
+    } catch (e, st) {
+      debugPrint('Splash init error: $e\n$st');
+    }
+
+    if (!mounted) return;
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const BottomBar()),
+      (route) => false,
+    );
   }
 
   @override
