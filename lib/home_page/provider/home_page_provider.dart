@@ -5,6 +5,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:doc_scanner/utils/meta_events_helper.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HomePageProvider extends ChangeNotifier {
@@ -405,6 +406,7 @@ class HomePageProvider extends ChangeNotifier {
       }
 
       notifyListeners();
+      await MetaEventsHelper.logPdfCreated();
       return pdfFile;
     } catch (e) {
       _isCreatingPDF = false;

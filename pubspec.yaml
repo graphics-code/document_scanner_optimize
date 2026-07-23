@@ -51,6 +51,7 @@ dependencies:
   interactive_box: ^0.4.0
   google_mlkit_text_recognition: ^0.15.0
   pdf: ^3.11.3
+  pdfx: ^2.9.2
   share_plus: ^12.0.1
   colorfilter_generator: ^0.0.8
   screenshot: ^3.0.0
@@ -75,6 +76,7 @@ dependencies:
   flutter_local_notifications: ^20.1.0
   http_parser: ^4.1.2
   mime: ^2.0.0
+  facebook_app_events: ^0.28.0
 
  
 

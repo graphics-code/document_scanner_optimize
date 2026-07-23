@@ -5,6 +5,7 @@ import 'package:doc_scanner/l10n/app_localizations.dart';
 import 'package:doc_scanner/splash_screen/splash_screen.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
+import 'package:doc_scanner/utils/meta_events_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -139,6 +140,8 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await LocalStorage().init();
   await AppHelper().createDirectories();
+  await MetaEventsHelper.initialize();
+  await MetaEventsHelper.logAppOpen();
 
   runApp(
     const MyApp(),

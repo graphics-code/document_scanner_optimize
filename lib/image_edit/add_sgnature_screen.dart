@@ -18,6 +18,7 @@ import 'package:mime/mime.dart';
 import '../camera_screen/provider/camera_provider.dart';
 import '../localaization/language_constant.dart';
 import '../utils/app_assets.dart';
+import '../utils/meta_events_helper.dart';
 import 'drawing.dart';
 
 class AddSignature extends StatefulWidget {
@@ -79,6 +80,7 @@ class _AddSignatureState extends State<AddSignature> {
                           name: widget.imageModel.name,
                           docType: widget.imageModel.docType),
                       index: widget.imageIndex);
+                  await MetaEventsHelper.logPdfSigned();
                   Navigator.pop(context);
                 }
               });

@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart' hide PdfDocument;
 import 'package:pdfx/pdfx.dart';
+import 'package:doc_scanner/utils/meta_events_helper.dart';
 import 'package:provider/provider.dart';
 import '../model/image_model.dart';
 
@@ -184,6 +185,7 @@ class CameraProvider extends ChangeNotifier {
 
       _isCreatingPDFLoader = false;
       notifyListeners();
+      await MetaEventsHelper.logPdfCreated();
       return pdfFile;
     } catch (e) {
       _isCreatingPDFLoader = false;
