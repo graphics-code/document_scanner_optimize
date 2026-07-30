@@ -32,7 +32,9 @@ class IdCardImagePreview extends StatefulWidget {
 
 class _IdCardImagePreviewState extends State<IdCardImagePreview> {
   bool isLoading = false;
-  bool actionsEnabled = true;
+  /// Only the selected document shows resize/rotate handles.
+  int? selectedImageIndex;
+  int? _selectedBeforeExport;
   bool isSaving = false;
   List<Map<String, dynamic>> imageProperties = [];
   String fileName =
@@ -391,7 +393,8 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
             GestureDetector(
               onTap: () async {
                 setState(() {
-                  actionsEnabled = false;
+                  _selectedBeforeExport = selectedImageIndex;
+                  selectedImageIndex = null;
                 });
                 await showModalBottomSheet(
                   context: context,
@@ -438,7 +441,8 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                                       onTap: () {
                                         Navigator.pop(context);
                                         setState(() {
-                                          actionsEnabled = true;
+                                          selectedImageIndex =
+                                              _selectedBeforeExport;
                                         });
                                       },
                                       child: Icon(
@@ -799,24 +803,34 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                               final imageProps = entry.value;
 
                               return InteractiveBox(
+                                key: ValueKey('id_card_image_$index'),
                                 initialPosition: imageProps['position'],
                                 initialSize: imageProps['size'],
+                                initialShowActionIcons:
+                                    selectedImageIndex == index,
+                                // Selection is controlled by [selectedImageIndex].
+                                toggleBy: null,
                                 includedScaleDirections: const [
                                   ScaleDirection.topRight,
                                   ScaleDirection.bottomRight,
                                   ScaleDirection.bottomLeft,
                                   ScaleDirection.topLeft,
                                 ],
-                                includedActions: actionsEnabled
+                                includedActions: selectedImageIndex == index
                                     ? const [
                                         ControlActionType.move,
                                         ControlActionType.scale,
                                         ControlActionType.rotate,
                                       ]
-                                    : [],
+                                    : const [
+                                        ControlActionType.move,
+                                      ],
                                 onTap: () {
                                   setState(() {
-                                    actionsEnabled = true;
+                                    selectedImageIndex =
+                                        selectedImageIndex == index
+                                            ? null
+                                            : index;
                                   });
                                 },
                                 onActionSelected: (ControlActionType actionType,
@@ -825,6 +839,16 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                                     if (actionType ==
                                         ControlActionType.delete) {
                                       imageProperties.removeAt(index);
+                                      if (selectedImageIndex == index) {
+                                        selectedImageIndex =
+                                            imageProperties.isEmpty
+                                                ? null
+                                                : 0;
+                                      } else if (selectedImageIndex != null &&
+                                          selectedImageIndex! > index) {
+                                        selectedImageIndex =
+                                            selectedImageIndex! - 1;
+                                      }
                                     } else {
                                       imageProperties[index]['position'] =
                                           info.position;

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:doc_scanner/image_edit/provider/image_edit_provider.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +22,48 @@ class ImageSizeScreen extends StatefulWidget {
 class _ImageSizeScreenState extends State<ImageSizeScreen> {
   ScreenshotController screenshotController = ScreenshotController();
 
-  List<SizeOption> availableSizeOption = const [
-    SizeOption(title: 'Original', radio: 1),
+  static const List<SizeOption> availableSizeOption = [
+    SizeOption(title: 'Original', radio: null),
     SizeOption(title: 'A4', radio: 1 / 1.4),
     SizeOption(title: 'A5', radio: 1 / 1.5),
     SizeOption(title: 'ID Card', radio: 3 / 2),
     SizeOption(title: 'Legal', radio: 8.5 / 14),
   ];
 
+  String _selectedTitle = 'Original';
+  double? _originalRatio;
   double _selectedRatio = 1;
+  bool _isLoadingRatio = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadOriginalRatio();
+    });
+  }
+
+  Future<void> _loadOriginalRatio() async {
+    final bytes = context.read<ImageEditProvider>().currentState;
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    final image = frame.image;
+    if (!mounted) return;
+    setState(() {
+      _originalRatio = image.width / image.height;
+      _selectedRatio = _originalRatio!;
+      _selectedTitle = 'Original';
+      _isLoadingRatio = false;
+    });
+  }
+
+  double _ratioFor(SizeOption size) {
+    if (size.title == 'Original') {
+      return _originalRatio ?? 1;
+    }
+    return size.radio!;
+  }
+
   @override
   Widget build(BuildContext context) {
     final imageEditProvider = context.watch<ImageEditProvider>();
@@ -72,16 +106,18 @@ class _ImageSizeScreenState extends State<ImageSizeScreen> {
         ],
       ),
       body: Center(
-        child: Screenshot(
-          controller: screenshotController,
-          child: AspectRatio(
-            aspectRatio: _selectedRatio,
-            child: Image.memory(
-              imageEditProvider.currentState,
-              fit: BoxFit.fill,
-            ),
-          ),
-        ),
+        child: _isLoadingRatio
+            ? const CircularProgressIndicator()
+            : Screenshot(
+                controller: screenshotController,
+                child: AspectRatio(
+                  aspectRatio: _selectedRatio,
+                  child: Image.memory(
+                    imageEditProvider.currentState,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
       ),
       bottomNavigationBar: SafeArea(
           child: Container(
@@ -97,10 +133,14 @@ class _ImageSizeScreenState extends State<ImageSizeScreen> {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {
-                    _selectedRatio = size.radio!;
-                    setState(() {});
-                  },
+                  onTap: _isLoadingRatio
+                      ? null
+                      : () {
+                          setState(() {
+                            _selectedTitle = size.title!;
+                            _selectedRatio = _ratioFor(size);
+                          });
+                        },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Column(
@@ -108,7 +148,7 @@ class _ImageSizeScreenState extends State<ImageSizeScreen> {
                       children: [
                         SvgPicture.asset(
                           AppAssets.size_preview,
-                          color: _selectedRatio == size.radio
+                          color: _selectedTitle == size.title
                               ? Colors.white
                               : Colors.grey,
                         ),
@@ -118,7 +158,7 @@ class _ImageSizeScreenState extends State<ImageSizeScreen> {
                           child: Text(
                             getTitle(size, context),
                             style: TextStyle(
-                              color: _selectedRatio == size.radio
+                              color: _selectedTitle == size.title
                                   ? Colors.white
                                   : Colors.grey,
                             ),
