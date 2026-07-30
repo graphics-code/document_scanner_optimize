@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:doc_scanner/camera_screen/provider/camera_provider.dart';
 import 'package:doc_scanner/camera_screen/widget/analyzee_image.dart';
@@ -22,12 +24,43 @@ class QRCodeCameraScreen extends StatefulWidget {
   _QRCodeCameraScreenState createState() => _QRCodeCameraScreenState();
 }
 
-class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
+class _QRCodeCameraScreenState extends State<QRCodeCameraScreen>
+    with WidgetsBindingObserver {
   final MobileScannerController controller = MobileScannerController(
     formats: const [BarcodeFormat.qrCode],
   );
   bool activeDialog = false;
   final player = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!controller.value.hasCameraPermission) return;
+
+    switch (state) {
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        return;
+      case AppLifecycleState.resumed:
+        if (!activeDialog) {
+          unawaited(controller.start());
+        }
+      case AppLifecycleState.inactive:
+        unawaited(controller.stop());
+    }
+  }
+
+  Future<void> _closeScanner() async {
+    await controller.stop();
+    if (mounted) Navigator.pop(context);
+  }
+
   void _openBrowserWithSearch(String query) async {
     // Encode the query to make it URL-safe
     final encodedQuery = Uri.encodeComponent(query);
@@ -232,9 +265,7 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: _closeScanner,
                       icon: const Icon(
                         Icons.arrow_back,
                         color: Color(0xffffffff),
@@ -344,16 +375,19 @@ class _QRCodeCameraScreenState extends State<QRCodeCameraScreen> {
   }
 
   Future<void> _resumeCamera() async {
+    if (!mounted) return;
     setState(() {
       activeDialog = false;
     });
-    await controller.start(); // Resume the camera
+    await controller.start();
   }
 
   @override
-  Future<void> dispose() async {
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(controller.dispose());
+    unawaited(player.dispose());
     super.dispose();
-    await controller.dispose();
   }
 }
 
