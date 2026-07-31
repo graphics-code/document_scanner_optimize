@@ -33,6 +33,7 @@ class AppAssets {
   static const String edit = "assets/icons/edit.svg";
   static const String ocr = "assets/icons/ocr.svg";
   static const String sign = "assets/icons/sign.svg";
+  static const String scan = "assets/icons/scan.svg";
   static const String addPage = "assets/icons/add_page.svg";
   static const String editFile = "assets/icons/edit_file.svg";
   static const String crop = "assets/icons/crop.svg";
