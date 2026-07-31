@@ -96,9 +96,9 @@ class _ImageFiltersState extends State<ImageFilters> {
                   ? Container()
                   : selectedFilter.build(
                       Slider(
-                        min: 0,
+                        min: .3,
                         max: 1,
-                        divisions: 100,
+                        divisions: 70,
                         value: filterOpacity,
                         onChanged: (value) {
                           filterOpacity = value;

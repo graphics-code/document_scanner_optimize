@@ -1,24 +1,18 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
-
-import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
-import 'dart:typed_data';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
+import 'package:doc_scanner/image_edit/widget/signature_sticker_widget.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/baseurl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:interactive_box/interactive_box.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
 import '../camera_screen/provider/camera_provider.dart';
 import '../localaization/language_constant.dart';
 import '../utils/app_assets.dart';
@@ -42,8 +36,10 @@ class _AddSignatureState extends State<AddSignature> {
   String? signaturePath;
   bool drawSignature = false;
   final GlobalKey _globalKey = GlobalKey();
-  bool initialShowActionIcons = true;
-  bool isScaleView = true;
+  /// `false` = show red border + handles (edit mode).
+  /// `true` = hide controls for screenshot (PDF scanner behavior).
+  bool isScaleView = false;
+  Uint8List? processedImageBytes;
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +66,7 @@ class _AddSignatureState extends State<AddSignature> {
           TextButton(
             onPressed: () {
               setState(() {
-                initialShowActionIcons = false;
-                isScaleView = false;
+                isScaleView = true;
               });
 
               Future.delayed(const Duration(milliseconds: 500), () async {
@@ -83,7 +78,7 @@ class _AddSignatureState extends State<AddSignature> {
                           name: widget.imageModel.name,
                           docType: widget.imageModel.docType),
                       index: widget.imageIndex);
-                  Navigator.pop(context);
+                  if (mounted) Navigator.pop(context);
                 }
               });
             },
@@ -103,7 +98,6 @@ class _AddSignatureState extends State<AddSignature> {
         child: RepaintBoundary(
           key: _globalKey,
           child: Stack(
-            alignment: Alignment.center,
             children: [
               Center(
                 child: Image.memory(
@@ -112,48 +106,29 @@ class _AddSignatureState extends State<AddSignature> {
                 ),
               ),
               if (processedImageBytes != null)
-                InteractiveBox(
-                  initialSize: const Size(200, 200),
-                  includedActions: const [
-                    ControlActionType.move,
-                    ControlActionType.scale,
-                    ControlActionType.rotate,
-                    ControlActionType.delete,
-                  ],
-                  initialShowActionIcons: isScaleView,
-                  child: Image.memory(processedImageBytes!),
+                SignatureStickerWidget(
+                  key: ValueKey(
+                    'processed_signature_${processedImageBytes.hashCode}',
+                  ),
+                  isScaleView: isScaleView,
+                  onDelete: () => setState(() => processedImageBytes = null),
+                  child: Image.memory(
+                    processedImageBytes!,
+                    width: 100,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               if (signaturePath != null)
-                InteractiveBox(
-                  initialPosition: const Offset(50, 200),
-                  includedScaleDirections: const [
-                    ScaleDirection.topRight,
-                    ScaleDirection.bottomRight,
-                    ScaleDirection.bottomLeft,
-                    ScaleDirection.topLeft,
-                  ],
-                  initialSize: const Size(250, 150),
-                  includedActions: const [
-                    ControlActionType.move,
-                    ControlActionType.scale,
-                    ControlActionType.rotate,
-                    ControlActionType.delete,
-                  ],
-                  onActionSelected: (ControlActionType controlActionType,
-                      InteractiveBoxInfo interactiveBoxInfo) {
-                    if (controlActionType == ControlActionType.delete) {
-                      setState(() {
-                        signaturePath = null;
-                      });
-                    }
-                  },
-                  initialShowActionIcons: initialShowActionIcons,
-                  rotateIndicatorSpacing: 10,
-                  child: drawSignature == true
-                      ? SvgPicture.string(signaturePath!, fit: BoxFit.cover)
+                SignatureStickerWidget(
+                  key: const ValueKey('drawn_signature'),
+                  isScaleView: isScaleView,
+                  onDelete: () => setState(() => signaturePath = null),
+                  child: drawSignature
+                      ? SvgPicture.string(signaturePath!, width: 100)
                       : Image.memory(
                           Uint8List.fromList(signaturePath!.codeUnits),
-                          fit: BoxFit.cover,
+                          width: 100,
+                          fit: BoxFit.contain,
                         ),
                 ),
             ],
@@ -179,50 +154,27 @@ class _AddSignatureState extends State<AddSignature> {
                 if (signature != null) {
                   setState(() {
                     signaturePath = signature;
+                    processedImageBytes = null;
                     drawSignature = true;
+                    isScaleView = false;
                   });
                 }
               },
               iconPath: AppAssets.sign,
             ),
             ImageEditButton(
+              title: 'Scan',
+              onTap: () async {
+                await importFromScan();
+              },
+              iconPath: AppAssets.scan,
+            ),
+            ImageEditButton(
               title: translation(context).gallery,
               onTap: () async {
-                final hasInternet =
-                    await InternetConnectionChecker().hasConnection;
-
-                if (!hasInternet) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('No internet connection'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-
-                final picker = ImagePicker();
-                final pickedFile =
-                    await picker.pickImage(source: ImageSource.gallery);
-
-                if (pickedFile == null) return;
-
-                final inputFile = File(pickedFile.path);
-
-                Uint8List? removedBgBytes = await removeImageBackground(
-                  context: context,
-                  imageFile: inputFile,
-                );
-
-                if (removedBgBytes == null) return;
-
-                setState(() {
-                  processedImageBytes = removedBgBytes;
-                  drawSignature = false;
-                });
+                await importFromGallery();
               },
-              iconPath:
-                  AppAssets.gallery, // Replace with your desired gallery icon
+              iconPath: AppAssets.gallery,
             ),
           ],
         ),
@@ -246,108 +198,116 @@ class _AddSignatureState extends State<AddSignature> {
     }
   }
 
-  Uint8List? processedImageBytes;
+  Future<void> importFromGallery() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
+    if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      final processedBytes = await removeImageBackground(
+        context: context,
+        imageFile: file,
+      );
+
+      if (!mounted || processedBytes == null) return;
+      setState(() {
+        processedImageBytes = processedBytes;
+        signaturePath = null;
+        drawSignature = false;
+        isScaleView = false;
+      });
+    }
+  }
+
+  Future<void> importFromScan() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile == null) return;
+
+    final file = File(pickedFile.path);
+    final processedBytes = await removeImageBackground(
+      context: context,
+      imageFile: file,
+    );
+
+    if (!mounted || processedBytes == null) return;
+    setState(() {
+      processedImageBytes = processedBytes;
+      signaturePath = null;
+      drawSignature = false;
+      isScaleView = false;
+    });
+  }
+
+  /// Same endpoint/logic as PDF-Scanner-Convert-Document.
   Future<Uint8List?> removeImageBackground({
     required BuildContext context,
     required File imageFile,
   }) async {
-    final progressNotifier = ValueNotifier<double>(0);
-
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Text('Processing Image'),
-        content: ValueListenableBuilder<double>(
-          valueListenable: progressNotifier,
-          builder: (context, progress, _) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                LinearProgressIndicator(value: progress),
-                const SizedBox(height: 12),
-                Text('${(progress * 100).toStringAsFixed(0)}% completed'),
-              ],
-            );
-          },
+      builder: (context) => const AlertDialog(
+        title: Text('Processing Image'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 12),
+            Text('Removing background...'),
+          ],
         ),
       ),
     );
 
     try {
-      String? bgRemovalUrl = "https://app4.clippingworld.com";
-
-      final uri = Uri.parse("$bgRemovalUrl/remove-background");
-      print("remove background $bgRemovalUrl/remove-background");
+      final uri = Uri.parse('$baseUrl/convert/remove-background');
       final request = http.MultipartRequest('POST', uri);
-
-      final mimeType = lookupMimeType(imageFile.path) ?? 'image/png';
-      final fileLength = await imageFile.length();
-      final fileStream = imageFile.openRead();
-
-      int bytesSent = 0;
-      final streamWithProgress = fileStream.transform<List<int>>(
-        StreamTransformer.fromHandlers(
-          handleData: (data, sink) {
-            bytesSent += data.length;
-            progressNotifier.value =
-                bytesSent / fileLength * 0.5; // Upload: 0–50%
-            sink.add(data);
-          },
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'file',
+          imageFile.path,
+          filename: imageFile.path.split('/').last,
         ),
       );
 
-      final multipartFile = http.MultipartFile(
-        'image',
-        streamWithProgress,
-        fileLength,
-        filename: imageFile.path.split('/').last,
-        contentType: MediaType.parse(mimeType),
-      );
-
-      request.files.add(multipartFile);
       final streamedResponse = await request.send();
+      final responseBytes = await streamedResponse.stream.toBytes();
 
-      if (streamedResponse.statusCode == 200) {
-        final contentLength = streamedResponse.contentLength ?? 0;
-        List<int> bytes = [];
-        int downloaded = 0;
-
-        await for (var chunk in streamedResponse.stream) {
-          bytes.addAll(chunk);
-          downloaded += chunk.length;
-          if (contentLength > 0) {
-            progressNotifier.value =
-                0.5 + (downloaded / contentLength) * 0.5; // Download: 50–100%
-          }
+      if (streamedResponse.statusCode != 200) {
+        final status = streamedResponse.statusCode;
+        final message = status == 422
+            ? 'Image could not be processed. Please use a clearer signature image.'
+            : 'Server error ($status). Please try again.';
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message), backgroundColor: Colors.red),
+          );
         }
-
-        Navigator.of(context).pop(); // Close dialog
-        return Uint8List.fromList(bytes);
-      } else {
-        final responseBody = await streamedResponse.stream.bytesToString();
-        print('Error Response: $responseBody');
-
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed: Image Should be Clear'),
-            backgroundColor: Colors.red,
-          ),
+        debugPrint(
+          'removeImageBackground failed ($status): '
+          '${String.fromCharCodes(responseBytes).trim()}',
         );
         return null;
       }
+
+      return responseBytes;
     } catch (e) {
-      Navigator.of(context).pop();
-      print('Exception while removing background: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong while processing the image.'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to remove image background.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      debugPrint('removeImageBackground exception: $e');
       return null;
+    } finally {
+      if (mounted && Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
     }
   }
 }
