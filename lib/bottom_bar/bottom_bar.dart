@@ -11,9 +11,12 @@ import 'package:doc_scanner/image_edit/image_edit_preview.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/settings_page/settings_page.dart';
 import 'package:doc_scanner/utils/Common.dart';
+import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:doc_scanner/utils/helper.dart';
+import 'package:doc_scanner/main.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +41,22 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   int _currentIndex = 0;
   List<Widget> pages = [const HomePage(), const SettingsPage()];
+
+  @override
+  void initState() {
+    super.initState();
+    // Only preload if none ready — don't wipe ad loaded during scan/export.
+    if (myInterstitial == null || !interstitialReady) {
+      createInterstitialAd(adUnitId: AdHelper.interstitialAdUnitId1);
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (widget.shouldShowReview != null && widget.shouldShowReview == true) {
+        if (await inAppReview.isAvailable()) {
+          inAppReview.requestReview();
+        }
+      }
+    });
+  }
 
   void updatePage(int page) {
     setState(() {
@@ -82,18 +101,6 @@ class _BottomBarState extends State<BottomBar> {
   }
 
   final InAppReview inAppReview = InAppReview.instance;
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (widget.shouldShowReview != null && widget.shouldShowReview == true) {
-        if (await inAppReview.isAvailable()) {
-          inAppReview.requestReview();
-        }
-      }
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +180,7 @@ class _BottomBarState extends State<BottomBar> {
                     // if (fileSizeInMB <= 5) {
                     cameraProvider.convertPdfToImage(file).then((value) {
                       if (value) {
-                        createInterstitialAd();
+                        createInterstitialAd(adUnitId: AdHelper.interstitialAdUnitId1);
                         BuildContext context = _scaffoldKey.currentContext!;
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -300,7 +307,7 @@ class _BottomBarState extends State<BottomBar> {
                       }
 
                       if (cameraProvider.idCardImages.isNotEmpty) {
-                        createInterstitialAd();
+                        createInterstitialAd(adUnitId: AdHelper.interstitialAdUnitId1);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -376,7 +383,7 @@ class _BottomBarState extends State<BottomBar> {
                       }
 
                       if (cameraProvider.imageList.isNotEmpty) {
-                        createInterstitialAd();
+                        createInterstitialAd(adUnitId: AdHelper.interstitialAdUnitId1);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -399,8 +406,10 @@ class _BottomBarState extends State<BottomBar> {
                 width: size.width >= 600 ? 30 : 30,
                 height: size.width >= 600 ? 30 : 28)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
-          height:AppHelper.isIpad(context)?90: 60,
+        bottomNavigationBar: BottomBarWithBanner(
+          adUnitId: AdHelper.homeSettingsBannerAdUnitId,
+          child: BottomAppBar(
+          height:AppHelper.isIpad(context)?90: 68,
           surfaceTintColor: Colors.grey,
           shape: const CircularNotchedRectangle(),
           notchMargin: 10.0,
@@ -429,9 +438,20 @@ class _BottomBarState extends State<BottomBar> {
                 indicatorColor: Colors.transparent,
                 elevation: 5,
                 onDestinationSelected: (int index) {
+                  final wasOnSettings = _currentIndex == 1;
                   setState(() {
                     _currentIndex = index;
                   });
+                  // Settings -> Home: show interstitial (same as Android flow).
+                  if (wasOnSettings && index == 0) {
+                    showInterstitialAd(context);
+                  }
+                  // Preload while user is on Settings.
+                  if (index == 1) {
+                    createInterstitialAd(
+                      adUnitId: AdHelper.interstitialAdUnitId1,
+                    );
+                  }
                 },
                 selectedIndex: _currentIndex,
                 destinations: [
@@ -473,6 +493,7 @@ class _BottomBarState extends State<BottomBar> {
               ),
             ),
           ),
+        ),
         ),
       ),
     );

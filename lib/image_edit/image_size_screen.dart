@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:doc_scanner/image_edit/provider/image_edit_provider.dart';
+import 'package:doc_scanner/utils/addHelper.dart';
+import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -119,8 +121,9 @@ class _ImageSizeScreenState extends State<ImageSizeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-          child: Container(
+      bottomNavigationBar: BottomBarWithBanner(
+        adUnitId: AdHelper.imageSizeScreenBannerAdUnitId,
+        child: Container(
         padding: const EdgeInsets.symmetric(vertical: 4),
         height: 80,
         decoration: const BoxDecoration(
@@ -171,7 +174,8 @@ class _ImageSizeScreenState extends State<ImageSizeScreen> {
               )
           ],
         ),
-      )),
+      ),
+      ),
     );
   }
 

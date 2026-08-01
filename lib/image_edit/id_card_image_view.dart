@@ -4,7 +4,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:doc_scanner/bottom_bar/bottom_bar.dart';
+import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:doc_scanner/utils/helper.dart';
 import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -774,6 +776,14 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
           ],
         ),
         backgroundColor: Colors.grey,
+        bottomNavigationBar: SafeArea(
+          top: false,
+          left: false,
+          right: false,
+          child: BannerAdWidget(
+            adUnitId: AdHelper.idCardImageViewBannerAdUnitId,
+          ),
+        ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(

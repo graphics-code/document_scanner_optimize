@@ -2,7 +2,9 @@ import 'dart:typed_data';
 
 import 'package:colorfilter_generator/colorfilter_generator.dart';
 import 'package:colorfilter_generator/presets.dart';
+import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +88,8 @@ class _ImageFiltersState extends State<ImageFilters> {
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
+      bottomNavigationBar: BottomBarWithBanner(
+        adUnitId: AdHelper.imageFilterScreenBannerAdUnitId,
         child: SizedBox(
           height: 160,
           child: Column(children: [

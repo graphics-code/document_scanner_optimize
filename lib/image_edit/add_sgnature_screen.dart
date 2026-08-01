@@ -4,7 +4,9 @@ import 'dart:ui' as ui;
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/image_edit/widget/signature_sticker_widget.dart';
+import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:doc_scanner/utils/baseurl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -135,7 +137,9 @@ class _AddSignatureState extends State<AddSignature> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
+      bottomNavigationBar: BottomBarWithBanner(
+        adUnitId: AdHelper.addSignatureBannerAdUnitId,
+        child: BottomAppBar(
         color: const Color(0xff1E1F20),
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         surfaceTintColor: const Color(0xff1E1F20),
@@ -178,6 +182,7 @@ class _AddSignatureState extends State<AddSignature> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

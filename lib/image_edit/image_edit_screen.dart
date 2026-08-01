@@ -4,7 +4,9 @@ import 'package:doc_scanner/image_edit/provider/image_edit_provider.dart';
 import 'package:doc_scanner/image_edit/image_size_screen.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
 import 'package:doc_scanner/image_edit/widget/image_filter_screen.dart';
+import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
+import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../localaization/language_constant.dart';
@@ -95,7 +97,9 @@ class _ImageEditScreenState extends State<ImageEditScreen> {
                 : const CircularProgressIndicator(),
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
+        bottomNavigationBar: BottomBarWithBanner(
+          adUnitId: AdHelper.imageEditScreenBannerAdUnitId,
+          child: BottomAppBar(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           color: const Color(0xff1E1F20),
           surfaceTintColor: const Color(0xff1E1F20),
@@ -172,6 +176,7 @@ class _ImageEditScreenState extends State<ImageEditScreen> {
               ),
             ],
           ),
+        ),
         ),
       ),
     );

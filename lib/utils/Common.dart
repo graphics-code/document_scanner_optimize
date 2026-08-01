@@ -34,14 +34,26 @@ extension IntExt on int {
   Size get size => Size(this.toDouble(), this.toDouble());
 }
 
-String get getBannerAdId => AdHelper.bannerAdUnitId;
+String get getBannerAdId => AdHelper.directoryViewBannerAdUnitId;
 
 String get getInterstitialId => AdHelper.interstitialAdUnitId;
 
-void createInterstitialAd() {
+void createInterstitialAd({String? adUnitId, bool forceReload = false}) {
+  // Keep already-loaded ad (needed after Document Files export -> Home).
+  if (!forceReload && myInterstitial != null && interstitialReady) {
+    return;
+  }
+
+  try {
+    myInterstitial?.dispose();
+  } catch (_) {}
+  myInterstitial = null;
+  interstitialReady = false;
+  interstitialReadyNotifier.value = false;
+
   InterstitialAd.load(
-    adUnitId: AdHelper.interstitialAdUnitId,
-    request: AdRequest(),
+    adUnitId: adUnitId ?? AdHelper.interstitialAdUnitId,
+    request: const AdRequest(),
     adLoadCallback: InterstitialAdLoadCallback(
       onAdLoaded: (InterstitialAd ad) {
         log('${ad.runtimeType} loaded.');
@@ -52,36 +64,49 @@ void createInterstitialAd() {
       onAdFailedToLoad: (LoadAdError error) {
         log('InterstitialAd failed to load: $error.');
         myInterstitial = null;
+        interstitialReady = false;
+        interstitialReadyNotifier.value = false;
       },
     ),
   );
 }
 
 void showInterstitialAd(BuildContext context) {
-  if (myInterstitial == null) {
+  if (myInterstitial == null || !interstitialReady) {
     log('attempt to show interstitial before loaded.');
-    finish(context);
     return;
   }
+
   myInterstitial!.fullScreenContentCallback = FullScreenContentCallback(
     onAdShowedFullScreenContent: (InterstitialAd ad) =>
-        print('ad onAdShowedFullScreenContent.'),
+        log('ad onAdShowedFullScreenContent.'),
     onAdClicked: (ad) {
       interstitialReady = false;
       interstitialReadyNotifier.value = false;
     },
     onAdDismissedFullScreenContent: (InterstitialAd ad) {
       log('$ad onAdDismissedFullScreenContent.');
-      interstitialReadyNotifier.value = false;
+      try {
+        ad.dispose();
+      } catch (_) {}
+      myInterstitial = null;
       interstitialReady = false;
-      myInterstitial!.dispose();
+      interstitialReadyNotifier.value = false;
+      createInterstitialAd(); // preload next
     },
     onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
       log('$ad onAdFailedToShowFullScreenContent: $error');
-      interstitialReadyNotifier.value = false;
+      try {
+        ad.dispose();
+      } catch (_) {}
+      myInterstitial = null;
       interstitialReady = false;
-      myInterstitial!.dispose();
+      interstitialReadyNotifier.value = false;
+      createInterstitialAd(); // preload next
     },
   );
+
+  interstitialReady = false;
+  interstitialReadyNotifier.value = false;
   myInterstitial!.show();
 }

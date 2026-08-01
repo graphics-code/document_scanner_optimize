@@ -4,7 +4,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:doc_scanner/image_edit/text_recognition_screen.dart';
 import 'package:doc_scanner/image_edit/widget/image_edit_button.dart';
+import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -800,7 +802,9 @@ class _EditImagePreviewState extends State<EditImagePreview> {
               ),
             ],
           ),
-          bottomNavigationBar: BottomAppBar(
+          bottomNavigationBar: BottomBarWithBanner(
+            adUnitId: AdHelper.imageEditPreviewBannerAdUnitId,
+            child: BottomAppBar(
             color: const Color(0xff1E1F20),
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             surfaceTintColor: const Color(0xff1E1F20),
@@ -894,6 +898,7 @@ class _EditImagePreviewState extends State<EditImagePreview> {
                 ),
               ],
             ),
+          ),
           ),
         ));
   }

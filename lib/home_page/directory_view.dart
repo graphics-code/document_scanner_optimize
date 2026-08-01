@@ -5,24 +5,22 @@ import 'dart:io';
 import 'package:doc_scanner/bottom_bar/bottom_bar.dart';
 import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
-import 'package:doc_scanner/main.dart';
 import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gal/gal.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/utils.dart';
-import 'fixed_size_delegate_grid.dart';
 import 'package:path/path.dart' as path;
 // import 'package:document_file_save_plus/document_file_save_plus.dart';
 
@@ -45,7 +43,6 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
 
   late Directory rootDirectory;
   String subFilePath = "";
-  BannerAd? myBanner;
   void _openBrowserWithSearch(String query) async {
     // Encode the query to make it URL-safe
     final encodedQuery = Uri.encodeComponent(query);
@@ -293,34 +290,6 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
       rootDirectory = await getApplicationDocumentsDirectory();
     });
     super.initState();
-    myBanner = buildBannerAd()..load();
-  }
-
-  BannerAd buildBannerAd() {
-    return BannerAd(
-      size: AdSize.banner,
-      request: AdRequest(),
-      adUnitId: AdHelper.bannerAdUnitId,
-      listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
-          log('${ad.runtimeType} loaded.');
-          myBanner = ad as BannerAd;
-          myBanner!.load();
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          log('${ad.runtimeType} failed to load: $error.');
-          ad.dispose();
-          bannerReady = true;
-        },
-        onAdOpened: (Ad ad) {
-          log('${ad.runtimeType} onAdOpened.');
-        },
-        onAdClosed: (Ad ad) {
-          log('${ad.runtimeType} closed.');
-          ad.dispose();
-        },
-      ),
-    );
   }
 
   bool isSubfolderOfQRCode(String directoryPath) {
@@ -2285,22 +2254,6 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                                   },
                                 ),
                               ),
-                              // Column(
-                              //   children: [
-                              //     Container(
-                              //       alignment: Alignment.center,
-                              //       height: 75,
-                              //       width: MediaQuery.of(context).size.width,
-                              //       child: myBanner != null
-                              //           ? AdWidget(ad: myBanner!)
-                              //           : const SizedBox(),
-                              //     ),
-                              //     const SizedBox(
-                              //       height: 2,
-                              //     ),
-                              //
-                              //   ],
-                              // ),
                             ],
                           );
                         }
@@ -2319,7 +2272,10 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
                   },
                 ),
               ),
-        bottomNavigationBar:  Container(
+        bottomNavigationBar: BottomBarWithBanner(
+          adUnitId: AdHelper.directoryViewBannerAdUnitId,
+          bannerAbove: true,
+          child: Container(
           height: size.width >= 600 ? 100 : 90,
           color: Colors.white,
           padding: const EdgeInsets.symmetric(
@@ -3469,6 +3425,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
               ),
             ],
           ),
+        ),
         ),
       ),
     );
