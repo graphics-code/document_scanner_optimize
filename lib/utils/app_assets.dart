@@ -20,6 +20,7 @@ class AppAssets {
   static const String vibration = "assets/icons/vibration.svg";
   static const String shareWithFriend = "assets/icons/share_with_friend.svg";
   static const String rateUs = "assets/icons/rate_us.svg";
+  static const String moreApps = "assets/icons/more_apps.svg";
   static const String privacyPolicy = "assets/icons/privacy_policy.svg";
   static const String termsCondition = "assets/icons/terms_condition.svg";
   static const String upgradePlan = "assets/icons/upgrade_plan.svg";

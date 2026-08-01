@@ -438,6 +438,65 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.012,
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(6),
+                      onTap: () async {
+                        try {
+                          if (Platform.isAndroid) {
+                            final url = Uri.parse(
+                              "https://play.google.com/store/apps/dev?id=6584495725981374366",
+                            );
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          } else if (Platform.isIOS) {
+                            final url = Uri.parse(
+                              "https://apps.apple.com/us/developer/md-sajedur-rahaman/id1586019019",
+                            );
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          }
+                        } catch (e) {
+                          developer.log(e.toString());
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              AppAssets.moreApps,
+                              height: AppHelper.isTablet(context) ? 30 : 20,
+                              width: AppHelper.isTablet(context) ? 30 : 20,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.015,
+                            ),
+                            const Text(
+                              'More Apps',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 17,
+                              ),
+                            ),
+                            const Spacer(),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: AppHelper.isTablet(context) ? 20 : 15,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
