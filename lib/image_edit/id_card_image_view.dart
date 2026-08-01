@@ -4,6 +4,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:doc_scanner/bottom_bar/bottom_bar.dart';
+import 'package:doc_scanner/google_ads_helper/banner_ad_widget.dart';
+import 'package:doc_scanner/google_ads_helper/google_ads_helper.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
 import 'package:doc_scanner/utils/meta_events_helper.dart';
@@ -20,7 +22,7 @@ import 'package:provider/provider.dart';
 import '../camera_screen/provider/camera_provider.dart';
 import '../localaization/language_constant.dart';
 
-class IdCardImagePreview extends StatefulWidget {
+class  IdCardImagePreview extends StatefulWidget {
   final bool? isCameFromRetake;
   final int? imageIndex;
 
@@ -780,6 +782,14 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
           ],
         ),
         backgroundColor: Colors.grey,
+        bottomNavigationBar: SafeArea(
+          top: false,
+          left: false,
+          right: false,
+          child: BannerAdWidget(
+            adUnitId: AdHelper.idCardImageViewBannerAdUnitId,
+          ),
+        ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(

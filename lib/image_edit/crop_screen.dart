@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 import 'package:doc_scanner/camera_screen/model/image_model.dart';
+import 'package:doc_scanner/google_ads_helper/banner_ad_widget.dart';
+import 'package:doc_scanner/google_ads_helper/google_ads_helper.dart';
 import 'package:doc_scanner/image_edit/provider/image_edit_provider.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:extended_image/extended_image.dart';
@@ -104,6 +106,14 @@ class _CropScreenState extends State<CropScreen> {
             cornerColor: AppColor.primaryColor,
           );
         },
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        left: false,
+        right: false,
+        child: BannerAdWidget(
+          adUnitId: AdHelper.imageCropBannerAdUnitId,
+        ),
       ),
     );
   }

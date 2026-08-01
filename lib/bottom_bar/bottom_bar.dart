@@ -5,6 +5,7 @@ import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:doc_scanner/camera_screen/bar_code_camera_screen.dart';
 import 'package:doc_scanner/camera_screen/qr_code_camera_screen.dart';
+import 'package:doc_scanner/google_ads_helper/banner_ad_widget.dart';
 import 'package:doc_scanner/google_ads_helper/google_ads_helper.dart';
 import 'package:doc_scanner/home_page/home_page.dart';
 import 'package:doc_scanner/image_edit/id_card_image_view.dart';
@@ -178,7 +179,7 @@ class _BottomBarState extends State<BottomBar> {
                     cameraProvider.convertPdfToImage(file).then((value) {
                       if (value) {
                         BuildContext context = _scaffoldKey.currentContext!;
-                        createInterstitialAd();
+                        createInterstitialAd(adUnitId: AdHelper.interstitialAdUnitId1);
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -376,7 +377,7 @@ class _BottomBarState extends State<BottomBar> {
                       }
 
                       if (cameraProvider.idCardImages.isNotEmpty) {
-                        createInterstitialAd();
+                        createInterstitialAd(adUnitId: AdHelper.interstitialAdUnitId1);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -452,7 +453,7 @@ class _BottomBarState extends State<BottomBar> {
                       }
 
                       if (cameraProvider.imageList.isNotEmpty) {
-                        createInterstitialAd();
+                        createInterstitialAd(adUnitId: AdHelper.interstitialAdUnitId1);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -518,7 +519,9 @@ class _BottomBarState extends State<BottomBar> {
                 width: size.width >= 600 ? 32 : 30,
                 height: size.width >= 600 ? 32 : 28)),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
+        bottomNavigationBar: BottomBarWithBanner(
+          adUnitId: AdHelper.homeSettingsBannerAdUnitId,
+          child: BottomAppBar(
           surfaceTintColor: Colors.grey,
           shape: const CircularNotchedRectangle(),
           notchMargin: 10.0,
@@ -591,6 +594,7 @@ class _BottomBarState extends State<BottomBar> {
               ),
             ),
           ),
+        ),
         ),
       ),
     );

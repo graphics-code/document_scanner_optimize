@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:doc_scanner/google_ads_helper/banner_ad_widget.dart';
+import 'package:doc_scanner/google_ads_helper/google_ads_helper.dart';
 import 'package:doc_scanner/image_edit/provider/image_edit_provider.dart';
 import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:extended_image/extended_image.dart';
@@ -107,7 +109,9 @@ class _ImageRotationState extends State<ImageRotation> {
           },
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
+      bottomNavigationBar: BottomBarWithBanner(
+        adUnitId: AdHelper.imageRotationBannerAdUnitId,
+        child: BottomAppBar(
         color: const Color(0xff1E1F20),
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
@@ -145,6 +149,7 @@ class _ImageRotationState extends State<ImageRotation> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

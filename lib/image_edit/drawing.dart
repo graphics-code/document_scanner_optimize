@@ -1,4 +1,6 @@
 import 'package:doc_scanner/image_edit/widget/color_button.dart';
+import 'package:doc_scanner/google_ads_helper/banner_ad_widget.dart';
+import 'package:doc_scanner/google_ads_helper/google_ads_helper.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/helper.dart';
 import 'package:flutter/material.dart';
@@ -122,7 +124,9 @@ class _DrawingScreenState extends State<DrawingScreen> {
           type: SignatureDrawType.line,
         ),
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: BottomBarWithBanner(
+        adUnitId: AdHelper.drawingScreenBannerAdUnitId,
+        child: Container(
         color: Colors.white,
         height: 160,
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -177,6 +181,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

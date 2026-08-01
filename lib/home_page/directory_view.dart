@@ -206,7 +206,7 @@ class _DirectoryDetailsPageState extends State<DirectoryDetailsPage> {
     return BannerAd(
       size: AdSize.banner,
       request: const AdRequest(),
-      adUnitId: AdHelper.bannerAdUnitId,
+      adUnitId: AdHelper.directoryViewBannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           log('${ad.runtimeType} loaded.');
