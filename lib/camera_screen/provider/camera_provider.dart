@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:gal/gal.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:doc_scanner/home_page/provider/home_page_provider.dart';
+import 'package:doc_scanner/utils/meta_events_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -185,6 +186,7 @@ class CameraProvider extends ChangeNotifier {
 
       _isCreatingPDFLoader = false;
       notifyListeners();
+      await MetaEventsHelper.logPdfCreated();
       return pdfFile;
     } catch (e) {
       _isCreatingPDFLoader = false;

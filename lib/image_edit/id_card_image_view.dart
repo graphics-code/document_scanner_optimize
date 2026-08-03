@@ -8,6 +8,7 @@ import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:doc_scanner/utils/helper.dart';
+import 'package:doc_scanner/utils/meta_events_helper.dart';
 import 'package:doc_scanner/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -185,6 +186,7 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
                       await externalFile.writeAsBytes(pdfBytes);
                     }
 
+                    await MetaEventsHelper.logPdfCreated();
                     setState(() {
                       isLoading = false;
                       Navigator.pop(context);
@@ -235,6 +237,7 @@ class _IdCardImagePreviewState extends State<IdCardImagePreview> {
           await externalFile.writeAsBytes(pdfBytes);
         }
 
+        await MetaEventsHelper.logPdfCreated();
         setState(() {
           isLoading = false;
         });

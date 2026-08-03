@@ -52,6 +52,30 @@
 	<string> To send voice text this app requires Mic's permission.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To edit document from the photo gallery, it needs to access the photo gallery.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This identifier will be used to deliver personalized ads and measure app performance.</string>
+	<key>FacebookAppID</key>
+	<string>969488689485352</string>
+	<key>FacebookClientToken</key>
+	<string>713e981696d52fc2945779bca5f12823</string>
+	<key>FacebookDisplayName</key>
+	<string>Doc Scan</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb969488689485352</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

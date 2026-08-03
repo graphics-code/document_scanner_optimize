@@ -4,6 +4,7 @@ import 'package:doc_scanner/image_edit/provider/image_edit_provider.dart';
 import 'package:doc_scanner/l10n/app_localizations.dart';
 import 'package:doc_scanner/splash_screen/splash_screen.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/meta_events_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -19,6 +20,8 @@ ValueNotifier<bool> interstitialReadyNotifier = ValueNotifier(false);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await MetaEventsHelper.initialize();
+  await MetaEventsHelper.logAppOpen();
   runApp(const MyApp());
 }
 

@@ -8,6 +8,7 @@ import 'package:doc_scanner/utils/addHelper.dart';
 import 'package:doc_scanner/utils/app_color.dart';
 import 'package:doc_scanner/utils/banner_ad_widget.dart';
 import 'package:doc_scanner/utils/baseurl.dart';
+import 'package:doc_scanner/utils/meta_events_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -80,6 +81,7 @@ class _AddSignatureState extends State<AddSignature> {
                           name: widget.imageModel.name,
                           docType: widget.imageModel.docType),
                       index: widget.imageIndex);
+                  await MetaEventsHelper.logPdfSigned();
                   if (mounted) Navigator.pop(context);
                 }
               });
