@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "com.documentscannerpdfscanner_"
     compileSdk 36
-    ndkVersion = "26.1.10909125"  // Update to latest stable NDK
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

@@ -61,7 +61,7 @@ class _ImageRotationState extends State<ImageRotation> {
                 } else {
                   final Uint8List img = state.rawImageData;
                   final EditActionDetails action = state.editAction!;
-                  final int rotateAngle = action.rotateAngle.toInt();
+                  final int rotateAngle = action.rotateDegrees.toInt();
                   final ImageEditorOption option = ImageEditorOption();
                   option.addOption(RotateOption(rotateAngle));
                   final Uint8List? result = await ImageEditor.editImage(
@@ -123,7 +123,7 @@ class _ImageRotationState extends State<ImageRotation> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   icon: const Icon(Icons.rotate_left, color: Colors.white),
                   onPressed: () {
-                    editorKey.currentState!.rotate(right: false);
+                    editorKey.currentState!.rotate(degree: -90);
                   },
                 ),
                 Text(
@@ -138,7 +138,7 @@ class _ImageRotationState extends State<ImageRotation> {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   icon: const Icon(Icons.rotate_right, color: Colors.white),
                   onPressed: () {
-                    editorKey.currentState!.rotate(right: true);
+                    editorKey.currentState!.rotate(degree: 90);
                   },
                 ),
                 Text(
