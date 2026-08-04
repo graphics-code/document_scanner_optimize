@@ -72,7 +72,11 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future<void> initCamera() async {
     final cameras = await availableCameras();
-    cameraController = CameraController(cameras[0], ResolutionPreset.max);
+    cameraController = CameraController(
+      cameras[0],
+      ResolutionPreset.max,
+      enableAudio: false,
+    );
     await cameraController.initialize().then((_) {
       if (!mounted) {
         return;
@@ -88,8 +92,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future checkPermission() async {
     var cameraStatus = await Permission.camera.status;
-    var storageStatus = await Permission.microphone.status;
-    if (cameraStatus.isGranted && storageStatus.isGranted) {
+    if (cameraStatus.isGranted) {
       initCamera();
       setState(() {
         isCameraPermissionGranted = true;
@@ -189,31 +192,22 @@ class _CameraScreenState extends State<CameraScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          final permissions = [
-                            Permission.camera,
-                            Permission.microphone
-                          ];
-                          var status = await permissions.request();
-                          var cameraStatus = status[Permission.camera];
-                          var microphoneStatus = status[Permission.microphone];
+                          final cameraStatus = await Permission.camera.request();
 
-                          if (cameraStatus!.isGranted &&
-                              microphoneStatus!.isGranted) {
+                          if (cameraStatus.isGranted) {
                             setState(() {
                               isCameraPermissionGranted = true;
                               initCamera();
                             });
-                          } else if ((microphoneStatus!.isPermanentlyDenied ||
-                                  cameraStatus.isPermanentlyDenied) ||
-                              (microphoneStatus.isDenied ||
-                                  cameraStatus.isDenied)) {
+                          } else if (cameraStatus.isPermanentlyDenied ||
+                              cameraStatus.isDenied) {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
                                 title:
                                     Text(translation(context).permissionDenied),
-                                content: Text(translation(context)
-                                    .pleaseAllowCameraMicrophonePermissionToUseThisFeature),
+                                content: Text(
+                                    translation(context).allowCameraPermission),
                                 actions: [
                                   TextButton(
                                       onPressed: () {

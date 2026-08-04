@@ -28,13 +28,6 @@
 	<string>ca-app-pub-9877635475483541~5230100748</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>This app needs local network access for Flutter debugging.</string>
-	<key>NSBonjourServices</key>
-	<array>
-    	<string>_flutter-tether._tcp</string>
-	</array>
-
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -44,22 +37,20 @@
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
 		<true/>
 	</dict>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Play beep for using  QR or Bar code scan sound </string>
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera for scan documents.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string> To send voice text this app requires Mic's permission.</string>
+	<string>Doc Scanner needs camera access to scan documents, ID cards, QR codes, and barcodes. For example, you can point your camera at a paper document to capture pages and create a PDF.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>To edit document from the photo gallery, it needs to access the photo gallery.</string>
+	<string>Doc Scanner needs photo library access so you can import existing photos of documents to edit, crop, and convert them into PDFs. For example, you can select a receipt photo from your gallery and save it as a scanned PDF.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Doc Scanner needs permission to save scanned documents and images to your photo library. For example, after you scan a document, you can save the final image to Photos.</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to deliver personalized ads and measure app performance.</string>
+	<string>Doc Scanner uses this identifier to deliver relevant ads and measure ad performance so we can keep the app free. For example, it helps us understand which ads are effective without tracking you across unrelated apps beyond your permission.</string>
 	<key>FacebookAppID</key>
 	<string>969488689485352</string>
 	<key>FacebookClientToken</key>
 	<string>713e981696d52fc2945779bca5f12823</string>
 	<key>FacebookDisplayName</key>
-	<string>Doc Scan</string>
+	<string>Doc Scanner</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -81,7 +72,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
-		<string>fetch</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
