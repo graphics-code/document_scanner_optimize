@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyChMYOI77OJeUM-A7I7tFFw5oLQIXRQWi4',
-    appId: '1:275740105691:ios:bb93c45110bb28ed1225fe',
+    appId: '1:275740105691:ios:5ee636d25ded868b1225fe',
     messagingSenderId: '275740105691',
     projectId: 'doc-scanner-cf033',
     storageBucket: 'doc-scanner-cf033.appspot.com',

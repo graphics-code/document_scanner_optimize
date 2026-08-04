@@ -34,14 +34,12 @@ class _SplashScreenState extends State<SplashScreen> {
       await AppHelper().createDirectories();
       MobileAds.instance.initialize();
 
-      Future.delayed(const Duration(seconds: 5), () async {
-        final localNotificationsService = LocalNotificationsService.instance();
-        await localNotificationsService.init();
-        final firebaseMessagingService = FirebaseMessagingService.instance();
-        await firebaseMessagingService.init(
-          localNotificationsService: localNotificationsService,
-        );
-      });
+      final localNotificationsService = LocalNotificationsService.instance();
+      await localNotificationsService.init();
+      final firebaseMessagingService = FirebaseMessagingService.instance();
+      await firebaseMessagingService.init(
+        localNotificationsService: localNotificationsService,
+      );
     } catch (e, st) {
       debugPrint('Splash init error: $e\n$st');
     }

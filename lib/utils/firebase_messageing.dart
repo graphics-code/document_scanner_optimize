@@ -40,18 +40,26 @@ class FirebaseMessagingService {
   }
 
   Future<void> _handlePushNotificationsToken() async {
+    // iOS: wait briefly for APNs token before requesting FCM token
+    if (Platform.isIOS) {
+      String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      for (var i = 0; i < 10 && apnsToken == null; i++) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      }
+      print('🔐 APNs Token: $apnsToken');
+      if (apnsToken == null) {
+        print('❗ APNs token is NULL. Push notifications will NOT work on iOS.');
+        print('❗ Use a real iPhone/iPad (not Simulator) + enable Push capability.');
+        return;
+      }
+    }
+
     final token = await FirebaseMessaging.instance.getToken();
     print('📱 FCM Token: $token');
 
-    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    print('🔐 APNs Token: $apnsToken');
-    if (apnsToken == null) {
-      print('❗ APNs token is NULL. Push notifications will NOT work on iOS.');
-    }
-
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
       print('🔄 FCM token refreshed: $newToken');
-      // TODO: Send to your server if needed
     }).onError((e) {
       print('❌ Token refresh error: $e');
     });
@@ -59,6 +67,13 @@ class FirebaseMessagingService {
 
   Future<void> _requestPermission() async {
     final settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
