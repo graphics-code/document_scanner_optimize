@@ -14,6 +14,7 @@ import 'package:doc_scanner/localaization/language_constant.dart';
 import 'package:doc_scanner/settings_page/settings_page.dart';
 import 'package:doc_scanner/utils/app_assets.dart';
 import 'package:doc_scanner/utils/app_color.dart';
+import 'package:doc_scanner/utils/force_update_wrapper.dart';
 import 'package:doc_scanner/utils/helper.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +102,8 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     final cameraProvider = context.watch<CameraProvider>();
     final size = MediaQuery.sizeOf(context);
-    return PopScope(
+    return ForceUpdateWrapper(
+      child: PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
         showDialog(
@@ -596,6 +598,7 @@ class _BottomBarState extends State<BottomBar> {
           ),
         ),
         ),
+      ),
       ),
     );
   }
