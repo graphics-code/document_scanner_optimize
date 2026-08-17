@@ -360,6 +360,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get shareWithFriend => '與朋友分享';
 
   @override
+  String get moreApps => '更多應用程式';
+
+  @override
   String get pleaseSelectADirectory => '請選擇目錄';
 
   @override

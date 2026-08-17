@@ -372,6 +372,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shareWithFriend => 'Partage avec un ami';
 
   @override
+  String get moreApps => 'Plus d\'applications';
+
+  @override
   String get pleaseSelectADirectory => 'Veuillez sélectionner un répertoire';
 
   @override

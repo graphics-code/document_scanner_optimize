@@ -368,6 +368,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get shareWithFriend => 'दोस्त के साथ सांझा करें';
 
   @override
+  String get moreApps => 'और ऐप्स';
+
+  @override
   String get pleaseSelectADirectory => 'कृपया एक निर्देशिका चुनें';
 
   @override

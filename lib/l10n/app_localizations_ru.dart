@@ -373,6 +373,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shareWithFriend => 'Поделиться с другом';
 
   @override
+  String get moreApps => 'Другие приложения';
+
+  @override
   String get pleaseSelectADirectory => 'Пожалуйста, выберите каталог';
 
   @override

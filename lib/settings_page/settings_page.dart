@@ -480,9 +480,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.015,
                             ),
-                            const Text(
-                              'More Apps',
-                              style: TextStyle(
+                            Text(
+                              translation(context).moreApps,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 17,
                               ),

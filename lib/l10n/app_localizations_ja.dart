@@ -361,6 +361,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get shareWithFriend => '友達と共有する';
 
   @override
+  String get moreApps => 'その他のアプリ';
+
+  @override
   String get pleaseSelectADirectory => 'ディレクトリを選択してください';
 
   @override

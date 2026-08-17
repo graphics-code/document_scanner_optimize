@@ -369,6 +369,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get shareWithFriend => 'Bagikan Dengan Teman';
 
   @override
+  String get moreApps => 'Aplikasi Lainnya';
+
+  @override
   String get pleaseSelectADirectory => 'Silakan pilih direktori';
 
   @override

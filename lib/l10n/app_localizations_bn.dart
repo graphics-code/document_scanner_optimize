@@ -370,6 +370,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get shareWithFriend => 'বন্ধুর সাথে ভাগ করি';
 
   @override
+  String get moreApps => 'আরও অ্যাপস';
+
+  @override
   String get pleaseSelectADirectory => 'একটি ডিরেক্টরি নির্বাচন করুন';
 
   @override

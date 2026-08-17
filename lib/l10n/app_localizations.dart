@@ -818,6 +818,12 @@ abstract class AppLocalizations {
   /// **'Share With Friend'**
   String get shareWithFriend;
 
+  /// No description provided for @moreApps.
+  ///
+  /// In en, this message translates to:
+  /// **'More Apps'**
+  String get moreApps;
+
   /// No description provided for @pleaseSelectADirectory.
   ///
   /// In en, this message translates to:

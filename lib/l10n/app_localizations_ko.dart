@@ -360,6 +360,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get shareWithFriend => '친구와 공유';
 
   @override
+  String get moreApps => '더 많은 앱';
+
+  @override
   String get pleaseSelectADirectory => '디렉터리를 선택하세요';
 
   @override

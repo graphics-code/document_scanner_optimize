@@ -368,6 +368,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get shareWithFriend => 'شارك مع صديق';
 
   @override
+  String get moreApps => 'المزيد من التطبيقات';
+
+  @override
   String get pleaseSelectADirectory => 'الرجاء تحديد الدليل';
 
   @override
