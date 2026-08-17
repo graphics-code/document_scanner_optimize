@@ -572,4 +572,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get duplicate => 'নকল';
+
+  @override
+  String get moreApps => 'আরো অ্যাপস';
 }

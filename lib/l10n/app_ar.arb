@@ -182,5 +182,6 @@
   "fileAlreadyExists": "الملف موجود بالفعل",
   "conflictAlert": "تنبيه الصراع",
   "fileConflictAlertContent": "توجد بعض الملفات بالفعل في هذا الدليل. هل تريد تكرارها؟",
-  "duplicate": "ينسخ"
+  "duplicate": "ينسخ",
+  "moreApps": "المزيد من التطبيقات"
 }

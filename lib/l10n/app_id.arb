@@ -182,6 +182,7 @@
     "fileAlreadyExists" : "File Sudah Ada",
   "conflictAlert": "Peringatan Konflik",
   "fileConflictAlertContent":"Beberapa berkas sudah ada di direktori ini. Apakah Anda ingin menduplikasinya?",
-  "duplicate": "Duplikat"
+  "duplicate": "Duplikat",
+  "moreApps": "Aplikasi Lainnya"
 
 }

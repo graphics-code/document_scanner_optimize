@@ -578,4 +578,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get duplicate => 'Dupliquer';
+
+  @override
+  String get moreApps => 'Plus d\'applications';
 }

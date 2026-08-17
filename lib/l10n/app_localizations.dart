@@ -1207,6 +1207,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Duplicate'**
   String get duplicate;
+
+  /// No description provided for @moreApps.
+  ///
+  /// In en, this message translates to:
+  /// **'More Apps'**
+  String get moreApps;
 }
 
 class _AppLocalizationsDelegate

@@ -567,4 +567,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get duplicate => 'ينسخ';
+
+  @override
+  String get moreApps => 'المزيد من التطبيقات';
 }

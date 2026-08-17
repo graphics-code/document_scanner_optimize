@@ -558,4 +558,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get duplicate => '重複';
+
+  @override
+  String get moreApps => 'その他のアプリ';
 }

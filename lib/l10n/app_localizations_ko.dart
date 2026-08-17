@@ -557,4 +557,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get duplicate => '중복';
+
+  @override
+  String get moreApps => '더 많은 앱';
 }

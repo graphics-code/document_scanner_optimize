@@ -566,4 +566,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get duplicate => 'Duplicate';
+
+  @override
+  String get moreApps => 'More Apps';
 }

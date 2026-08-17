@@ -556,4 +556,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get duplicate => '重复';
+
+  @override
+  String get moreApps => '更多應用';
 }

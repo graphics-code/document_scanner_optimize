@@ -572,4 +572,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get duplicate => 'Duplikat';
+
+  @override
+  String get moreApps => 'Aplikasi Lainnya';
 }

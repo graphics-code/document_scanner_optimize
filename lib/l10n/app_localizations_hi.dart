@@ -569,4 +569,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get duplicate => 'डुप्लिकेट';
+
+  @override
+  String get moreApps => 'और ऐप्स';
 }

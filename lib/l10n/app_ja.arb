@@ -182,5 +182,6 @@
   "fileAlreadyExists": "ファイルはすでに存在します",
   "conflictAlert": "ファイルの競合警告",
   "fileConflictAlertContent":"このディレクトリにはすでにいくつかのファイルがあります。複製しますか?",
-  "duplicate": "重複"
+  "duplicate": "重複",
+  "moreApps": "その他のアプリ"
 }
